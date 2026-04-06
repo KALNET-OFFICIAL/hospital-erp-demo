@@ -1,0 +1,1 @@
+export { HandoverBoardPage } from "./HandoverBoardPage";

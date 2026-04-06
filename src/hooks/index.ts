@@ -1,0 +1,1 @@
+export { usePrint } from "./usePrint";
