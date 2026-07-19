@@ -129,7 +129,7 @@ export function AttenderDetails({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">
+        <h3 className="text-lg font-semibold text-ink">
           Attender / Family Details
         </h3>
         {!readOnly && (
@@ -150,15 +150,15 @@ export function AttenderDetails({
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h4 className="font-semibold text-gray-900">
+                  <h4 className="font-semibold text-ink">
                     {primaryAttender.name}
                   </h4>
                   <Badge variant="primary">Primary Contact</Badge>
                 </div>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-ink-muted">
                   {primaryAttender.relationship}
                 </p>
-                <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
+                <div className="flex items-center gap-4 mt-1 text-sm text-ink-muted">
                   <span className="flex items-center gap-1">
                     <Phone className="w-3 h-3" />
                     {primaryAttender.phone}
@@ -191,17 +191,17 @@ export function AttenderDetails({
               <Card key={attender.id} className="p-3">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                      <User className="w-5 h-5 text-gray-500" />
+                    <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
+                      <User className="w-5 h-5 text-ink-muted" />
                     </div>
                     <div>
-                      <h4 className="font-medium text-gray-900">
+                      <h4 className="font-medium text-ink">
                         {attender.name}
                       </h4>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-ink-muted">
                         {attender.relationship}
                       </p>
-                      <p className="text-sm text-gray-600">{attender.phone}</p>
+                      <p className="text-sm text-ink-muted">{attender.phone}</p>
                     </div>
                   </div>
                   {!readOnly && (
@@ -225,7 +225,7 @@ export function AttenderDetails({
                         variant="ghost"
                         size="sm"
                         onClick={() => onDelete(attender.id)}
-                        className="text-red-500 hover:text-red-700"
+                        className="text-danger-500 hover:text-danger-700"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -239,8 +239,8 @@ export function AttenderDetails({
 
       {attenders.length === 0 && (
         <Card className="p-8 text-center">
-          <User className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500 mb-3">No attender details added</p>
+          <User className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+          <p className="text-ink-muted mb-3">No attender details added</p>
           {!readOnly && (
             <Button size="sm" onClick={() => handleOpenModal()}>
               <UserPlus className="w-4 h-4 mr-2" />
@@ -337,9 +337,9 @@ export function AttenderDetails({
               onChange={(e) =>
                 setFormData({ ...formData, isPrimary: e.target.checked })
               }
-              className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              className="rounded border-line text-primary-600 focus:ring-primary-500"
             />
-            <span className="text-sm text-gray-700">
+            <span className="text-sm text-ink-muted">
               Set as primary contact (Emergency)
             </span>
           </label>

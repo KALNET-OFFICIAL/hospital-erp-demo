@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Modal, ModalBody, ModalFooter } from "@/components/ui/modal";
 import { format } from "date-fns";
+import { getIdentityColor, getCurrentThemeMode } from "@/lib/theme";
 
 interface TreatmentNote {
   id: string;
@@ -41,14 +42,6 @@ interface TreatmentNote {
   plan: string;
   createdAt: string;
 }
-
-const noteTypeColors: Record<string, string> = {
-  progress: "bg-blue-100 text-blue-800",
-  nursing: "bg-teal-100 text-teal-800",
-  medication: "bg-purple-100 text-purple-800",
-  procedure: "bg-amber-100 text-amber-800",
-  rounds: "bg-green-100 text-green-800",
-};
 
 const mockNotes: TreatmentNote[] = [
   {
@@ -230,8 +223,8 @@ export function TreatmentNotesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Treatment Notes</h1>
-          <p className="text-gray-500 mt-1">IPD patient progress and treatment documentation</p>
+          <h1 className="text-2xl font-bold text-ink">Treatment Notes</h1>
+          <p className="text-ink-muted mt-1">IPD patient progress and treatment documentation</p>
         </div>
         <Button onClick={() => setShowAddModal(true)} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
@@ -241,63 +234,75 @@ export function TreatmentNotesPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+        <div className="bg-paper rounded-xl border border-line p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <FileText className="h-5 w-5 text-blue-600" />
+            <div className="p-2 bg-slate-100 rounded-lg">
+              <FileText className="h-5 w-5 text-ink-muted" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-              <p className="text-sm text-gray-500">Total Notes</p>
+              <p className="text-2xl font-bold text-ink">{stats.total}</p>
+              <p className="text-sm text-ink-muted">Total Notes</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+        <div className="bg-paper rounded-xl border border-line p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-teal-100 rounded-lg">
-              <Calendar className="h-5 w-5 text-teal-600" />
+            <div className="p-2 bg-primary-100 rounded-lg">
+              <Calendar className="h-5 w-5 text-primary-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.today}</p>
-              <p className="text-sm text-gray-500">Today's Notes</p>
+              <p className="text-2xl font-bold text-ink">{stats.today}</p>
+              <p className="text-sm text-ink-muted">Today's Notes</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+        <div className="bg-paper rounded-xl border border-line p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <ClipboardList className="h-5 w-5 text-green-600" />
+            <div
+              className="p-2 rounded-lg"
+              style={{ backgroundColor: `${getIdentityColor("progress", getCurrentThemeMode())}1f` }}
+            >
+              <ClipboardList
+                className="h-5 w-5"
+                style={{ color: getIdentityColor("progress", getCurrentThemeMode()) }}
+              />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.progress}</p>
-              <p className="text-sm text-gray-500">Progress Notes</p>
+              <p className="text-2xl font-bold text-ink">{stats.progress}</p>
+              <p className="text-sm text-ink-muted">Progress Notes</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+        <div className="bg-paper rounded-xl border border-line p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <Activity className="h-5 w-5 text-purple-600" />
+            <div
+              className="p-2 rounded-lg"
+              style={{ backgroundColor: `${getIdentityColor("nursing", getCurrentThemeMode())}1f` }}
+            >
+              <Activity
+                className="h-5 w-5"
+                style={{ color: getIdentityColor("nursing", getCurrentThemeMode()) }}
+              />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.nursing}</p>
-              <p className="text-sm text-gray-500">Nursing Notes</p>
+              <p className="text-2xl font-bold text-ink">{stats.nursing}</p>
+              <p className="text-sm text-ink-muted">Nursing Notes</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+      <div className="bg-paper rounded-xl border border-line p-4 shadow-sm">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <input
               type="text"
               placeholder="Search by patient, doctor, or notes..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-9 pr-4 py-2 border border-line bg-paper text-ink rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
           <div className="flex gap-2 flex-wrap">
@@ -321,16 +326,16 @@ export function TreatmentNotesPage() {
         {filteredNotes.map((note) => (
           <div
             key={note.id}
-            className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow"
+            className="bg-paper rounded-xl border border-line p-6 shadow-sm hover:shadow-md transition-shadow"
           >
             <div className="flex flex-col lg:flex-row lg:items-start gap-4">
               {/* Patient & Location Info */}
               <div className="flex-shrink-0 lg:w-48">
                 <div className="flex items-center gap-2 mb-2">
-                  <User className="h-4 w-4 text-gray-400" />
-                  <span className="font-medium text-gray-900">{note.patientName}</span>
+                  <User className="h-4 w-4 text-slate-400" />
+                  <span className="font-medium text-ink">{note.patientName}</span>
                 </div>
-                <div className="space-y-1 text-sm text-gray-500">
+                <div className="space-y-1 text-sm text-ink-muted">
                   <div className="flex items-center gap-2">
                     <BedDouble className="h-3 w-3" />
                     <span>
@@ -347,41 +352,48 @@ export function TreatmentNotesPage() {
               {/* Note Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 mb-3">
-                  <Badge className={noteTypeColors[note.noteType]}>{note.noteType}</Badge>
-                  <span className="text-sm text-gray-500">
+                  <Badge
+                    style={{
+                      backgroundColor: `${getIdentityColor(note.noteType, getCurrentThemeMode())}1f`,
+                      color: getIdentityColor(note.noteType, getCurrentThemeMode()),
+                    }}
+                  >
+                    {note.noteType}
+                  </Badge>
+                  <span className="text-sm text-ink-muted">
                     {format(new Date(note.date), "MMM d, yyyy")} at {note.time}
                   </span>
                 </div>
 
                 {note.vitals && (
-                  <div className="grid grid-cols-4 gap-3 mb-3 p-3 bg-gray-50 rounded-lg">
+                  <div className="grid grid-cols-4 gap-3 mb-3 p-3 bg-bg rounded-lg">
                     <div>
-                      <span className="text-xs text-gray-500">BP</span>
-                      <p className="font-medium text-gray-900">{note.vitals.bp}</p>
+                      <span className="text-xs text-ink-muted">BP</span>
+                      <p className="font-medium text-ink">{note.vitals.bp}</p>
                     </div>
                     <div>
-                      <span className="text-xs text-gray-500">Pulse</span>
-                      <p className="font-medium text-gray-900">{note.vitals.pulse}</p>
+                      <span className="text-xs text-ink-muted">Pulse</span>
+                      <p className="font-medium text-ink">{note.vitals.pulse}</p>
                     </div>
                     <div>
-                      <span className="text-xs text-gray-500">Temp</span>
-                      <p className="font-medium text-gray-900">{note.vitals.temp}</p>
+                      <span className="text-xs text-ink-muted">Temp</span>
+                      <p className="font-medium text-ink">{note.vitals.temp}</p>
                     </div>
                     <div>
-                      <span className="text-xs text-gray-500">SpO2</span>
-                      <p className="font-medium text-gray-900">{note.vitals.spo2}</p>
+                      <span className="text-xs text-ink-muted">SpO2</span>
+                      <p className="font-medium text-ink">{note.vitals.spo2}</p>
                     </div>
                   </div>
                 )}
 
-                <p className="text-gray-700 mb-2">{note.notes}</p>
+                <p className="text-ink mb-2">{note.notes}</p>
                 {note.assessment && (
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-ink-muted">
                     <span className="font-medium">Assessment:</span> {note.assessment}
                   </p>
                 )}
                 {note.plan && (
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-ink-muted">
                     <span className="font-medium">Plan:</span> {note.plan}
                   </p>
                 )}
@@ -414,11 +426,11 @@ export function TreatmentNotesPage() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Patient</label>
+                <label className="block text-sm font-medium text-ink-muted mb-1">Patient</label>
                 <select
                   value={newNote.patientId}
                   onChange={(e) => setNewNote({ ...newNote, patientId: e.target.value })}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 >
                   <option value="">Select patient...</option>
                   {currentPatients.map((p) => (
@@ -429,11 +441,11 @@ export function TreatmentNotesPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Doctor/Staff</label>
+                <label className="block text-sm font-medium text-ink-muted mb-1">Doctor/Staff</label>
                 <select
                   value={newNote.doctorId}
                   onChange={(e) => setNewNote({ ...newNote, doctorId: e.target.value })}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 >
                   <option value="">Select doctor...</option>
                   {doctors.map((d) => (
@@ -446,7 +458,7 @@ export function TreatmentNotesPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Note Type</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1">Note Type</label>
               <select
                 value={newNote.noteType}
                 onChange={(e) =>
@@ -455,7 +467,7 @@ export function TreatmentNotesPage() {
                     noteType: e.target.value as TreatmentNote["noteType"],
                   })
                 }
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="progress">Progress Note</option>
                 <option value="nursing">Nursing Note</option>
@@ -467,7 +479,7 @@ export function TreatmentNotesPage() {
 
             {/* Vitals */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Vitals (Optional)
               </label>
               <div className="grid grid-cols-4 gap-3">
@@ -481,7 +493,7 @@ export function TreatmentNotesPage() {
                       vitals: { ...newNote.vitals, bp: e.target.value },
                     })
                   }
-                  className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
                 <input
                   type="text"
@@ -493,7 +505,7 @@ export function TreatmentNotesPage() {
                       vitals: { ...newNote.vitals, pulse: e.target.value },
                     })
                   }
-                  className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
                 <input
                   type="text"
@@ -505,7 +517,7 @@ export function TreatmentNotesPage() {
                       vitals: { ...newNote.vitals, temp: e.target.value },
                     })
                   }
-                  className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
                 <input
                   type="text"
@@ -517,40 +529,40 @@ export function TreatmentNotesPage() {
                       vitals: { ...newNote.vitals, spo2: e.target.value },
                     })
                   }
-                  className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1">Notes</label>
               <textarea
                 value={newNote.notes}
                 onChange={(e) => setNewNote({ ...newNote, notes: e.target.value })}
                 rows={3}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder="Enter observations, findings..."
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Assessment</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1">Assessment</label>
               <textarea
                 value={newNote.assessment}
                 onChange={(e) => setNewNote({ ...newNote, assessment: e.target.value })}
                 rows={2}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder="Clinical assessment..."
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Plan</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1">Plan</label>
               <textarea
                 value={newNote.plan}
                 onChange={(e) => setNewNote({ ...newNote, plan: e.target.value })}
                 rows={2}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder="Treatment plan, next steps..."
               />
             </div>
@@ -583,73 +595,78 @@ export function TreatmentNotesPage() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-500">Patient</p>
-                  <p className="font-medium text-gray-900">{selectedNote.patientName}</p>
+                  <p className="text-sm text-ink-muted">Patient</p>
+                  <p className="font-medium text-ink">{selectedNote.patientName}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Location</p>
-                  <p className="font-medium text-gray-900">
+                  <p className="text-sm text-ink-muted">Location</p>
+                  <p className="font-medium text-ink">
                     {selectedNote.ward} - {selectedNote.bedNumber}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Doctor/Staff</p>
-                  <p className="font-medium text-gray-900">{selectedNote.doctorName}</p>
+                  <p className="text-sm text-ink-muted">Doctor/Staff</p>
+                  <p className="font-medium text-ink">{selectedNote.doctorName}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Date & Time</p>
-                  <p className="font-medium text-gray-900">
+                  <p className="text-sm text-ink-muted">Date & Time</p>
+                  <p className="font-medium text-ink">
                     {format(new Date(selectedNote.date), "MMM d, yyyy")} at {selectedNote.time}
                   </p>
                 </div>
                 <div className="col-span-2">
-                  <p className="text-sm text-gray-500">Note Type</p>
-                  <Badge className={noteTypeColors[selectedNote.noteType]}>
+                  <p className="text-sm text-ink-muted">Note Type</p>
+                  <Badge
+                    style={{
+                      backgroundColor: `${getIdentityColor(selectedNote.noteType, getCurrentThemeMode())}1f`,
+                      color: getIdentityColor(selectedNote.noteType, getCurrentThemeMode()),
+                    }}
+                  >
                     {selectedNote.noteType}
                   </Badge>
                 </div>
               </div>
 
               {selectedNote.vitals && (
-                <div className="border-t border-gray-200 pt-4">
-                  <p className="text-sm font-medium text-gray-700 mb-2">Vitals</p>
+                <div className="border-t border-line pt-4">
+                  <p className="text-sm font-medium text-ink-muted mb-2">Vitals</p>
                   <div className="grid grid-cols-4 gap-3">
-                    <div className="p-3 bg-gray-50 rounded-lg">
-                      <span className="text-xs text-gray-500">BP</span>
-                      <p className="font-medium text-gray-900">{selectedNote.vitals.bp}</p>
+                    <div className="p-3 bg-bg rounded-lg">
+                      <span className="text-xs text-ink-muted">BP</span>
+                      <p className="font-medium text-ink">{selectedNote.vitals.bp}</p>
                     </div>
-                    <div className="p-3 bg-gray-50 rounded-lg">
-                      <span className="text-xs text-gray-500">Pulse</span>
-                      <p className="font-medium text-gray-900">{selectedNote.vitals.pulse}</p>
+                    <div className="p-3 bg-bg rounded-lg">
+                      <span className="text-xs text-ink-muted">Pulse</span>
+                      <p className="font-medium text-ink">{selectedNote.vitals.pulse}</p>
                     </div>
-                    <div className="p-3 bg-gray-50 rounded-lg">
-                      <span className="text-xs text-gray-500">Temp</span>
-                      <p className="font-medium text-gray-900">{selectedNote.vitals.temp}</p>
+                    <div className="p-3 bg-bg rounded-lg">
+                      <span className="text-xs text-ink-muted">Temp</span>
+                      <p className="font-medium text-ink">{selectedNote.vitals.temp}</p>
                     </div>
-                    <div className="p-3 bg-gray-50 rounded-lg">
-                      <span className="text-xs text-gray-500">SpO2</span>
-                      <p className="font-medium text-gray-900">{selectedNote.vitals.spo2}</p>
+                    <div className="p-3 bg-bg rounded-lg">
+                      <span className="text-xs text-ink-muted">SpO2</span>
+                      <p className="font-medium text-ink">{selectedNote.vitals.spo2}</p>
                     </div>
                   </div>
                 </div>
               )}
 
-              <div className="border-t border-gray-200 pt-4">
-                <p className="text-sm font-medium text-gray-700 mb-1">Notes</p>
-                <p className="text-gray-900">{selectedNote.notes}</p>
+              <div className="border-t border-line pt-4">
+                <p className="text-sm font-medium text-ink-muted mb-1">Notes</p>
+                <p className="text-ink">{selectedNote.notes}</p>
               </div>
 
               {selectedNote.assessment && (
                 <div>
-                  <p className="text-sm font-medium text-gray-700 mb-1">Assessment</p>
-                  <p className="text-gray-900">{selectedNote.assessment}</p>
+                  <p className="text-sm font-medium text-ink-muted mb-1">Assessment</p>
+                  <p className="text-ink">{selectedNote.assessment}</p>
                 </div>
               )}
 
               {selectedNote.plan && (
                 <div>
-                  <p className="text-sm font-medium text-gray-700 mb-1">Plan</p>
-                  <p className="text-gray-900">{selectedNote.plan}</p>
+                  <p className="text-sm font-medium text-ink-muted mb-1">Plan</p>
+                  <p className="text-ink">{selectedNote.plan}</p>
                 </div>
               )}
             </div>

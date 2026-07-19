@@ -150,8 +150,8 @@ export function BillingPaymentsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Payments</h1>
-        <p className="text-slate-500">Record and track invoice payments</p>
+        <h1 className="text-2xl font-bold text-ink">Payments</h1>
+        <p className="text-ink-muted">Record and track invoice payments</p>
       </div>
 
       {/* Stats */}
@@ -162,8 +162,8 @@ export function BillingPaymentsPage() {
               <Clock className="h-5 w-5 text-warning-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Pending Invoices</p>
-              <p className="text-2xl font-bold text-slate-900">{filtered.length}</p>
+              <p className="text-sm text-ink-muted">Pending Invoices</p>
+              <p className="text-2xl font-bold text-ink">{filtered.length}</p>
             </div>
           </div>
         </Card>
@@ -173,7 +173,7 @@ export function BillingPaymentsPage() {
               <IndianRupee className="h-5 w-5 text-danger-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Outstanding Amount</p>
+              <p className="text-sm text-ink-muted">Outstanding Amount</p>
               <p className="text-2xl font-bold text-danger-600">{formatCurrency(dueTotal)}</p>
             </div>
           </div>
@@ -184,7 +184,7 @@ export function BillingPaymentsPage() {
               <CheckCircle className="h-5 w-5 text-success-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Today's Collections</p>
+              <p className="text-sm text-ink-muted">Today's Collections</p>
               <p className="text-2xl font-bold text-success-600">
                 {formatCurrency(
                   getPayments()
@@ -213,7 +213,7 @@ export function BillingPaymentsPage() {
             {filtered.length === 0 ? (
               <Card className="p-8 text-center">
                 <CheckCircle className="mx-auto h-12 w-12 text-success-300 mb-4" />
-                <p className="text-slate-500">No pending payments!</p>
+                <p className="text-ink-muted">No pending payments!</p>
               </Card>
             ) : (
               filtered.map((invoice) => {
@@ -222,11 +222,11 @@ export function BillingPaymentsPage() {
                   <Card key={invoice.id} className="p-4">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <div>
-                        <p className="font-semibold text-slate-900">{invoice.patientName}</p>
-                        <p className="text-sm text-slate-500">
+                        <p className="font-semibold text-ink">{invoice.patientName}</p>
+                        <p className="text-sm text-ink-muted">
                           {invoice.id} • {formatDate(invoice.createdAt)}
                         </p>
-                        <p className="text-sm text-slate-500">
+                        <p className="text-sm text-ink-muted">
                           Total: {formatCurrency(invoice.total)}
                         </p>
                       </div>
@@ -259,20 +259,20 @@ export function BillingPaymentsPage() {
         {/* Right: Recent Payments */}
         <div>
           <Card className="p-4">
-            <h3 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+            <h3 className="font-semibold text-ink mb-4 flex items-center gap-2">
               <Receipt size={18} />
               Recent Payments
             </h3>
             {recentPayments.length === 0 ? (
-              <p className="text-sm text-slate-500 text-center py-4">No payments recorded yet</p>
+              <p className="text-sm text-ink-muted text-center py-4">No payments recorded yet</p>
             ) : (
               <div className="space-y-3">
                 {recentPayments.map((payment) => (
-                  <div key={payment.id} className="border-b border-slate-100 pb-3 last:border-0">
+                  <div key={payment.id} className="border-b border-line pb-3 last:border-0">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium text-slate-900">{payment.patientName}</p>
-                        <p className="text-xs text-slate-500">{payment.invoiceId}</p>
+                        <p className="text-sm font-medium text-ink">{payment.patientName}</p>
+                        <p className="text-xs text-ink-muted">{payment.invoiceId}</p>
                       </div>
                       <div className="text-right">
                         <p className="text-sm font-semibold text-success-600">
@@ -283,7 +283,7 @@ export function BillingPaymentsPage() {
                         </Badge>
                       </div>
                     </div>
-                    <p className="text-xs text-slate-400 mt-1">{formatDate(payment.createdAt)}</p>
+                    <p className="text-xs text-ink-muted mt-1">{formatDate(payment.createdAt)}</p>
                   </div>
                 ))}
               </div>
@@ -302,27 +302,27 @@ export function BillingPaymentsPage() {
           <ModalBody>
             <div className="space-y-4">
               {/* Invoice Summary */}
-              <div className="bg-slate-50 rounded-lg p-4">
+              <div className="bg-bg rounded-lg p-4">
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div>
-                    <p className="text-slate-500">Invoice</p>
+                    <p className="text-ink-muted">Invoice</p>
                     <p className="font-medium">{selectedInvoice.id}</p>
                   </div>
                   <div>
-                    <p className="text-slate-500">Patient</p>
+                    <p className="text-ink-muted">Patient</p>
                     <p className="font-medium">{selectedInvoice.patientName}</p>
                   </div>
                   <div>
-                    <p className="text-slate-500">Total Amount</p>
+                    <p className="text-ink-muted">Total Amount</p>
                     <p className="font-medium">{formatCurrency(selectedInvoice.total)}</p>
                   </div>
                   <div>
-                    <p className="text-slate-500">Already Paid</p>
+                    <p className="text-ink-muted">Already Paid</p>
                     <p className="font-medium text-success-600">{formatCurrency(selectedInvoice.paidAmount)}</p>
                   </div>
                 </div>
-                <div className="mt-3 pt-3 border-t border-slate-200 text-center">
-                  <p className="text-sm text-slate-500">Balance Due</p>
+                <div className="mt-3 pt-3 border-t border-line text-center">
+                  <p className="text-sm text-ink-muted">Balance Due</p>
                   <p className="text-2xl font-bold text-danger-600">
                     {formatCurrency(selectedInvoice.total - selectedInvoice.paidAmount)}
                   </p>
@@ -344,9 +344,9 @@ export function BillingPaymentsPage() {
               />
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Notes (Optional)</label>
+                <label className="block text-sm font-medium text-ink-muted mb-1">Notes (Optional)</label>
                 <textarea
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full px-3 py-2 border border-line bg-paper text-ink rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   rows={2}
                   placeholder="Transaction reference, remarks..."
                   value={paymentNotes}
@@ -378,9 +378,9 @@ export function BillingPaymentsPage() {
             <div className="mx-auto w-16 h-16 bg-success-100 rounded-full flex items-center justify-center mb-4">
               <CheckCircle size={32} className="text-success-600" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">Payment Successful!</h3>
+            <h3 className="text-xl font-bold text-ink mb-2">Payment Successful!</h3>
             {lastPayment && (
-              <div className="space-y-2 text-sm text-slate-600">
+              <div className="space-y-2 text-sm text-ink-muted">
                 <p>Payment ID: {lastPayment.id}</p>
                 <p>Amount: {formatCurrency(lastPayment.amount)}</p>
                 <p className="capitalize">Method: {lastPayment.method}</p>

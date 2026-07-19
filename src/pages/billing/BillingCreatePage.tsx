@@ -203,8 +203,8 @@ export function BillingCreatePage() {
           <ArrowLeft size={20} />
         </Button>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Create Invoice</h1>
-          <p className="text-slate-500">Build bill using configured services and smart defaults</p>
+          <h1 className="text-2xl font-bold text-ink">Create Invoice</h1>
+          <p className="text-ink-muted">Build bill using configured services and smart defaults</p>
         </div>
       </div>
 
@@ -257,7 +257,7 @@ export function BillingCreatePage() {
               )}
 
               {selectedDoctor && (
-                <div className="rounded-lg bg-slate-50 p-3 text-sm text-slate-700">
+                <div className="rounded-lg bg-bg p-3 text-sm text-ink-muted">
                   Smart default consultation fee: {formatCurrency(selectedDoctor.consultationFee ?? 500)}
                 </div>
               )}
@@ -291,7 +291,7 @@ export function BillingCreatePage() {
             </CardHeader>
             <CardContent>
               {items.length === 0 ? (
-                <p className="py-8 text-center text-slate-500">No items added yet.</p>
+                <p className="py-8 text-center text-ink-muted">No items added yet.</p>
               ) : (
                 <div className="space-y-3">
                   {items.map((item) => {
@@ -299,11 +299,11 @@ export function BillingCreatePage() {
                     return (
                       <div
                         key={item.id}
-                        className="grid items-center gap-3 rounded-lg border border-slate-200 p-3 lg:grid-cols-[1fr_auto_auto_auto_auto]"
+                        className="grid items-center gap-3 rounded-lg border border-line p-3 lg:grid-cols-[1fr_auto_auto_auto_auto]"
                       >
                         <div>
-                          <p className="font-medium text-slate-900">{item.name}</p>
-                          <div className="mt-1 flex items-center gap-2 text-xs text-slate-500">
+                          <p className="font-medium text-ink">{item.name}</p>
+                          <div className="mt-1 flex items-center gap-2 text-xs text-ink-muted">
                             <Badge variant="default">{item.category}</Badge>
                             <span>{item.serviceCode}</span>
                             <span>Tax {item.taxRate}%</span>
@@ -357,15 +357,15 @@ export function BillingCreatePage() {
             <CardContent className="space-y-4">
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Subtotal</span>
+                  <span className="text-ink-muted">Subtotal</span>
                   <span className="font-medium">{formatCurrency(subtotal)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Tax</span>
+                  <span className="text-ink-muted">Tax</span>
                   <span className="font-medium">{formatCurrency(tax)}</span>
                 </div>
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-slate-500">Discount</span>
+                  <span className="text-ink-muted">Discount</span>
                   <Input
                     type="number"
                     className="w-28 text-right"
@@ -373,8 +373,8 @@ export function BillingCreatePage() {
                     onChange={(e) => setDiscount(Number(e.target.value) || 0)}
                   />
                 </div>
-                <div className="border-t border-slate-200 pt-2">
-                  <div className="flex justify-between text-base font-semibold text-slate-900">
+                <div className="border-t border-line pt-2">
+                  <div className="flex justify-between text-base font-semibold text-ink">
                     <span>Total</span>
                     <span>{formatCurrency(grandTotal)}</span>
                   </div>

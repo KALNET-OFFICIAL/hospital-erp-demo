@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Modal, ModalBody, ModalFooter } from "@/components/ui/modal";
 import { cn } from "@/lib/utils";
+import { getIdentityColor, getCurrentThemeMode } from "@/lib/theme";
 
 interface Ward {
   id: string;
@@ -133,19 +134,11 @@ export default function BedAndWardConfigPage() {
     maintenanceBeds: beds.filter((b) => b.status === "maintenance").length,
   };
 
-  const getWardTypeColor = (type: Ward["type"]) => {
-    switch (type) {
-      case "general":
-        return "bg-blue-100 text-blue-700";
-      case "private":
-        return "bg-purple-100 text-purple-700";
-      case "icu":
-        return "bg-red-100 text-red-700";
-      case "pediatric":
-        return "bg-green-100 text-green-700";
-      case "maternity":
-        return "bg-pink-100 text-pink-700";
-    }
+  const mode = getCurrentThemeMode();
+
+  const getWardTypeStyle = (type: Ward["type"]) => {
+    const accent = getIdentityColor(type, mode);
+    return { backgroundColor: `${accent}1f`, color: accent };
   };
 
   const getBedStatusColor = (status: Bed["status"]) => {
@@ -259,8 +252,8 @@ export default function BedAndWardConfigPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Bed & Ward Configuration</h1>
-          <p className="text-slate-500">Manage hospital wards and bed allocation</p>
+          <h1 className="text-2xl font-bold text-ink">Bed & Ward Configuration</h1>
+          <p className="text-ink-muted">Manage hospital wards and bed allocation</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" className="gap-2" onClick={() => openBedModal()}>
@@ -276,60 +269,60 @@ export default function BedAndWardConfigPage() {
 
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-              <Building2 className="h-5 w-5 text-blue-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+              <Building2 className="h-5 w-5 text-primary-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Total Wards</p>
-              <p className="text-2xl font-bold text-slate-900">{stats.totalWards}</p>
+              <p className="text-sm text-ink-muted">Total Wards</p>
+              <p className="text-2xl font-bold text-ink">{stats.totalWards}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
-              <BedDouble className="h-5 w-5 text-purple-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+              <BedDouble className="h-5 w-5 text-primary-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Total Beds</p>
-              <p className="text-2xl font-bold text-purple-600">{stats.totalBeds}</p>
+              <p className="text-sm text-ink-muted">Total Beds</p>
+              <p className="text-2xl font-bold text-ink">{stats.totalBeds}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
-              <CheckCircle className="h-5 w-5 text-green-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-success-100">
+              <CheckCircle className="h-5 w-5 text-success-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Available Beds</p>
-              <p className="text-2xl font-bold text-green-600">{stats.availableBeds}</p>
+              <p className="text-sm text-ink-muted">Available Beds</p>
+              <p className="text-2xl font-bold text-success-600">{stats.availableBeds}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100">
-              <Wrench className="h-5 w-5 text-amber-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-warning-100">
+              <Wrench className="h-5 w-5 text-warning-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Under Maintenance</p>
-              <p className="text-2xl font-bold text-amber-600">{stats.maintenanceBeds}</p>
+              <p className="text-sm text-ink-muted">Under Maintenance</p>
+              <p className="text-2xl font-bold text-warning-600">{stats.maintenanceBeds}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-gray-200">
+      <div className="flex gap-2 border-b border-line">
         <button
           className={cn(
             "px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors",
             activeTab === "wards"
-              ? "border-blue-600 text-blue-600"
-              : "border-transparent text-slate-500 hover:text-slate-700"
+              ? "border-primary-600 text-ink"
+              : "border-transparent text-ink-muted hover:text-ink"
           )}
           onClick={() => setActiveTab("wards")}
         >
@@ -339,8 +332,8 @@ export default function BedAndWardConfigPage() {
           className={cn(
             "px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors",
             activeTab === "beds"
-              ? "border-blue-600 text-blue-600"
-              : "border-transparent text-slate-500 hover:text-slate-700"
+              ? "border-primary-600 text-ink"
+              : "border-transparent text-ink-muted hover:text-ink"
           )}
           onClick={() => setActiveTab("beds")}
         >
@@ -350,39 +343,39 @@ export default function BedAndWardConfigPage() {
 
       {/* Wards Table */}
       {activeTab === "wards" && (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div className="bg-paper rounded-xl border border-line overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-50 border-b border-gray-200">
+              <thead className="bg-bg border-b border-line">
                 <tr>
-                  <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Ward</th>
-                  <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Type</th>
-                  <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Floor</th>
-                  <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Beds</th>
-                  <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Charge/Day</th>
-                  <th className="text-right text-sm font-medium text-slate-600 px-6 py-4">Actions</th>
+                  <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Ward</th>
+                  <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Type</th>
+                  <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Floor</th>
+                  <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Beds</th>
+                  <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Charge/Day</th>
+                  <th className="text-right text-sm font-medium text-ink-muted px-6 py-4">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-line">
                 {wards.map((ward) => (
-                  <tr key={ward.id} className="hover:bg-slate-50 transition-colors">
+                  <tr key={ward.id} className="hover:bg-hover transition-colors">
                     <td className="px-6 py-4">
                       <div>
-                        <p className="font-medium text-slate-900">{ward.name}</p>
-                        <p className="text-sm text-slate-500">{ward.description}</p>
+                        <p className="font-medium text-ink">{ward.name}</p>
+                        <p className="text-sm text-ink-muted">{ward.description}</p>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={cn("px-2 py-1 rounded text-xs font-medium uppercase", getWardTypeColor(ward.type))}>
+                      <span className="px-2 py-1 rounded text-xs font-medium uppercase" style={getWardTypeStyle(ward.type)}>
                         {ward.type}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-slate-700">{ward.floor}</td>
+                    <td className="px-6 py-4 text-ink-muted">{ward.floor}</td>
                     <td className="px-6 py-4">
-                      <span className="text-green-600 font-medium">{ward.availableBeds}</span>
+                      <span className="text-success-600 font-medium">{ward.availableBeds}</span>
                       <span className="text-slate-400"> / {ward.totalBeds}</span>
                     </td>
-                    <td className="px-6 py-4 text-slate-900 font-medium">₹{ward.chargePerDay.toLocaleString()}</td>
+                    <td className="px-6 py-4 text-ink font-medium">₹{ward.chargePerDay.toLocaleString()}</td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-2">
                         <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => openWardModal(ward)}>
@@ -391,7 +384,7 @@ export default function BedAndWardConfigPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-8 w-8 p-0 text-red-500 hover:text-red-700"
+                          className="h-8 w-8 p-0 text-danger-500 hover:text-danger-700"
                           onClick={() => setShowDeleteConfirm({ type: "ward", id: ward.id })}
                         >
                           <Trash2 className="h-4 w-4" />
@@ -408,30 +401,30 @@ export default function BedAndWardConfigPage() {
 
       {/* Beds Table */}
       {activeTab === "beds" && (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div className="bg-paper rounded-xl border border-line overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-50 border-b border-gray-200">
+              <thead className="bg-bg border-b border-line">
                 <tr>
-                  <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Bed Number</th>
-                  <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Ward</th>
-                  <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Status</th>
-                  <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Features</th>
-                  <th className="text-right text-sm font-medium text-slate-600 px-6 py-4">Actions</th>
+                  <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Bed Number</th>
+                  <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Ward</th>
+                  <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Status</th>
+                  <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Features</th>
+                  <th className="text-right text-sm font-medium text-ink-muted px-6 py-4">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-line">
                 {beds.map((bed) => {
                   const ward = wards.find((w) => w.id === bed.wardId);
                   return (
-                    <tr key={bed.id} className="hover:bg-slate-50 transition-colors">
+                    <tr key={bed.id} className="hover:bg-hover transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
                           <BedDouble className="h-4 w-4 text-slate-400" />
-                          <span className="font-medium text-slate-900">{bed.bedNumber}</span>
+                          <span className="font-medium text-ink">{bed.bedNumber}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-slate-700">{ward?.name || "Unknown"}</td>
+                      <td className="px-6 py-4 text-ink-muted">{ward?.name || "Unknown"}</td>
                       <td className="px-6 py-4">
                         <Badge variant={getBedStatusColor(bed.status) as any}>{bed.status}</Badge>
                       </td>
@@ -439,7 +432,7 @@ export default function BedAndWardConfigPage() {
                         <div className="flex flex-wrap gap-1">
                           {bed.features.length > 0 ? (
                             bed.features.map((f) => (
-                              <span key={f} className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
+                              <span key={f} className="px-2 py-0.5 bg-hover text-ink-muted text-xs rounded">
                                 {f}
                               </span>
                             ))
@@ -456,7 +449,7 @@ export default function BedAndWardConfigPage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-8 w-8 p-0 text-red-500 hover:text-red-700"
+                            className="h-8 w-8 p-0 text-danger-500 hover:text-danger-700"
                             onClick={() => setShowDeleteConfirm({ type: "bed", id: bed.id })}
                           >
                             <Trash2 className="h-4 w-4" />
@@ -477,14 +470,14 @@ export default function BedAndWardConfigPage() {
         <ModalBody>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Ward Name *</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">Ward Name *</label>
               <Input value={wardForm.name || ""} onChange={(e) => setWardForm({ ...wardForm, name: e.target.value })} placeholder="e.g., General Ward A" />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Type</label>
+                <label className="block text-sm font-medium text-ink-muted mb-1.5">Type</label>
                 <select
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
                   value={wardForm.type || "general"}
                   onChange={(e) => setWardForm({ ...wardForm, type: e.target.value as Ward["type"] })}
                 >
@@ -494,24 +487,24 @@ export default function BedAndWardConfigPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Floor</label>
+                <label className="block text-sm font-medium text-ink-muted mb-1.5">Floor</label>
                 <Input value={wardForm.floor || ""} onChange={(e) => setWardForm({ ...wardForm, floor: e.target.value })} placeholder="e.g., Ground Floor" />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Total Beds</label>
+                <label className="block text-sm font-medium text-ink-muted mb-1.5">Total Beds</label>
                 <Input type="number" value={wardForm.totalBeds || ""} onChange={(e) => setWardForm({ ...wardForm, totalBeds: Number(e.target.value) })} placeholder="0" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Charge/Day (₹)</label>
+                <label className="block text-sm font-medium text-ink-muted mb-1.5">Charge/Day (₹)</label>
                 <Input type="number" value={wardForm.chargePerDay || ""} onChange={(e) => setWardForm({ ...wardForm, chargePerDay: Number(e.target.value) })} placeholder="0" />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Description</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">Description</label>
               <textarea
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
                 rows={2}
                 value={wardForm.description || ""}
                 onChange={(e) => setWardForm({ ...wardForm, description: e.target.value })}
@@ -531,9 +524,9 @@ export default function BedAndWardConfigPage() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Ward *</label>
+                <label className="block text-sm font-medium text-ink-muted mb-1.5">Ward *</label>
                 <select
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
                   value={bedForm.wardId || ""}
                   onChange={(e) => setBedForm({ ...bedForm, wardId: e.target.value })}
                 >
@@ -544,14 +537,14 @@ export default function BedAndWardConfigPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Bed Number *</label>
+                <label className="block text-sm font-medium text-ink-muted mb-1.5">Bed Number *</label>
                 <Input value={bedForm.bedNumber || ""} onChange={(e) => setBedForm({ ...bedForm, bedNumber: e.target.value })} placeholder="e.g., GA-01" />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Status</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">Status</label>
               <select
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
                 value={bedForm.status || "available"}
                 onChange={(e) => setBedForm({ ...bedForm, status: e.target.value as Bed["status"] })}
               >
@@ -562,16 +555,16 @@ export default function BedAndWardConfigPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Features</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">Features</label>
               <div className="flex gap-2 mb-2">
                 <Input value={newFeature} onChange={(e) => setNewFeature(e.target.value)} placeholder="Add feature..." onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addFeature())} />
                 <Button type="button" onClick={addFeature}>Add</Button>
               </div>
               <div className="flex flex-wrap gap-2">
                 {(bedForm.features || []).map((f) => (
-                  <span key={f} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 text-sm rounded">
+                  <span key={f} className="inline-flex items-center gap-1 px-2 py-1 bg-hover text-ink text-sm rounded">
                     {f}
-                    <button onClick={() => removeFeature(f)} className="hover:text-blue-900">&times;</button>
+                    <button onClick={() => removeFeature(f)} className="hover:text-danger-600">&times;</button>
                   </span>
                 ))}
               </div>
@@ -587,7 +580,7 @@ export default function BedAndWardConfigPage() {
       {/* Delete Confirmation */}
       <Modal isOpen={!!showDeleteConfirm} onClose={() => setShowDeleteConfirm(null)} title="Confirm Delete">
         <ModalBody>
-          <p className="text-slate-600">
+          <p className="text-ink-muted">
             {showDeleteConfirm?.type === "ward"
               ? "Are you sure you want to delete this ward? All beds in this ward will also be deleted."
               : "Are you sure you want to delete this bed?"}

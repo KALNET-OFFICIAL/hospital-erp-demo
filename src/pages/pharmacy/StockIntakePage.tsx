@@ -15,9 +15,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import type { BadgeProps } from "@/components/ui/badge";
 import { Modal, ModalBody, ModalFooter } from "@/components/ui/modal";
 import { format } from "date-fns";
 import { medicines as mockMedicines, suppliers as mockSuppliers } from "@/lib/mock-data";
+import { getIdentityColor, getCurrentThemeMode } from "@/lib/theme";
 import type { Supplier } from "@/types";
 
 interface GRNItem {
@@ -119,10 +121,10 @@ function getMedicinesFromStorage() {
   return mockMedicines.map((med) => ({ id: med.id, name: med.name }));
 }
 
-const statusColors: Record<string, string> = {
-  draft: "bg-gray-100 text-gray-800",
-  received: "bg-blue-100 text-blue-800",
-  verified: "bg-green-100 text-green-800",
+const statusVariant: Record<GRN["status"], BadgeProps["variant"]> = {
+  draft: "default",
+  received: "warning",
+  verified: "success",
 };
 
 export function StockIntakePage() {
@@ -157,6 +159,10 @@ export function StockIntakePage() {
     mrp: 0,
   });
   const [formError, setFormError] = useState("");
+
+  const themeMode = getCurrentThemeMode();
+  const totalGrnAccent = getIdentityColor("Total GRNs", themeMode);
+  const totalValueAccent = getIdentityColor("Total Value", themeMode);
 
   const stats = {
     total: grns.length,
@@ -277,8 +283,8 @@ export function StockIntakePage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Stock Intake (GRN)</h1>
-          <p className="text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-ink">Stock Intake (GRN)</h1>
+          <p className="text-ink-muted mt-1">
             Use this page only after supplier dispatch/arrival. Raise orders from Purchase Orders.
           </p>
         </div>
@@ -295,129 +301,135 @@ export function StockIntakePage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+        <div className="bg-paper rounded-xl border border-line p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <FileText className="h-5 w-5 text-blue-600" />
+            <div
+              className="p-2 rounded-lg"
+              style={{ backgroundColor: `${totalGrnAccent}1f` }}
+            >
+              <FileText className="h-5 w-5" style={{ color: totalGrnAccent }} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-              <p className="text-sm text-gray-500">Total GRNs</p>
+              <p className="text-2xl font-bold text-ink">{stats.total}</p>
+              <p className="text-sm text-ink-muted">Total GRNs</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+        <div className="bg-paper rounded-xl border border-line p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-gray-100 rounded-lg">
-              <FileText className="h-5 w-5 text-gray-600" />
+            <div className="p-2 bg-slate-100 rounded-lg">
+              <FileText className="h-5 w-5 text-ink-muted" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.draft}</p>
-              <p className="text-sm text-gray-500">Draft</p>
+              <p className="text-2xl font-bold text-ink">{stats.draft}</p>
+              <p className="text-sm text-ink-muted">Draft</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+        <div className="bg-paper rounded-xl border border-line p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <Package className="h-5 w-5 text-blue-600" />
+            <div className="p-2 bg-warning-50 rounded-lg">
+              <Package className="h-5 w-5 text-warning-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.received}</p>
-              <p className="text-sm text-gray-500">Received</p>
+              <p className="text-2xl font-bold text-ink">{stats.received}</p>
+              <p className="text-sm text-ink-muted">Received</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+        <div className="bg-paper rounded-xl border border-line p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <Check className="h-5 w-5 text-green-600" />
+            <div className="p-2 bg-success-50 rounded-lg">
+              <Check className="h-5 w-5 text-success-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.verified}</p>
-              <p className="text-sm text-gray-500">Verified</p>
+              <p className="text-2xl font-bold text-ink">{stats.verified}</p>
+              <p className="text-sm text-ink-muted">Verified</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+        <div className="bg-paper rounded-xl border border-line p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-teal-100 rounded-lg">
-              <IndianRupee className="h-5 w-5 text-teal-600" />
+            <div
+              className="p-2 rounded-lg"
+              style={{ backgroundColor: `${totalValueAccent}1f` }}
+            >
+              <IndianRupee className="h-5 w-5" style={{ color: totalValueAccent }} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-2xl font-bold text-ink">
                 ₹{stats.totalValue.toLocaleString()}
               </p>
-              <p className="text-sm text-gray-500">Total Value</p>
+              <p className="text-sm text-ink-muted">Total Value</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Search */}
-      <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+      <div className="bg-paper rounded-xl border border-line p-4 shadow-sm">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <input
             type="text"
             placeholder="Search by GRN number, supplier, or invoice..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-9 pr-4 py-2 border border-line bg-paper text-ink rounded-lg text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
           />
         </div>
       </div>
 
       {/* GRN Table */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-paper rounded-xl border border-line shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-slate-50 border-b border-line">
               <tr>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">
                   GRN Number
                 </th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">
                   Supplier
                 </th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">
                   Invoice
                 </th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">
                   Received Date
                 </th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">
                   Items
                 </th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">
                   Amount
                 </th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">
                   Status
                 </th>
-                <th className="text-right px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-right px-6 py-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-line">
               {filteredGRNs.map((grn) => (
-                <tr key={grn.id} className="hover:bg-gray-50">
+                <tr key={grn.id} className="hover:bg-hover">
                   <td className="px-6 py-4">
-                    <p className="font-medium text-gray-900">{grn.grnNumber}</p>
+                    <p className="font-medium text-ink">{grn.grnNumber}</p>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
-                      <Building2 className="h-4 w-4 text-gray-400" />
-                      <span className="text-gray-900">{grn.supplierName}</span>
+                      <Building2 className="h-4 w-4 text-slate-400" />
+                      <span className="text-ink">{grn.supplierName}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
-                      <Hash className="h-4 w-4 text-gray-400" />
+                      <Hash className="h-4 w-4 text-slate-400" />
                       <div>
-                        <p className="text-gray-900">{grn.invoiceNumber}</p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-ink">{grn.invoiceNumber}</p>
+                        <p className="text-xs text-ink-muted">
                           {format(new Date(grn.invoiceDate), "MMM d, yyyy")}
                         </p>
                       </div>
@@ -425,22 +437,22 @@ export function StockIntakePage() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-gray-400" />
-                      <span className="text-gray-900">
+                      <Calendar className="h-4 w-4 text-slate-400" />
+                      <span className="text-ink">
                         {format(new Date(grn.receivedDate), "MMM d, yyyy")}
                       </span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-gray-900">{grn.items.length} items</span>
+                    <span className="text-ink">{grn.items.length} items</span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="font-medium text-gray-900">
+                    <span className="font-medium text-ink">
                       ₹{grn.totalAmount.toLocaleString()}
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <Badge className={statusColors[grn.status]}>{grn.status}</Badge>
+                    <Badge variant={statusVariant[grn.status]} className="capitalize">{grn.status}</Badge>
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2">
@@ -467,7 +479,7 @@ export function StockIntakePage() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="text-green-600"
+                          className="text-success-600"
                           onClick={() => handleVerify(grn)}
                         >
                           <Check className="h-4 w-4 mr-1" />
@@ -503,11 +515,11 @@ export function StockIntakePage() {
             {/* Supplier & Invoice Info */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Supplier</label>
+                <label className="block text-sm font-medium text-ink-muted mb-1">Supplier</label>
                 <select
                   value={newGRN.supplierId}
                   onChange={(e) => setNewGRN({ ...newGRN, supplierId: e.target.value })}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
                 >
                   <option value="">Select supplier...</option>
                   {suppliers.map((sup) => (
@@ -518,32 +530,32 @@ export function StockIntakePage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-ink-muted mb-1">
                   Invoice Number
                 </label>
                 <input
                   type="text"
                   value={newGRN.invoiceNumber}
                   onChange={(e) => setNewGRN({ ...newGRN, invoiceNumber: e.target.value })}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
                   placeholder="Enter invoice number"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Invoice Date</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1">Invoice Date</label>
               <input
                 type="date"
                 value={newGRN.invoiceDate}
                 onChange={(e) => setNewGRN({ ...newGRN, invoiceDate: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
               />
             </div>
 
             {/* Add Items Section */}
-            <div className="border-t border-gray-200 pt-4">
-              <h4 className="font-medium text-gray-900 mb-3">Add Items</h4>
+            <div className="border-t border-line pt-4">
+              <h4 className="font-medium text-ink mb-3">Add Items</h4>
               <p className="mb-3 text-xs text-slate-500">
                 Add each received batch item, then click <span className="font-medium">Add Item</span>.
               </p>
@@ -552,7 +564,7 @@ export function StockIntakePage() {
                   <select
                     value={newItem.medicineId}
                     onChange={(e) => setNewItem({ ...newItem, medicineId: e.target.value })}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
                   >
                     <option value="">Select medicine...</option>
                     {medicines.map((med) => (
@@ -568,7 +580,7 @@ export function StockIntakePage() {
                     placeholder="Batch No."
                     value={newItem.batchNumber}
                     onChange={(e) => setNewItem({ ...newItem, batchNumber: e.target.value })}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
                   />
                 </div>
                 <div>
@@ -579,7 +591,7 @@ export function StockIntakePage() {
                     onChange={(e) =>
                       setNewItem({ ...newItem, quantity: parseInt(e.target.value) || 0 })
                     }
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
                   />
                 </div>
               </div>
@@ -592,7 +604,7 @@ export function StockIntakePage() {
                     onChange={(e) =>
                       setNewItem({ ...newItem, unitPrice: parseFloat(e.target.value) || 0 })
                     }
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
                   />
                 </div>
                 <div>
@@ -603,7 +615,7 @@ export function StockIntakePage() {
                     onChange={(e) =>
                       setNewItem({ ...newItem, mrp: parseFloat(e.target.value) || 0 })
                     }
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
                   />
                 </div>
                 <div>
@@ -612,7 +624,7 @@ export function StockIntakePage() {
                     placeholder="Expiry Date"
                     value={newItem.expiryDate}
                     onChange={(e) => setNewItem({ ...newItem, expiryDate: e.target.value })}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
                   />
                 </div>
               </div>
@@ -630,28 +642,28 @@ export function StockIntakePage() {
 
             {/* Items List */}
             {newGRN.items.length > 0 && (
-              <div className="border-t border-gray-200 pt-4">
-                <h4 className="font-medium text-gray-900 mb-3">Items ({newGRN.items.length})</h4>
+              <div className="border-t border-line pt-4">
+                <h4 className="font-medium text-ink mb-3">Items ({newGRN.items.length})</h4>
                 <div className="space-y-2 max-h-40 overflow-y-auto">
                   {newGRN.items.map((item, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      className="flex items-center justify-between p-3 bg-slate-50 rounded-lg"
                     >
                       <div>
-                        <p className="font-medium text-gray-900">{item.medicineName}</p>
-                        <p className="text-xs text-gray-500">
+                        <p className="font-medium text-ink">{item.medicineName}</p>
+                        <p className="text-xs text-ink-muted">
                           Batch: {item.batchNumber} | Qty: {item.quantity} | ₹{item.unitPrice}/unit
                         </p>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="font-medium text-gray-900">
+                        <span className="font-medium text-ink">
                           ₹{(item.quantity * item.unitPrice).toLocaleString()}
                         </span>
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-red-500"
+                          className="text-danger-500"
                           onClick={() => removeItemFromGRN(index)}
                         >
                           <Trash2 className="h-4 w-4" />
@@ -660,9 +672,9 @@ export function StockIntakePage() {
                     </div>
                   ))}
                 </div>
-                <div className="mt-3 pt-3 border-t border-gray-200 flex justify-between">
-                  <span className="font-medium text-gray-900">Total</span>
-                  <span className="font-bold text-gray-900">
+                <div className="mt-3 pt-3 border-t border-line flex justify-between">
+                  <span className="font-medium text-ink">Total</span>
+                  <span className="font-bold text-ink">
                     ₹
                     {newGRN.items
                       .reduce((sum, item) => sum + item.quantity * item.unitPrice, 0)
@@ -674,17 +686,17 @@ export function StockIntakePage() {
 
             {/* Notes */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1">Notes</label>
               <textarea
                 value={newGRN.notes}
                 onChange={(e) => setNewGRN({ ...newGRN, notes: e.target.value })}
                 rows={2}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
                 placeholder="Optional notes..."
               />
             </div>
             {formError && (
-              <p className="text-sm text-red-600">{formError}</p>
+              <p className="text-sm text-danger-600">{formError}</p>
             )}
           </div>
         </ModalBody>
@@ -729,57 +741,57 @@ export function StockIntakePage() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-500">Supplier</p>
-                  <p className="font-medium text-gray-900">{selectedGRN.supplierName}</p>
+                  <p className="text-sm text-ink-muted">Supplier</p>
+                  <p className="font-medium text-ink">{selectedGRN.supplierName}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Invoice</p>
-                  <p className="font-medium text-gray-900">{selectedGRN.invoiceNumber}</p>
+                  <p className="text-sm text-ink-muted">Invoice</p>
+                  <p className="font-medium text-ink">{selectedGRN.invoiceNumber}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Invoice Date</p>
-                  <p className="font-medium text-gray-900">
+                  <p className="text-sm text-ink-muted">Invoice Date</p>
+                  <p className="font-medium text-ink">
                     {format(new Date(selectedGRN.invoiceDate), "MMM d, yyyy")}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Received Date</p>
-                  <p className="font-medium text-gray-900">
+                  <p className="text-sm text-ink-muted">Received Date</p>
+                  <p className="font-medium text-ink">
                     {format(new Date(selectedGRN.receivedDate), "MMM d, yyyy")}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Status</p>
-                  <Badge className={statusColors[selectedGRN.status]}>{selectedGRN.status}</Badge>
+                  <p className="text-sm text-ink-muted">Status</p>
+                  <Badge variant={statusVariant[selectedGRN.status]} className="capitalize">{selectedGRN.status}</Badge>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Total Amount</p>
-                  <p className="font-bold text-gray-900">
+                  <p className="text-sm text-ink-muted">Total Amount</p>
+                  <p className="font-bold text-ink">
                     ₹{selectedGRN.totalAmount.toLocaleString()}
                   </p>
                 </div>
               </div>
 
-              <div className="border-t border-gray-200 pt-4">
-                <h4 className="font-medium text-gray-900 mb-3">Items</h4>
+              <div className="border-t border-line pt-4">
+                <h4 className="font-medium text-ink mb-3">Items</h4>
                 <div className="space-y-2">
                   {selectedGRN.items.map((item, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      className="flex items-center justify-between p-3 bg-slate-50 rounded-lg"
                     >
                       <div>
-                        <p className="font-medium text-gray-900">{item.medicineName}</p>
-                        <p className="text-xs text-gray-500">
+                        <p className="font-medium text-ink">{item.medicineName}</p>
+                        <p className="text-xs text-ink-muted">
                           Batch: {item.batchNumber} | Expiry:{" "}
                           {format(new Date(item.expiryDate), "MMM yyyy")}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium text-gray-900">
+                        <p className="font-medium text-ink">
                           {item.quantity} × ₹{item.unitPrice}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-ink-muted">
                           = ₹{(item.quantity * item.unitPrice).toLocaleString()}
                         </p>
                       </div>
@@ -789,9 +801,9 @@ export function StockIntakePage() {
               </div>
 
               {selectedGRN.notes && (
-                <div className="border-t border-gray-200 pt-4">
-                  <p className="text-sm text-gray-500">Notes</p>
-                  <p className="text-gray-900">{selectedGRN.notes}</p>
+                <div className="border-t border-line pt-4">
+                  <p className="text-sm text-ink-muted">Notes</p>
+                  <p className="text-ink">{selectedGRN.notes}</p>
                 </div>
               )}
             </div>

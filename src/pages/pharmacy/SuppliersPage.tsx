@@ -25,6 +25,7 @@ import { Modal, ModalBody, ModalFooter } from "@/components/ui/modal";
 import { Select } from "@/components/ui/select";
 import { suppliers as mockSuppliers, purchaseOrders } from "@/lib/mock-data";
 import { formatCurrency } from "@/lib/utils";
+import { getIdentityColor, getCurrentThemeMode } from "@/lib/theme";
 import type { Supplier } from "@/types";
 
 // Get suppliers from localStorage or mock data
@@ -173,15 +174,19 @@ export default function SuppliersPage() {
   const pendingPOs = purchaseOrders.filter((po) => po.status === "ordered").length;
   const totalPurchaseValue = purchaseOrders.reduce((sum, po) => sum + po.total, 0);
 
+  const themeMode = getCurrentThemeMode();
+  const totalSuppliersAccent = getIdentityColor("Total Suppliers", themeMode);
+  const totalValueAccent = getIdentityColor("Total Value", themeMode);
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-ink">
             {isCreateRoute ? "Add New Supplier" : "Suppliers"}
           </h1>
-          <p className="text-gray-500 mt-1">
+          <p className="text-ink-muted mt-1">
             {isCreateRoute
               ? "Create a supplier profile for medicine procurement and purchase orders"
               : "Manage medicine suppliers and vendors"}
@@ -204,19 +209,22 @@ export default function SuppliersPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Total Suppliers</p>
-              <p className="text-2xl font-bold text-gray-900">{totalSuppliers}</p>
+              <p className="text-sm text-ink-muted">Total Suppliers</p>
+              <p className="text-2xl font-bold text-ink">{totalSuppliers}</p>
             </div>
-            <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
-              <Building className="w-5 h-5 text-primary-600" />
+            <div
+              className="w-10 h-10 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: `${totalSuppliersAccent}1f` }}
+            >
+              <Building className="w-5 h-5" style={{ color: totalSuppliersAccent }} />
             </div>
           </div>
         </Card>
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Total POs</p>
-              <p className="text-2xl font-bold text-gray-900">{totalPOs}</p>
+              <p className="text-sm text-ink-muted">Total POs</p>
+              <p className="text-2xl font-bold text-ink">{totalPOs}</p>
             </div>
             <div className="w-10 h-10 rounded-full bg-success-100 flex items-center justify-center">
               <ShoppingCart className="w-5 h-5 text-success-600" />
@@ -226,7 +234,7 @@ export default function SuppliersPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Pending POs</p>
+              <p className="text-sm text-ink-muted">Pending POs</p>
               <p className="text-2xl font-bold text-warning-600">{pendingPOs}</p>
             </div>
             <div className="w-10 h-10 rounded-full bg-warning-100 flex items-center justify-center">
@@ -237,11 +245,14 @@ export default function SuppliersPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Total Value</p>
-              <p className="text-2xl font-bold text-gray-900">{formatCurrency(totalPurchaseValue)}</p>
+              <p className="text-sm text-ink-muted">Total Value</p>
+              <p className="text-2xl font-bold text-ink">{formatCurrency(totalPurchaseValue)}</p>
             </div>
-            <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
-              <FileText className="w-5 h-5 text-primary-600" />
+            <div
+              className="w-10 h-10 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: `${totalValueAccent}1f` }}
+            >
+              <FileText className="w-5 h-5" style={{ color: totalValueAccent }} />
             </div>
           </div>
         </Card>
@@ -250,7 +261,7 @@ export default function SuppliersPage() {
       {/* Search */}
       <Card className="p-4">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <Input
             placeholder="Search suppliers by name, contact, or phone..."
             value={searchQuery}
@@ -278,8 +289,8 @@ export default function SuppliersPage() {
 
       {filteredSuppliers.length === 0 && (
         <div className="text-center py-12">
-          <Building className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500">No suppliers found</p>
+          <Building className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+          <p className="text-ink-muted">No suppliers found</p>
         </div>
       )}
 
@@ -353,7 +364,7 @@ export default function SuppliersPage() {
             </Select>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t">
+          <div className="flex justify-end gap-3 pt-4 border-t border-line">
             <Button
               variant="outline"
               onClick={() => {
@@ -381,44 +392,44 @@ export default function SuppliersPage() {
         {selectedSupplier && (
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <div className="flex items-center gap-2 text-gray-600">
+              <div className="flex items-center gap-2 text-ink-muted">
                 <Phone className="w-4 h-4" />
                 <span>{selectedSupplier.phone}</span>
               </div>
-              <div className="flex items-center gap-2 text-gray-600">
+              <div className="flex items-center gap-2 text-ink-muted">
                 <Mail className="w-4 h-4" />
                 <span>{selectedSupplier.email}</span>
               </div>
             </div>
-            <div className="flex items-start gap-2 text-gray-600">
+            <div className="flex items-start gap-2 text-ink-muted">
               <MapPin className="w-4 h-4 mt-0.5" />
               <span>{selectedSupplier.address}</span>
             </div>
-            <div className="pt-4 border-t">
+            <div className="pt-4 border-t border-line">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-500">GST Number</p>
+                  <p className="text-sm text-ink-muted">GST Number</p>
                   <p className="font-medium">{selectedSupplier.gstNumber || "N/A"}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Payment Terms</p>
+                  <p className="text-sm text-ink-muted">Payment Terms</p>
                   <p className="font-medium">{selectedSupplier.paymentTerms}</p>
                 </div>
               </div>
             </div>
 
             {/* Recent Orders */}
-            <div className="pt-4 border-t">
+            <div className="pt-4 border-t border-line">
               <h3 className="font-medium mb-3">Recent Purchase Orders</h3>
               <div className="space-y-2">
                 {purchaseOrders
                   .filter((po) => po.supplierId === selectedSupplier.id)
                   .slice(0, 3)
                   .map((po) => (
-                    <div key={po.id} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                    <div key={po.id} className="flex items-center justify-between p-2 bg-slate-50 rounded-lg">
                       <div>
                         <p className="font-medium">{po.id}</p>
-                        <p className="text-xs text-gray-500">{po.orderDate}</p>
+                        <p className="text-xs text-ink-muted">{po.orderDate}</p>
                       </div>
                       <div className="text-right">
                         <p className="font-medium">{formatCurrency(po.total)}</p>
@@ -439,7 +450,7 @@ export default function SuppliersPage() {
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 pt-4 border-t">
+            <div className="flex justify-end gap-3 pt-4 border-t border-line">
               <Button variant="outline" onClick={() => setSelectedSupplier(null)}>
                 Close
               </Button>
@@ -468,17 +479,21 @@ function SupplierCard({
   onView: () => void;
 }) {
   const [showMenu, setShowMenu] = useState(false);
+  const supplierAccent = getIdentityColor(supplier.name, getCurrentThemeMode());
 
   return (
     <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer" onClick={onView}>
       <div className="flex items-start justify-between" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-start gap-3">
-          <div className="w-12 h-12 rounded-lg bg-primary-100 flex items-center justify-center">
-            <Building className="w-6 h-6 text-primary-600" />
+          <div
+            className="w-12 h-12 rounded-lg flex items-center justify-center"
+            style={{ backgroundColor: `${supplierAccent}1f` }}
+          >
+            <Building className="w-6 h-6" style={{ color: supplierAccent }} />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">{supplier.name}</h3>
-            <p className="text-sm text-gray-500">{supplier.contactPerson}</p>
+            <h3 className="font-semibold text-ink">{supplier.name}</h3>
+            <p className="text-sm text-ink-muted">{supplier.contactPerson}</p>
           </div>
         </div>
         <div className="relative">
@@ -487,19 +502,19 @@ function SupplierCard({
               e.stopPropagation();
               setShowMenu(!showMenu);
             }}
-            className="p-1 hover:bg-gray-100 rounded"
+            className="p-1 hover:bg-hover rounded"
           >
-            <MoreVertical className="w-4 h-4 text-gray-400" />
+            <MoreVertical className="w-4 h-4 text-slate-400" />
           </button>
           {showMenu && (
-            <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border py-1 z-10 min-w-32">
+            <div className="absolute right-0 top-full mt-1 bg-paper rounded-lg shadow-lg border border-line py-1 z-10 min-w-32">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onEdit(supplier);
                   setShowMenu(false);
                 }}
-                className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
+                className="w-full px-3 py-2 text-left text-sm hover:bg-hover flex items-center gap-2"
               >
                 <Edit2 className="w-4 h-4" /> Edit
               </button>
@@ -508,7 +523,7 @@ function SupplierCard({
                   e.stopPropagation();
                   setShowMenu(false);
                 }}
-                className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 text-warning-600"
+                className="w-full px-3 py-2 text-left text-sm hover:bg-hover flex items-center gap-2 text-warning-600"
               >
                 <Archive className="w-4 h-4" /> Archive
               </button>
@@ -519,29 +534,29 @@ function SupplierCard({
 
       {/* Contact Info */}
       <div className="mt-3 space-y-1">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
+        <div className="flex items-center gap-2 text-sm text-ink-muted">
           <Phone className="w-3 h-3" />
           <span>{supplier.phone}</span>
         </div>
-        <div className="flex items-center gap-2 text-sm text-gray-600">
+        <div className="flex items-center gap-2 text-sm text-ink-muted">
           <Mail className="w-3 h-3" />
           <span className="truncate">{supplier.email}</span>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="mt-4 pt-4 border-t grid grid-cols-3 gap-2 text-center">
+      <div className="mt-4 pt-4 border-t border-line grid grid-cols-3 gap-2 text-center">
         <div>
-          <p className="text-lg font-semibold text-gray-900">{stats.totalOrders}</p>
-          <p className="text-xs text-gray-500">Orders</p>
+          <p className="text-lg font-semibold text-ink">{stats.totalOrders}</p>
+          <p className="text-xs text-ink-muted">Orders</p>
         </div>
         <div>
           <p className="text-lg font-semibold text-warning-600">{stats.pendingOrders}</p>
-          <p className="text-xs text-gray-500">Pending</p>
+          <p className="text-xs text-ink-muted">Pending</p>
         </div>
         <div>
           <p className="text-sm font-semibold text-primary-600">{formatCurrency(stats.totalValue)}</p>
-          <p className="text-xs text-gray-500">Value</p>
+          <p className="text-xs text-ink-muted">Value</p>
         </div>
       </div>
 

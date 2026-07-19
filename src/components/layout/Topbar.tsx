@@ -20,6 +20,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useAuthStore, useNotificationStore, useSidebarStore, useThemeStore } from "@/stores";
 import { formatDate } from "@/lib/utils";
+import { getSidebarWidth } from "@/lib/layout";
 import { patients, staff, invoices, medicines } from "@/lib/mock-data";
 
 interface SearchResult {
@@ -146,19 +147,14 @@ export function Topbar() {
     setShowSearch(false);
   };
 
-  const isDark = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-
   return (
     <header
-      className={cn(
-        "fixed top-0 right-0 z-30 flex h-16 items-center justify-between px-6 transition-all duration-300 border-b",
-        isDark ? "bg-slate-900 border-slate-700" : "bg-white border-gray-200",
-        isCollapsed ? "left-[80px]" : "left-[256px]"
-      )}
+      className="fixed top-0 right-0 z-30 flex h-16 items-center justify-between px-6 transition-all duration-300 border-b border-line bg-bg"
+      style={{ left: getSidebarWidth(isCollapsed) }}
     >
       {/* Search */}
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon-sm" onClick={toggle} className={isDark ? "text-slate-300" : "text-slate-700"}>
+        <Button variant="ghost" size="icon-sm" onClick={toggle} className="text-ink-muted">
           <Menu size={20} />
         </Button>
         <div className="relative hidden md:block">
@@ -166,31 +162,22 @@ export function Topbar() {
             ref={searchInputRef}
             type="text"
             placeholder="Search patients, doctors, invoices..."
-            className={cn(
-              "h-10 w-[360px] rounded-xl pl-10 lg:w-[430px]",
-              isDark ? "border-slate-600 bg-slate-800 text-slate-200" : "border-slate-300 bg-slate-50"
-            )}
+            className="h-10 w-[360px] rounded-xl border-line bg-slate-50 pl-10 lg:w-[430px]"
             icon={<Search size={18} />}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setShowSearch(true)}
           />
           {showSearch && searchResults.length > 0 && (
-            <div className={cn(
-              "absolute top-full left-0 mt-2 w-full rounded-lg border shadow-lg",
-              isDark ? "bg-slate-800 border-slate-600" : "bg-white border-slate-200"
-            )}>
+            <div className="absolute top-full left-0 mt-2 w-full rounded-lg border border-line bg-paper shadow-lg">
               {searchResults.map((result) => (
                 <button
                   key={`${result.type}-${result.id}`}
                   onClick={() => handleSearchSelect(result)}
-                  className={cn(
-                    "block w-full border-b px-4 py-3 text-left last:border-b-0",
-                    isDark ? "border-slate-700 hover:bg-slate-700" : "border-slate-100 hover:bg-slate-50"
-                  )}
+                  className="block w-full border-b border-line px-4 py-3 text-left last:border-b-0 hover:bg-hover"
                 >
-                  <p className={cn("text-sm font-medium", isDark ? "text-slate-200" : "text-slate-900")}>{result.label}</p>
-                  <p className={cn("text-xs", isDark ? "text-slate-400" : "text-slate-500")}>
+                  <p className="text-sm font-medium text-ink">{result.label}</p>
+                  <p className="text-xs text-ink-muted">
                     {result.type.toUpperCase()} • {result.meta}
                   </p>
                 </button>
@@ -198,10 +185,7 @@ export function Topbar() {
             </div>
           )}
         </div>
-        <div className={cn(
-          "hidden items-center gap-1 rounded-lg border px-2 py-1 text-xs xl:flex",
-          isDark ? "border-slate-600 text-slate-400" : "border-slate-300 text-slate-500"
-        )}>
+        <div className="hidden items-center gap-1 rounded-lg border border-line px-2 py-1 text-xs text-ink-muted xl:flex">
           <Command size={12} />
           <span>Ctrl + K</span>
         </div>
@@ -213,7 +197,7 @@ export function Topbar() {
         <Button
           variant="ghost"
           size="icon"
-          className="text-slate-700"
+          className="text-ink-muted"
           onClick={toggleDarkMode}
           title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
         >
@@ -226,7 +210,7 @@ export function Topbar() {
             variant="ghost"
             size="icon"
             onClick={() => setShowNotifications(!showNotifications)}
-            className="relative text-slate-700"
+            className="relative text-ink-muted"
           >
             <Bell size={20} />
             {unreadCount > 0 && (
@@ -241,9 +225,9 @@ export function Topbar() {
                 className="fixed inset-0 z-40"
                 onClick={() => setShowNotifications(false)}
               />
-              <div className="absolute right-0 top-full z-50 mt-2 w-80 rounded-lg border border-slate-200 bg-white shadow-lg">
-                <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-                  <h3 className="font-semibold text-slate-900">Notifications</h3>
+              <div className="absolute right-0 top-full z-50 mt-2 w-80 rounded-lg border border-line bg-paper shadow-lg">
+                <div className="flex items-center justify-between border-b border-line px-4 py-3">
+                  <h3 className="font-semibold text-ink">Notifications</h3>
                   {unreadCount > 0 && (
                     <button
                       onClick={markAllAsRead}
@@ -259,8 +243,8 @@ export function Topbar() {
                       key={notification.id}
                       onClick={() => markAsRead(notification.id)}
                       className={cn(
-                        "flex cursor-pointer gap-3 border-b border-slate-100 px-4 py-3 hover:bg-slate-50",
-                        !notification.read && "bg-primary-50/50"
+                        "flex cursor-pointer gap-3 border-b border-line px-4 py-3 hover:bg-hover",
+                        !notification.read && "bg-selected"
                       )}
                     >
                       <div
@@ -273,10 +257,10 @@ export function Topbar() {
                         )}
                       />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-slate-900 truncate">
+                        <p className="text-sm font-medium text-ink truncate">
                           {notification.title}
                         </p>
-                        <p className="text-xs text-slate-500 truncate">
+                        <p className="text-xs text-ink-muted truncate">
                           {notification.message}
                         </p>
                         <p className="mt-1 text-xs text-slate-400">
@@ -286,7 +270,7 @@ export function Topbar() {
                     </div>
                   ))}
                 </div>
-                <button className="w-full border-t border-slate-200 py-3 text-center text-sm text-primary-600 hover:bg-slate-50">
+                <button className="w-full border-t border-line py-3 text-center text-sm text-primary-600 hover:bg-hover">
                   View all notifications
                 </button>
               </div>
@@ -298,12 +282,12 @@ export function Topbar() {
         <div className="relative ml-1">
           <button
             onClick={() => setShowProfile(!showProfile)}
-            className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-slate-100"
+            className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-hover"
           >
             <Avatar name={user?.name} size="sm" />
             <div className="hidden text-left md:block">
-              <p className="text-sm font-medium text-slate-900">{user?.name}</p>
-              <p className="text-xs text-slate-500 capitalize">{user?.role}</p>
+              <p className="text-sm font-medium text-ink">{user?.name}</p>
+              <p className="text-xs text-ink-muted capitalize">{user?.role}</p>
             </div>
             <ChevronDown size={14} className="text-slate-400" />
           </button>
@@ -313,10 +297,10 @@ export function Topbar() {
                 className="fixed inset-0 z-40"
                 onClick={() => setShowProfile(false)}
               />
-              <div className="absolute right-0 top-full z-50 mt-2 w-56 rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
-                <div className="border-b border-slate-200 px-4 py-3">
-                  <p className="font-medium text-slate-900">{user?.name}</p>
-                  <p className="text-sm text-slate-500">{user?.email}</p>
+              <div className="absolute right-0 top-full z-50 mt-2 w-56 rounded-lg border border-line bg-paper py-1 shadow-lg">
+                <div className="border-b border-line px-4 py-3">
+                  <p className="font-medium text-ink">{user?.name}</p>
+                  <p className="text-sm text-ink-muted">{user?.email}</p>
                 </div>
                 <div className="py-1">
                   <button
@@ -324,7 +308,7 @@ export function Topbar() {
                       navigate("/settings");
                       setShowProfile(false);
                     }}
-                    className="flex w-full items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                    className="flex w-full items-center gap-2 px-4 py-2 text-sm text-ink-muted hover:bg-hover"
                   >
                     <User size={16} />
                     Profile
@@ -334,16 +318,16 @@ export function Topbar() {
                       navigate("/settings");
                       setShowProfile(false);
                     }}
-                    className="flex w-full items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                    className="flex w-full items-center gap-2 px-4 py-2 text-sm text-ink-muted hover:bg-hover"
                   >
                     <Settings size={16} />
                     Settings
                   </button>
                 </div>
-                <div className="border-t border-slate-200 py-1">
+                <div className="border-t border-line py-1">
                   <button
                     onClick={handleLogout}
-                    className="flex w-full items-center gap-2 px-4 py-2 text-sm text-danger-600 hover:bg-slate-50"
+                    className="flex w-full items-center gap-2 px-4 py-2 text-sm text-danger-600 hover:bg-hover"
                   >
                     <LogOut size={16} />
                     Logout

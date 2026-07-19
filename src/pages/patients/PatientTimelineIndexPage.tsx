@@ -22,8 +22,8 @@ export function PatientTimelineIndexPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Patient Timeline</h1>
-        <p className="text-slate-500">Jump to a patient to view complete care continuity</p>
+        <h1 className="text-2xl font-bold text-ink">Patient Timeline</h1>
+        <p className="text-ink-muted">Jump to a patient to view complete care continuity</p>
       </div>
 
       <Card className="p-4">
@@ -40,8 +40,8 @@ export function PatientTimelineIndexPage() {
           <Card key={patient.id} className="p-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="font-semibold text-slate-900">{patient.name}</p>
-                <p className="text-sm text-slate-500">
+                <p className="font-semibold text-ink">{patient.name}</p>
+                <p className="text-sm text-ink-muted">
                   {patient.id} • {patient.phone}
                 </p>
               </div>

@@ -8,10 +8,10 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary-600 text-white hover:bg-primary-700 shadow-sm hover:shadow-md",
-        secondary: "bg-slate-100 text-slate-900 hover:bg-slate-200 border border-slate-200",
-        outline: "border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 hover:border-slate-400",
-        ghost: "hover:bg-slate-100 text-slate-700",
+        default: "bg-primary-600 text-on-ink hover:bg-primary-700 shadow-sm hover:shadow-md",
+        secondary: "bg-slate-100 text-ink hover:bg-slate-200 border border-line",
+        outline: "border border-line bg-paper hover:bg-slate-50 text-ink-muted hover:border-slate-400",
+        ghost: "hover:bg-slate-100 text-ink-muted",
         danger: "bg-danger-600 text-white hover:bg-danger-700 shadow-sm hover:shadow-md",
         success: "bg-success-600 text-white hover:bg-success-700 shadow-sm hover:shadow-md",
         teal: "bg-teal-600 text-white hover:bg-teal-700 shadow-sm hover:shadow-md",

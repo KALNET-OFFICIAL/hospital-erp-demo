@@ -260,7 +260,7 @@ export function OPDConsultationPage() {
   if (!appointment || !patient) {
     return (
       <Card className="p-8 text-center">
-        <p className="text-slate-600">Consultation visit not found.</p>
+        <p className="text-ink-muted">Consultation visit not found.</p>
         <Button className="mt-4" onClick={() => navigate("/opd")}>Back to OPD</Button>
       </Card>
     );
@@ -275,8 +275,8 @@ export function OPDConsultationPage() {
             Back to Queue
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">OPD Consultation</h1>
-            <p className="text-slate-500">Visit #{appointment.id}</p>
+            <h1 className="text-2xl font-bold text-ink">OPD Consultation</h1>
+            <p className="text-ink-muted">Visit #{appointment.id}</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -298,11 +298,11 @@ export function OPDConsultationPage() {
       <Card className="p-4">
         <div className="flex flex-wrap items-center gap-3">
           <Badge variant="primary">{patient.id}</Badge>
-          <span className="font-semibold text-slate-900">{patient.name}</span>
-          <span className="text-sm text-slate-500">{calculateAge(patient.dob)} yrs • {patient.gender}</span>
-          <span className="text-sm text-slate-500">{patient.phone}</span>
-          <span className="text-sm text-slate-500">{appointment.doctorName}</span>
-          <span className="text-sm text-slate-500">{formatDate(appointment.date)} {appointment.time}</span>
+          <span className="font-semibold text-ink">{patient.name}</span>
+          <span className="text-sm text-ink-muted">{calculateAge(patient.dob)} yrs • {patient.gender}</span>
+          <span className="text-sm text-ink-muted">{patient.phone}</span>
+          <span className="text-sm text-ink-muted">{appointment.doctorName}</span>
+          <span className="text-sm text-ink-muted">{formatDate(appointment.date)} {appointment.time}</span>
         </div>
       </Card>
 
@@ -316,18 +316,18 @@ export function OPDConsultationPage() {
               placeholder="Fever, cough, headache"
             />
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">Diagnosis</label>
+              <label className="mb-1.5 block text-sm font-medium text-ink-muted">Diagnosis</label>
               <textarea
-                className="min-h-20 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="min-h-20 w-full rounded-lg border border-line px-3 py-2 text-sm"
                 value={emrState.diagnosis}
                 onChange={(e) => setEmrState((prev) => ({ ...prev, diagnosis: e.target.value }))}
                 placeholder="Primary diagnosis"
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">Clinical Notes</label>
+              <label className="mb-1.5 block text-sm font-medium text-ink-muted">Clinical Notes</label>
               <textarea
-                className="min-h-24 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="min-h-24 w-full rounded-lg border border-line px-3 py-2 text-sm"
                 value={emrState.notes}
                 onChange={(e) => setEmrState((prev) => ({ ...prev, notes: e.target.value }))}
                 placeholder="Examination findings, plan"
@@ -343,7 +343,7 @@ export function OPDConsultationPage() {
 
           <Card className="space-y-4 p-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-slate-900">Prescription</h2>
+              <h2 className="text-lg font-semibold text-ink">Prescription</h2>
               <Button size="sm" onClick={addPrescriptionRow}>
                 <Plus className="mr-2 h-4 w-4" />
                 Add Medicine
@@ -352,7 +352,7 @@ export function OPDConsultationPage() {
 
             <div className="space-y-3">
               {prescriptionRows.map((row) => (
-                <div key={row.id} className="grid gap-2 rounded-lg border border-slate-200 p-3 lg:grid-cols-12">
+                <div key={row.id} className="grid gap-2 rounded-lg border border-line p-3 lg:grid-cols-12">
                   <div className="lg:col-span-3">
                     <Select
                       value={row.medicineId}
@@ -430,10 +430,10 @@ export function OPDConsultationPage() {
           </Card>
 
           <Card className="space-y-2 p-4 text-sm">
-            <p className="font-semibold text-slate-900">Visit Snapshot</p>
-            <p className="text-slate-600">Token: #{appointment.tokenNumber}</p>
-            <p className="text-slate-600">Department: {appointment.department}</p>
-            <p className="text-slate-600">Status: {appointment.status}</p>
+            <p className="font-semibold text-ink">Visit Snapshot</p>
+            <p className="text-ink-muted">Token: #{appointment.tokenNumber}</p>
+            <p className="text-ink-muted">Department: {appointment.department}</p>
+            <p className="text-ink-muted">Status: {appointment.status}</p>
           </Card>
         </div>
       </div>

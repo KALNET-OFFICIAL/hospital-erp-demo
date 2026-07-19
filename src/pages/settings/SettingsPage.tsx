@@ -11,8 +11,8 @@ export function SettingsPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Settings</h1>
-        <p className="text-slate-500">Manage your hospital settings</p>
+        <h1 className="text-2xl font-bold text-ink">Settings</h1>
+        <p className="text-ink-muted">Manage your hospital settings</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -45,23 +45,23 @@ export function SettingsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium">Email Notifications</p>
-                <p className="text-sm text-slate-500">Receive email alerts</p>
+                <p className="text-sm text-ink-muted">Receive email alerts</p>
               </div>
-              <input type="checkbox" defaultChecked className="h-5 w-5" />
+              <input type="checkbox" defaultChecked className="h-5 w-5 accent-primary-600" />
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium">SMS Notifications</p>
-                <p className="text-sm text-slate-500">Receive SMS alerts</p>
+                <p className="text-sm text-ink-muted">Receive SMS alerts</p>
               </div>
-              <input type="checkbox" defaultChecked className="h-5 w-5" />
+              <input type="checkbox" defaultChecked className="h-5 w-5 accent-primary-600" />
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium">Low Stock Alerts</p>
-                <p className="text-sm text-slate-500">Alert when inventory is low</p>
+                <p className="text-sm text-ink-muted">Alert when inventory is low</p>
               </div>
-              <input type="checkbox" defaultChecked className="h-5 w-5" />
+              <input type="checkbox" defaultChecked className="h-5 w-5 accent-primary-600" />
             </div>
           </CardContent>
         </Card>
@@ -78,7 +78,7 @@ export function SettingsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium">Two-Factor Authentication</p>
-                <p className="text-sm text-slate-500">Add extra security</p>
+                <p className="text-sm text-ink-muted">Add extra security</p>
               </div>
               <Button variant="outline" size="sm">
                 Enable
@@ -87,9 +87,9 @@ export function SettingsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium">Session Timeout</p>
-                <p className="text-sm text-slate-500">Auto logout after inactivity</p>
+                <p className="text-sm text-ink-muted">Auto logout after inactivity</p>
               </div>
-              <select className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm">
+              <select className="rounded-lg border border-line bg-paper text-ink px-3 py-1.5 text-sm">
                 <option>15 minutes</option>
                 <option>30 minutes</option>
                 <option>1 hour</option>
@@ -143,9 +143,9 @@ export function SettingsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium">Compact Mode</p>
-                <p className="text-sm text-slate-500">Reduce spacing</p>
+                <p className="text-sm text-ink-muted">Reduce spacing</p>
               </div>
-              <input type="checkbox" className="h-5 w-5" />
+              <input type="checkbox" className="h-5 w-5 accent-primary-600" />
             </div>
           </CardContent>
         </Card>

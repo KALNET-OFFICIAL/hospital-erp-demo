@@ -12,7 +12,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import type { BadgeProps } from "@/components/ui/badge";
 import { Modal, ModalBody, ModalFooter } from "@/components/ui/modal";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { format, differenceInDays, addDays } from "date-fns";
 
@@ -93,6 +102,7 @@ const mockExpiringItems: ExpiringItem[] = [
 ];
 
 type SortField = "expiryDate" | "quantity" | "value";
+type ExpiryUrgency = "expired" | "critical" | "warning" | "upcoming";
 
 export function PharmacyExpiryPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -132,12 +142,14 @@ export function PharmacyExpiryPage() {
     }
   };
 
-  const getExpiryStatus = (expiryDate: string) => {
+  const getExpiryStatus = (
+    expiryDate: string
+  ): { label: string; variant: BadgeProps["variant"]; urgency: ExpiryUrgency } => {
     const days = differenceInDays(new Date(expiryDate), new Date());
-    if (days <= 0) return { label: "Expired", color: "bg-red-100 text-red-700", urgency: "expired" };
-    if (days <= 30) return { label: `${days} days`, color: "bg-red-100 text-red-700", urgency: "critical" };
-    if (days <= 60) return { label: `${days} days`, color: "bg-amber-100 text-amber-700", urgency: "warning" };
-    return { label: `${days} days`, color: "bg-yellow-100 text-yellow-700", urgency: "upcoming" };
+    if (days <= 0) return { label: "Expired", variant: "danger", urgency: "expired" };
+    if (days <= 30) return { label: `${days} days`, variant: "danger", urgency: "critical" };
+    if (days <= 60) return { label: `${days} days`, variant: "serious", urgency: "warning" };
+    return { label: `${days} days`, variant: "warning", urgency: "upcoming" };
   };
 
   const stats = {
@@ -155,54 +167,54 @@ export function PharmacyExpiryPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Expiry Alerts</h1>
-          <p className="text-slate-500">Medicines expiring within 90 days</p>
+          <h1 className="text-2xl font-bold text-ink">Expiry Alerts</h1>
+          <p className="text-ink-muted">Medicines expiring within 90 days</p>
         </div>
       </div>
 
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100">
-              <Calendar className="h-5 w-5 text-amber-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100">
+              <Calendar className="h-5 w-5 text-ink-muted" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Total Expiring</p>
-              <p className="text-2xl font-bold text-amber-600">{stats.total}</p>
+              <p className="text-sm text-ink-muted">Total Expiring</p>
+              <p className="text-2xl font-bold text-ink">{stats.total}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100">
-              <AlertTriangle className="h-5 w-5 text-red-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-danger-50">
+              <AlertTriangle className="h-5 w-5 text-danger-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Expired</p>
-              <p className="text-2xl font-bold text-red-600">{stats.expired}</p>
+              <p className="text-sm text-ink-muted">Expired</p>
+              <p className="text-2xl font-bold text-danger-600">{stats.expired}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100">
-              <Clock className="h-5 w-5 text-orange-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-serious-50">
+              <Clock className="h-5 w-5 text-serious-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Critical ({"<"}30 days)</p>
-              <p className="text-2xl font-bold text-orange-600">{stats.critical}</p>
+              <p className="text-sm text-ink-muted">Critical ({"<"}30 days)</p>
+              <p className="text-2xl font-bold text-serious-600">{stats.critical}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
-              <Package className="h-5 w-5 text-purple-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-warning-50">
+              <Package className="h-5 w-5 text-warning-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Total Value at Risk</p>
-              <p className="text-2xl font-bold text-purple-600">₹{stats.totalValue.toLocaleString()}</p>
+              <p className="text-sm text-ink-muted">Total Value at Risk</p>
+              <p className="text-2xl font-bold text-warning-600">₹{stats.totalValue.toLocaleString()}</p>
             </div>
           </div>
         </div>
@@ -248,80 +260,77 @@ export function PharmacyExpiryPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-slate-50 border-b border-gray-200">
-              <tr>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Medicine</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Batch</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Expiry Date</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Time Left</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Quantity</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Value</th>
-                <th className="text-right text-sm font-medium text-slate-600 px-6 py-4">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {filteredItems.map((item) => {
-                const status = getExpiryStatus(item.expiryDate);
-                return (
-                  <tr key={`${item.id}-${item.batchNumber}`} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className={cn(
+      <div className="bg-paper rounded-xl border border-line overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Medicine</TableHead>
+              <TableHead>Batch</TableHead>
+              <TableHead>Expiry Date</TableHead>
+              <TableHead>Time Left</TableHead>
+              <TableHead>Quantity</TableHead>
+              <TableHead>Value</TableHead>
+              <TableHead className="text-right">Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredItems.map((item) => {
+              const status = getExpiryStatus(item.expiryDate);
+              const isSevere = status.urgency === "expired" || status.urgency === "critical";
+              return (
+                <TableRow key={`${item.id}-${item.batchNumber}`}>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={cn(
                           "flex h-10 w-10 items-center justify-center rounded-lg",
-                          status.urgency === "expired" || status.urgency === "critical"
-                            ? "bg-red-100"
-                            : "bg-amber-100"
-                        )}>
-                          <Pill className={cn(
-                            "h-5 w-5",
-                            status.urgency === "expired" || status.urgency === "critical"
-                              ? "text-red-600"
-                              : "text-amber-600"
-                          )} />
-                        </div>
-                        <div>
-                          <p className="font-medium text-slate-900">{item.name}</p>
-                          <p className="text-sm text-slate-500">{item.genericName}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <p className="text-slate-700">{item.batchNumber}</p>
-                      <p className="text-xs text-slate-500">{item.location}</p>
-                    </td>
-                    <td className="px-6 py-4 text-slate-700">
-                      {format(new Date(item.expiryDate), "dd MMM yyyy")}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={cn("px-2 py-1 rounded text-xs font-medium", status.color)}>
-                        {status.label}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-slate-900">
-                      {item.quantity} {item.unit}s
-                    </td>
-                    <td className="px-6 py-4 text-slate-900 font-medium">
-                      ₹{(item.quantity * item.unitPrice).toLocaleString()}
-                    </td>
-                    <td className="px-6 py-4">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="gap-1 text-red-600 hover:text-red-700 hover:bg-red-50"
-                        onClick={() => setShowDisposeModal(item)}
+                          isSevere ? "bg-danger-50" : "bg-serious-50"
+                        )}
                       >
-                        <Trash2 size={14} /> Dispose
-                      </Button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                        <Pill
+                          className={cn(
+                            "h-5 w-5",
+                            isSevere ? "text-danger-600" : "text-serious-600"
+                          )}
+                        />
+                      </div>
+                      <div>
+                        <p className="font-medium text-ink">{item.name}</p>
+                        <p className="text-sm text-ink-muted">{item.genericName}</p>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <p className="text-ink-muted">{item.batchNumber}</p>
+                    <p className="text-xs text-ink-muted">{item.location}</p>
+                  </TableCell>
+                  <TableCell className="text-ink-muted">
+                    {format(new Date(item.expiryDate), "dd MMM yyyy")}
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={status.variant}>{status.label}</Badge>
+                  </TableCell>
+                  <TableCell className="text-ink">
+                    {item.quantity} {item.unit}s
+                  </TableCell>
+                  <TableCell className="text-ink font-medium">
+                    ₹{(item.quantity * item.unitPrice).toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="gap-1 text-danger-600 hover:text-danger-700 hover:bg-danger-50"
+                      onClick={() => setShowDisposeModal(item)}
+                    >
+                      <Trash2 size={14} /> Dispose
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
       </div>
 
       {/* Dispose Modal */}
@@ -333,19 +342,19 @@ export function PharmacyExpiryPage() {
         <ModalBody>
           {showDisposeModal && (
             <div className="space-y-4">
-              <div className="p-4 bg-red-50 rounded-lg border border-red-200">
-                <p className="text-red-800 font-medium">{showDisposeModal.name}</p>
-                <p className="text-sm text-red-600">Batch: {showDisposeModal.batchNumber}</p>
+              <div className="p-4 bg-danger-50 rounded-lg border border-danger-200">
+                <p className="text-danger-800 font-medium">{showDisposeModal.name}</p>
+                <p className="text-sm text-danger-600">Batch: {showDisposeModal.batchNumber}</p>
               </div>
-              <p className="text-slate-600">
+              <p className="text-ink-muted">
                 This will mark <strong>{showDisposeModal.quantity} {showDisposeModal.unit}s</strong> as
                 disposed. This action cannot be undone.
               </p>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="block text-sm font-medium text-ink-muted mb-1.5">
                   Reason for Disposal
                 </label>
-                <select className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20">
                   <option value="expired">Expired</option>
                   <option value="damaged">Damaged</option>
                   <option value="recalled">Recalled by Manufacturer</option>
@@ -353,11 +362,11 @@ export function PharmacyExpiryPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="block text-sm font-medium text-ink-muted mb-1.5">
                   Notes
                 </label>
                 <textarea
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
                   rows={2}
                   placeholder="Additional notes..."
                 />

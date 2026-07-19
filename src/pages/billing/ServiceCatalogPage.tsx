@@ -18,8 +18,10 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Modal } from "@/components/ui/modal";
 import { Select } from "@/components/ui/select";
+import { KpiCard } from "@/components/dashboard/KpiCard";
 import { services, departments } from "@/lib/mock-data";
 import { formatCurrency } from "@/lib/utils";
+import { getIdentityColor, getCurrentThemeMode } from "@/lib/theme";
 import type { Service } from "@/types";
 
 const categoryIcons: Record<string, React.ReactNode> = {
@@ -38,13 +40,11 @@ const categoryLabels: Record<string, string> = {
   room: "Room Charges",
 };
 
-const categoryColors: Record<string, "primary" | "success" | "warning" | "danger"> = {
-  consultation: "primary",
-  lab: "success",
-  radiology: "warning",
-  procedure: "danger",
-  room: "primary",
-};
+// Category = identity, not state — always routed through getIdentityColor so
+// the same category hashes to the same accent everywhere it appears.
+function categoryAccent(category: string): string {
+  return getIdentityColor(category, getCurrentThemeMode());
+}
 
 export default function ServiceCatalogPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -129,8 +129,8 @@ export default function ServiceCatalogPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Service Catalog</h1>
-          <p className="text-gray-500 mt-1">Manage hospital services, procedures, and pricing</p>
+          <h1 className="text-2xl font-bold text-ink">Service Catalog</h1>
+          <p className="text-ink-muted mt-1">Manage hospital services, procedures, and pricing</p>
         </div>
         <Button onClick={handleAddService}>
           <Plus className="w-4 h-4 mr-2" />
@@ -140,54 +140,28 @@ export default function ServiceCatalogPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500">Total Services</p>
-              <p className="text-2xl font-bold text-gray-900">{totalServices}</p>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
-              <Stethoscope className="w-5 h-5 text-primary-600" />
-            </div>
-          </div>
-        </Card>
-        <Card className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500">Lab Tests</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {services.filter((s) => s.category === "lab").length}
-              </p>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-success-100 flex items-center justify-center">
-              <FlaskConical className="w-5 h-5 text-success-600" />
-            </div>
-          </div>
-        </Card>
-        <Card className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500">Procedures</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {services.filter((s) => s.category === "procedure").length}
-              </p>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-warning-100 flex items-center justify-center">
-              <Scissors className="w-5 h-5 text-warning-600" />
-            </div>
-          </div>
-        </Card>
-        <Card className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500">Avg. Price</p>
-              <p className="text-2xl font-bold text-gray-900">{formatCurrency(avgPrice)}</p>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
-              <IndianRupee className="w-5 h-5 text-primary-600" />
-            </div>
-          </div>
-        </Card>
+        <KpiCard
+          title="Total Services"
+          value={totalServices}
+          icon={<Stethoscope className="h-5 w-5" />}
+        />
+        <KpiCard
+          title="Lab Tests"
+          value={services.filter((s) => s.category === "lab").length}
+          icon={<FlaskConical className="h-5 w-5" />}
+          iconColor="lab"
+        />
+        <KpiCard
+          title="Procedures"
+          value={services.filter((s) => s.category === "procedure").length}
+          icon={<Scissors className="h-5 w-5" />}
+          iconColor="procedure"
+        />
+        <KpiCard
+          title="Avg. Price"
+          value={formatCurrency(avgPrice)}
+          icon={<IndianRupee className="h-5 w-5" />}
+        />
       </div>
 
       {/* Filters */}
@@ -195,7 +169,7 @@ export default function ServiceCatalogPage() {
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted" />
               <Input
                 placeholder="Search services by name or code..."
                 value={searchQuery}
@@ -241,8 +215,8 @@ export default function ServiceCatalogPage() {
             onClick={() => setSelectedCategory(category)}
             className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
               selectedCategory === category
-                ? "bg-primary-100 text-primary-700"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                ? "bg-selected text-ink"
+                : "bg-slate-100 text-ink-muted hover:bg-slate-200"
             }`}
           >
             {category === "all" ? "All Services" : categoryLabels[category]}
@@ -258,10 +232,13 @@ export default function ServiceCatalogPage() {
         servicesByCategory.map(({ category, services: categoryServices }) => (
           <div key={category} className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className={`w-8 h-8 rounded-lg bg-${categoryColors[category]}-100 flex items-center justify-center`}>
+              <div
+                className="w-8 h-8 rounded-lg flex items-center justify-center"
+                style={{ backgroundColor: `${categoryAccent(category)}1f`, color: categoryAccent(category) }}
+              >
                 {categoryIcons[category]}
               </div>
-              <h2 className="text-lg font-semibold text-gray-900">{categoryLabels[category]}</h2>
+              <h2 className="text-lg font-semibold text-ink">{categoryLabels[category]}</h2>
               <Badge variant="primary">{categoryServices.length}</Badge>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -281,7 +258,7 @@ export default function ServiceCatalogPage() {
 
       {filteredServices.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-500">No services found matching your criteria</p>
+          <p className="text-ink-muted">No services found matching your criteria</p>
         </div>
       )}
 
@@ -358,9 +335,9 @@ export default function ServiceCatalogPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-sm font-medium text-ink-muted mb-1">Description</label>
             <textarea
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="w-full px-3 py-2 border border-line bg-paper text-ink rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               rows={3}
               placeholder="Service description..."
               value={formData.description}
@@ -390,35 +367,41 @@ function ServiceCard({ service, onEdit }: { service: Service; onEdit: (s: Servic
     <Card className="p-4 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-3">
-          <div className={`w-10 h-10 rounded-lg bg-${categoryColors[service.category]}-100 flex items-center justify-center flex-shrink-0`}>
+          <div
+            className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{
+              backgroundColor: `${categoryAccent(service.category)}1f`,
+              color: categoryAccent(service.category),
+            }}
+          >
             {categoryIcons[service.category]}
           </div>
           <div className="min-w-0">
-            <h3 className="font-medium text-gray-900 truncate">{service.name}</h3>
-            <p className="text-xs text-gray-500">{service.code}</p>
+            <h3 className="font-medium text-ink truncate">{service.name}</h3>
+            <p className="text-xs text-ink-muted">{service.code}</p>
           </div>
         </div>
         <div className="relative">
           <button
             onClick={() => setShowMenu(!showMenu)}
-            className="p-1 hover:bg-gray-100 rounded"
+            className="p-1 hover:bg-hover rounded"
           >
-            <MoreVertical className="w-4 h-4 text-gray-400" />
+            <MoreVertical className="w-4 h-4 text-ink-muted" />
           </button>
           {showMenu && (
-            <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border py-1 z-10 min-w-32">
+            <div className="absolute right-0 top-full mt-1 bg-paper rounded-lg shadow-lg border border-line py-1 z-10 min-w-32">
               <button
                 onClick={() => {
                   onEdit(service);
                   setShowMenu(false);
                 }}
-                className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
+                className="w-full px-3 py-2 text-left text-sm hover:bg-hover flex items-center gap-2"
               >
                 <Edit2 className="w-4 h-4" /> Edit
               </button>
               <button
                 onClick={() => setShowMenu(false)}
-                className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 text-warning-600"
+                className="w-full px-3 py-2 text-left text-sm hover:bg-hover flex items-center gap-2 text-warning-600"
               >
                 <Archive className="w-4 h-4" /> Archive
               </button>
@@ -427,11 +410,11 @@ function ServiceCard({ service, onEdit }: { service: Service; onEdit: (s: Servic
         </div>
       </div>
 
-      <div className="mt-3 pt-3 border-t flex items-center justify-between">
+      <div className="mt-3 pt-3 border-t border-line flex items-center justify-between">
         <div>
-          <p className="text-xs text-gray-500">{service.departmentName}</p>
+          <p className="text-xs text-ink-muted">{service.departmentName}</p>
           {service.duration && (
-            <p className="text-xs text-gray-400">{service.duration} mins</p>
+            <p className="text-xs text-ink-muted">{service.duration} mins</p>
           )}
         </div>
         <p className="text-lg font-semibold text-primary-600">

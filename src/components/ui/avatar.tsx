@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { getInitials } from "@/lib/utils";
+import { getIdentityColor, getCurrentThemeMode } from "@/lib/theme";
 
 interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
   src?: string;
@@ -41,14 +42,17 @@ const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
       );
     }
 
+    const accent = getIdentityColor(name || "?", getCurrentThemeMode());
+
     return (
       <div
         ref={ref}
         className={cn(
-          "relative flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary-100 text-primary-700 font-medium",
+          "relative flex shrink-0 items-center justify-center overflow-hidden rounded-full font-medium",
           sizeClasses[size],
           className
         )}
+        style={{ backgroundColor: `${accent}1f`, color: accent }}
         {...props}
       >
         {name ? getInitials(name) : "?"}

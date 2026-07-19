@@ -39,18 +39,18 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title, classNa
       {/* Modal Content */}
       <div
         className={cn(
-          "relative z-50 w-full max-w-lg rounded-xl bg-white p-6 shadow-xl max-h-[90vh] overflow-y-auto",
+          "relative z-50 w-full max-w-lg rounded-xl bg-paper p-6 shadow-xl max-h-[90vh] overflow-y-auto",
           className
         )}
       >
         {title && (
-          <div className="flex items-center justify-between mb-4 pb-4 border-b">
-            <h2 className="text-xl font-semibold text-slate-900">{title}</h2>
+          <div className="flex items-center justify-between mb-4 pb-4 border-b border-line">
+            <h2 className="text-xl font-semibold text-ink">{title}</h2>
             <button
               onClick={onClose}
-              className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-1 hover:bg-slate-100 rounded-lg transition-colors"
             >
-              <X className="w-5 h-5 text-gray-500" />
+              <X className="w-5 h-5 text-ink-muted" />
             </button>
           </div>
         )}
@@ -73,7 +73,7 @@ const ModalTitle: React.FC<{ children: React.ReactNode; className?: string }> = 
   children,
   className,
 }) => (
-  <h2 className={cn("text-xl font-semibold text-slate-900", className)}>
+  <h2 className={cn("text-xl font-semibold text-ink", className)}>
     {children}
   </h2>
 );

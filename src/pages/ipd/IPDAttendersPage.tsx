@@ -70,8 +70,8 @@ export function IPDAttendersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">IPD Attender Details</h1>
-        <p className="text-slate-500">Maintain family/emergency contacts for admitted patients</p>
+        <h1 className="text-2xl font-bold text-ink">IPD Attender Details</h1>
+        <p className="text-ink-muted">Maintain family/emergency contacts for admitted patients</p>
       </div>
 
       <Card className="p-4">

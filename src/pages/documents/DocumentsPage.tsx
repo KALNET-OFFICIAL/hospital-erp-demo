@@ -24,9 +24,19 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Modal } from "@/components/ui/modal";
 import { Select } from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { KpiCard } from "@/components/dashboard/KpiCard";
 import { patients } from "@/lib/mock-data";
 import { formatDate } from "@/lib/utils";
 import { useHospitalOpsStore } from "@/stores";
+import { getIdentityColor, getCurrentThemeMode } from "@/lib/theme";
 
 // Mock documents data
 const baseDocuments = [
@@ -41,15 +51,12 @@ const baseDocuments = [
 ];
 type DocumentRow = (typeof baseDocuments)[0];
 
-const typeColors: Record<string, "primary" | "success" | "warning" | "danger"> = {
-  lab_report: "success",
-  prescription: "primary",
-  radiology: "warning",
-  discharge: "primary",
-  consent: "primary",
-  insurance: "warning",
-  referral: "danger",
-};
+// Document/folder type is an identity, not a state — always routed through
+// getIdentityColor so the same type hashes to the same accent everywhere
+// (stat tile, list badge, card badge, file icon chip).
+function typeAccent(type: string): string {
+  return getIdentityColor(type, getCurrentThemeMode());
+}
 
 export default function DocumentsPage() {
   const { referrals } = useHospitalOpsStore();
@@ -128,8 +135,8 @@ export default function DocumentsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Documents</h1>
-          <p className="text-gray-500 mt-1">Manage patient files, reports, and prescriptions</p>
+          <h1 className="text-2xl font-bold text-ink">Documents</h1>
+          <p className="text-ink-muted mt-1">Manage patient files, reports, and prescriptions</p>
         </div>
         <Button onClick={() => setShowUploadModal(true)}>
           <Upload className="w-4 h-4 mr-2" />
@@ -139,57 +146,22 @@ export default function DocumentsPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500">Total Documents</p>
-              <p className="text-2xl font-bold text-gray-900">{totalDocs}</p>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
-              <FileText className="w-5 h-5 text-primary-600" />
-            </div>
-          </div>
-        </Card>
-        <Card className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500">Today's Uploads</p>
-              <p className="text-2xl font-bold text-gray-900">{todayUploads}</p>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-success-100 flex items-center justify-center">
-              <Upload className="w-5 h-5 text-success-600" />
-            </div>
-          </div>
-        </Card>
-        <Card className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500">Lab Reports</p>
-              <p className="text-2xl font-bold text-gray-900">{documents.filter(d => d.type === "lab_report").length}</p>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-warning-100 flex items-center justify-center">
-              <File className="w-5 h-5 text-warning-600" />
-            </div>
-          </div>
-        </Card>
-        <Card className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500">Total Size</p>
-              <p className="text-2xl font-bold text-gray-900">{totalSize}</p>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
-              <Folder className="w-5 h-5 text-primary-600" />
-            </div>
-          </div>
-        </Card>
+        <KpiCard title="Total Documents" value={totalDocs} icon={<FileText className="h-5 w-5" />} />
+        <KpiCard title="Today's Uploads" value={todayUploads} icon={<Upload className="h-5 w-5" />} />
+        <KpiCard
+          title="Lab Reports"
+          value={documents.filter((d) => d.type === "lab_report").length}
+          icon={<File className="h-5 w-5" />}
+          iconColor="lab_report"
+        />
+        <KpiCard title="Total Size" value={totalSize} icon={<Folder className="h-5 w-5" />} />
       </div>
 
       <div className="flex gap-6">
         {/* Sidebar - Categories */}
         <div className="w-64 flex-shrink-0 hidden lg:block">
           <Card className="p-4">
-            <h3 className="font-medium text-gray-900 mb-4">Categories</h3>
+            <h3 className="font-medium text-ink mb-4">Categories</h3>
             <nav className="space-y-1">
               {categories.map((cat) => {
                 const Icon = cat.icon;
@@ -199,15 +171,15 @@ export default function DocumentsPage() {
                     onClick={() => setSelectedCategory(cat.id)}
                     className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
                       selectedCategory === cat.id
-                        ? "bg-primary-100 text-primary-700"
-                        : "text-gray-600 hover:bg-gray-100"
+                        ? "bg-selected text-ink"
+                        : "text-ink-muted hover:bg-hover"
                     }`}
                   >
                     <div className="flex items-center gap-2">
                       <Icon className="w-4 h-4" />
                       <span>{cat.name}</span>
                     </div>
-                    <span className="text-xs bg-gray-200 px-2 py-0.5 rounded-full">
+                    <span className="text-xs bg-slate-200 text-ink-muted px-2 py-0.5 rounded-full">
                       {cat.count}
                     </span>
                   </button>
@@ -224,7 +196,7 @@ export default function DocumentsPage() {
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted" />
                   <Input
                     placeholder="Search documents..."
                     value={searchQuery}
@@ -252,16 +224,16 @@ export default function DocumentsPage() {
                   <option key={cat.id} value={cat.id}>{cat.name}</option>
                 ))}
               </Select>
-              <div className="flex border rounded-lg overflow-hidden">
+              <div className="flex border border-line rounded-lg overflow-hidden">
                 <button
                   onClick={() => setViewMode("grid")}
-                  className={`p-2 ${viewMode === "grid" ? "bg-primary-100 text-primary-600" : "text-gray-400 hover:bg-gray-100"}`}
+                  className={`p-2 ${viewMode === "grid" ? "bg-selected text-primary-600" : "text-ink-muted hover:bg-hover"}`}
                 >
                   <Grid className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => setViewMode("list")}
-                  className={`p-2 ${viewMode === "list" ? "bg-primary-100 text-primary-600" : "text-gray-400 hover:bg-gray-100"}`}
+                  className={`p-2 ${viewMode === "list" ? "bg-selected text-primary-600" : "text-ink-muted hover:bg-hover"}`}
                 >
                   <List className="w-5 h-5" />
                 </button>
@@ -284,53 +256,60 @@ export default function DocumentsPage() {
             </div>
           ) : (
             <Card className="overflow-hidden">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="text-left px-4 py-3 text-sm font-medium text-gray-700">Name</th>
-                    <th className="text-left px-4 py-3 text-sm font-medium text-gray-700">Patient</th>
-                    <th className="text-left px-4 py-3 text-sm font-medium text-gray-700">Category</th>
-                    <th className="text-left px-4 py-3 text-sm font-medium text-gray-700">Uploaded</th>
-                    <th className="text-left px-4 py-3 text-sm font-medium text-gray-700">Size</th>
-                    <th className="w-20"></th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Patient</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Uploaded</TableHead>
+                    <TableHead>Size</TableHead>
+                    <TableHead className="w-20"></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {filteredDocs.map((doc) => (
-                    <tr key={doc.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3">
+                    <TableRow key={doc.id}>
+                      <TableCell>
                         <div className="flex items-center gap-3">
                           <FileIcon type={doc.fileType} />
-                          <span className="font-medium text-gray-900">{doc.name}</span>
+                          <span className="font-medium text-ink">{doc.name}</span>
                         </div>
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{doc.patientName}</td>
-                      <td className="px-4 py-3">
-                        <Badge variant={typeColors[doc.type]}>{doc.category}</Badge>
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{formatDate(doc.uploadedAt)}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{doc.size}</td>
-                      <td className="px-4 py-3">
+                      </TableCell>
+                      <TableCell className="text-ink-muted">{doc.patientName}</TableCell>
+                      <TableCell>
+                        <Badge
+                          style={{
+                            backgroundColor: `${typeAccent(doc.type)}1f`,
+                            color: typeAccent(doc.type),
+                          }}
+                        >
+                          {doc.category}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-ink-muted">{formatDate(doc.uploadedAt)}</TableCell>
+                      <TableCell className="text-ink-muted">{doc.size}</TableCell>
+                      <TableCell>
                         <div className="flex gap-1">
-                          <button onClick={() => setSelectedDoc(doc)} className="p-1 hover:bg-gray-100 rounded">
-                            <Eye className="w-4 h-4 text-gray-500" />
+                          <button onClick={() => setSelectedDoc(doc)} className="p-1 hover:bg-hover rounded">
+                            <Eye className="w-4 h-4 text-ink-muted" />
                           </button>
-                          <button onClick={() => handleDownload(doc)} className="p-1 hover:bg-gray-100 rounded">
-                            <Download className="w-4 h-4 text-gray-500" />
+                          <button onClick={() => handleDownload(doc)} className="p-1 hover:bg-hover rounded">
+                            <Download className="w-4 h-4 text-ink-muted" />
                           </button>
                         </div>
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </Card>
           )}
 
           {filteredDocs.length === 0 && (
             <div className="text-center py-12">
-              <Folder className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500">No documents found</p>
+              <Folder className="w-12 h-12 text-ink-muted mx-auto mb-4" />
+              <p className="text-ink-muted">No documents found</p>
             </div>
           )}
         </div>
@@ -344,7 +323,7 @@ export default function DocumentsPage() {
       >
         <div className="space-y-4">
           {/* Drop Zone */}
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary-400 transition-colors">
+          <div className="border-2 border-dashed border-line rounded-lg p-8 text-center hover:border-primary-400 transition-colors">
             <input
               type="file"
               id="file-upload"
@@ -352,14 +331,14 @@ export default function DocumentsPage() {
               onChange={(e) => setUploadData({ ...uploadData, file: e.target.files?.[0] || null })}
             />
             <label htmlFor="file-upload" className="cursor-pointer">
-              <Upload className="w-10 h-10 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-600">
+              <Upload className="w-10 h-10 text-ink-muted mx-auto mb-3" />
+              <p className="text-ink-muted">
                 <span className="text-primary-600 font-medium">Click to upload</span> or drag and drop
               </p>
-              <p className="text-xs text-gray-400 mt-1">PDF, JPG, PNG up to 10MB</p>
+              <p className="text-xs text-ink-muted mt-1">PDF, JPG, PNG up to 10MB</p>
             </label>
             {uploadData.file && (
-              <div className="mt-4 flex items-center justify-center gap-2 text-sm text-gray-600">
+              <div className="mt-4 flex items-center justify-center gap-2 text-sm text-ink-muted">
                 <FileText className="w-4 h-4" />
                 <span>{uploadData.file.name}</span>
               </div>
@@ -393,9 +372,9 @@ export default function DocumentsPage() {
           </Select>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-sm font-medium text-ink-muted mb-1">Description</label>
             <textarea
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="w-full px-3 py-2 border border-line bg-paper text-ink rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               rows={2}
               placeholder="Optional description..."
               value={uploadData.description}
@@ -403,7 +382,7 @@ export default function DocumentsPage() {
             />
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t">
+          <div className="flex justify-end gap-3 pt-4 border-t border-line">
             <Button variant="outline" onClick={() => setShowUploadModal(false)}>
               Cancel
             </Button>
@@ -424,48 +403,55 @@ export default function DocumentsPage() {
         {selectedDoc && (
           <div className="space-y-4">
             {/* Preview Area */}
-            <div className="bg-gray-100 rounded-lg p-8 flex items-center justify-center min-h-48">
+            <div className="bg-bg rounded-lg p-8 flex items-center justify-center min-h-48">
               {selectedDoc.fileType === "image" ? (
                 <div className="text-center">
-                  <Image className="w-16 h-16 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-500">Image Preview</p>
+                  <Image className="w-16 h-16 text-ink-muted mx-auto mb-2" />
+                  <p className="text-sm text-ink-muted">Image Preview</p>
                 </div>
               ) : (
                 <div className="text-center">
-                  <FileText className="w-16 h-16 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-500">PDF Document</p>
+                  <FileText className="w-16 h-16 text-ink-muted mx-auto mb-2" />
+                  <p className="text-sm text-ink-muted">PDF Document</p>
                 </div>
               )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-gray-500">Patient</p>
+                <p className="text-sm text-ink-muted">Patient</p>
                 <p className="font-medium">{selectedDoc.patientName}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Category</p>
-                <Badge variant={typeColors[selectedDoc.type]}>{selectedDoc.category}</Badge>
+                <p className="text-sm text-ink-muted">Category</p>
+                <Badge
+                  style={{
+                    backgroundColor: `${typeAccent(selectedDoc.type)}1f`,
+                    color: typeAccent(selectedDoc.type),
+                  }}
+                >
+                  {selectedDoc.category}
+                </Badge>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Uploaded By</p>
+                <p className="text-sm text-ink-muted">Uploaded By</p>
                 <p className="font-medium">{selectedDoc.uploadedBy}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Upload Date</p>
+                <p className="text-sm text-ink-muted">Upload Date</p>
                 <p className="font-medium">{formatDate(selectedDoc.uploadedAt)}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">File Size</p>
+                <p className="text-sm text-ink-muted">File Size</p>
                 <p className="font-medium">{selectedDoc.size}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Document ID</p>
+                <p className="text-sm text-ink-muted">Document ID</p>
                 <p className="font-mono text-sm">{selectedDoc.id}</p>
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 pt-4 border-t">
+            <div className="flex justify-end gap-3 pt-4 border-t border-line">
               <Button variant="outline" onClick={() => setSelectedDoc(null)}>
                 Close
               </Button>
@@ -501,36 +487,36 @@ function DocumentCard({
         <div className="flex items-start gap-3">
           <FileIcon type={document.fileType} />
           <div className="min-w-0">
-            <h3 className="font-medium text-gray-900 truncate" title={document.name}>
+            <h3 className="font-medium text-ink truncate" title={document.name}>
               {document.name}
             </h3>
-            <p className="text-sm text-gray-500">{document.patientName}</p>
+            <p className="text-sm text-ink-muted">{document.patientName}</p>
           </div>
         </div>
         <div className="relative">
           <button
             onClick={() => setShowMenu(!showMenu)}
-            className="p-1 hover:bg-gray-100 rounded"
+            className="p-1 hover:bg-hover rounded"
           >
-            <MoreVertical className="w-4 h-4 text-gray-400" />
+            <MoreVertical className="w-4 h-4 text-ink-muted" />
           </button>
           {showMenu && (
-            <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border py-1 z-10 min-w-32">
+            <div className="absolute right-0 top-full mt-1 bg-paper rounded-lg shadow-lg border border-line py-1 z-10 min-w-32">
               <button
                 onClick={() => { onView(); setShowMenu(false); }}
-                className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
+                className="w-full px-3 py-2 text-left text-sm hover:bg-hover flex items-center gap-2"
               >
                 <Eye className="w-4 h-4" /> View
               </button>
               <button
                 onClick={() => { onDownload(); setShowMenu(false); }}
-                className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
+                className="w-full px-3 py-2 text-left text-sm hover:bg-hover flex items-center gap-2"
               >
                 <Download className="w-4 h-4" /> Download
               </button>
               <button
                 onClick={() => { onDelete(); setShowMenu(false); }}
-                className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 text-danger-600"
+                className="w-full px-3 py-2 text-left text-sm hover:bg-hover flex items-center gap-2 text-danger-600"
               >
                 <Trash2 className="w-4 h-4" /> Delete
               </button>
@@ -540,11 +526,18 @@ function DocumentCard({
       </div>
 
       <div className="mt-4 flex items-center justify-between">
-        <Badge variant={typeColors[document.type]}>{document.category}</Badge>
-        <span className="text-xs text-gray-500">{document.size}</span>
+        <Badge
+          style={{
+            backgroundColor: `${typeAccent(document.type)}1f`,
+            color: typeAccent(document.type),
+          }}
+        >
+          {document.category}
+        </Badge>
+        <span className="text-xs text-ink-muted">{document.size}</span>
       </div>
 
-      <div className="mt-3 pt-3 border-t flex items-center justify-between text-xs text-gray-500">
+      <div className="mt-3 pt-3 border-t border-line flex items-center justify-between text-xs text-ink-muted">
         <span className="flex items-center gap-1">
           <Calendar className="w-3 h-3" />
           {formatDate(document.uploadedAt)}
@@ -560,16 +553,19 @@ function DocumentCard({
 
 // File Icon Component
 function FileIcon({ type }: { type: string }) {
+  const accent = typeAccent(type);
+  const style = { backgroundColor: `${accent}1f`, color: accent };
+
   if (type === "image") {
     return (
-      <div className="w-10 h-10 rounded-lg bg-warning-100 flex items-center justify-center flex-shrink-0">
-        <Image className="w-5 h-5 text-warning-600" />
+      <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={style}>
+        <Image className="w-5 h-5" />
       </div>
     );
   }
   return (
-    <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center flex-shrink-0">
-      <FileText className="w-5 h-5 text-primary-600" />
+    <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={style}>
+      <FileText className="w-5 h-5" />
     </div>
   );
 }

@@ -18,9 +18,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { revenueData, departmentRevenue } from "@/lib/mock-data";
 import { formatCurrency } from "@/lib/utils";
+import { getChartColors, getChartTooltipStyle, getIdentityColor } from "@/lib/theme";
+import { useThemeStore } from "@/stores";
 
 export function ReportsPage() {
   const navigate = useNavigate();
+  const { theme } = useThemeStore();
+  const mode =
+    theme === "dark" ||
+    (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ? "dark"
+      : "light";
+  const chartColors = getChartColors(mode);
+  const tooltipStyle = getChartTooltipStyle(mode);
   const totalRevenue = revenueData.reduce((sum, d) => sum + d.revenue, 0);
   const totalPatients = revenueData.reduce((sum, d) => sum + d.patients, 0);
 
@@ -111,26 +121,23 @@ export function ReportsPage() {
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={revenueData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="month" stroke="#94a3b8" fontSize={12} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
+                  <XAxis dataKey="month" stroke={chartColors.axis} fontSize={12} />
                   <YAxis
-                    stroke="#94a3b8"
+                    stroke={chartColors.axis}
                     fontSize={12}
                     tickFormatter={(value) => `₹${(value / 100000).toFixed(0)}L`}
                   />
                   <Tooltip
                     formatter={(value) => [formatCurrency(Number(value)), "Revenue"]}
-                    contentStyle={{
-                      borderRadius: "8px",
-                      border: "1px solid #e2e8f0",
-                    }}
+                    {...tooltipStyle}
                   />
                   <Line
                     type="monotone"
                     dataKey="revenue"
-                    stroke="#3b82f6"
+                    stroke={getIdentityColor("revenue", mode)}
                     strokeWidth={3}
-                    dot={{ fill: "#3b82f6", strokeWidth: 2 }}
+                    dot={{ fill: getIdentityColor("revenue", mode), strokeWidth: 2 }}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -147,17 +154,14 @@ export function ReportsPage() {
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={revenueData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="month" stroke="#94a3b8" fontSize={12} />
-                  <YAxis stroke="#94a3b8" fontSize={12} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
+                  <XAxis dataKey="month" stroke={chartColors.axis} fontSize={12} />
+                  <YAxis stroke={chartColors.axis} fontSize={12} />
                   <Tooltip
                     formatter={(value) => [Number(value), "Patients"]}
-                    contentStyle={{
-                      borderRadius: "8px",
-                      border: "1px solid #e2e8f0",
-                    }}
+                    {...tooltipStyle}
                   />
-                  <Bar dataKey="patients" fill="#22c55e" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="patients" fill={getIdentityColor("patients", mode)} radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -176,30 +180,27 @@ export function ReportsPage() {
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={departmentRevenue} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
                   <XAxis
                     type="number"
-                    stroke="#94a3b8"
+                    stroke={chartColors.axis}
                     fontSize={12}
                     tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}K`}
                   />
                   <YAxis
                     type="category"
                     dataKey="department"
-                    stroke="#94a3b8"
+                    stroke={chartColors.axis}
                     fontSize={12}
                     width={120}
                   />
                   <Tooltip
                     formatter={(value) => [formatCurrency(Number(value)), "Revenue"]}
-                    contentStyle={{
-                      borderRadius: "8px",
-                      border: "1px solid #e2e8f0",
-                    }}
+                    {...tooltipStyle}
                   />
                   <Bar dataKey="revenue" radius={[0, 4, 4, 0]}>
                     {departmentRevenue.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
+                      <Cell key={`cell-${index}`} fill={getIdentityColor(entry.department, mode)} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -229,11 +230,12 @@ export function ReportsPage() {
                     labelLine={false}
                   >
                     {departmentRevenue.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
+                      <Cell key={`cell-${index}`} fill={getIdentityColor(entry.department, mode)} />
                     ))}
                   </Pie>
                   <Tooltip
                     formatter={(value) => formatCurrency(Number(value))}
+                    {...tooltipStyle}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -247,7 +249,7 @@ export function ReportsPage() {
                   <div className="flex items-center gap-2">
                     <div
                       className="h-3 w-3 rounded-full"
-                      style={{ backgroundColor: dept.color }}
+                      style={{ backgroundColor: getIdentityColor(dept.department, mode) }}
                     />
                     <span className="text-slate-600">{dept.department}</span>
                   </div>

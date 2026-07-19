@@ -78,7 +78,7 @@ export function AppointmentCalendarPage() {
       case "cancelled":
         return "bg-danger-100 border-danger-300 text-danger-700";
       default:
-        return "bg-slate-100 border-slate-300 text-slate-700";
+        return "bg-slate-100 border-line text-ink-muted";
     }
   };
 
@@ -92,8 +92,8 @@ export function AppointmentCalendarPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Appointments</h1>
-          <p className="text-slate-500">Manage appointments and schedules</p>
+          <h1 className="text-2xl font-bold text-ink">Appointments</h1>
+          <p className="text-ink-muted">Manage appointments and schedules</p>
         </div>
         <Button onClick={() => openBookModal()} className="gap-2">
           <Plus size={16} />
@@ -110,8 +110,8 @@ export function AppointmentCalendarPage() {
               <Button variant="outline" size="icon" onClick={() => navigateDate("prev")}>
                 <ChevronLeft size={16} />
               </Button>
-              <div className="flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2">
-                <CalendarIcon size={16} className="text-slate-400" />
+              <div className="flex items-center gap-2 rounded-lg border border-line px-4 py-2">
+                <CalendarIcon size={16} className="text-ink-muted" />
                 <span className="font-medium">
                   {viewMode === "day"
                     ? format(selectedDate, "EEEE, MMMM d, yyyy")
@@ -130,7 +130,7 @@ export function AppointmentCalendarPage() {
             <div className="flex items-center gap-4">
               {/* Doctor Filter */}
               <select
-                className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                className="rounded-lg border border-line px-3 py-2 text-sm"
                 value={selectedDoctor || ""}
                 onChange={(e) => setSelectedDoctor(e.target.value || null)}
               >
@@ -143,12 +143,12 @@ export function AppointmentCalendarPage() {
               </select>
 
               {/* View Mode Toggle */}
-              <div className="flex rounded-lg border border-slate-200">
+              <div className="flex rounded-lg border border-line">
                 <button
                   onClick={() => setViewMode("day")}
                   className={cn(
                     "px-3 py-1.5 text-sm",
-                    viewMode === "day" ? "bg-slate-100 text-slate-900" : "text-slate-500"
+                    viewMode === "day" ? "bg-selected text-ink" : "text-ink-muted"
                   )}
                 >
                   Day
@@ -157,7 +157,7 @@ export function AppointmentCalendarPage() {
                   onClick={() => setViewMode("week")}
                   className={cn(
                     "px-3 py-1.5 text-sm",
-                    viewMode === "week" ? "bg-slate-100 text-slate-900" : "text-slate-500"
+                    viewMode === "week" ? "bg-selected text-ink" : "text-ink-muted"
                   )}
                 >
                   Week
@@ -172,8 +172,8 @@ export function AppointmentCalendarPage() {
       {!hasVisibleSchedule && (
         <Card>
           <CardContent className="py-10 text-center">
-            <p className="font-medium text-slate-700">No appointments for selected filters</p>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="font-medium text-ink">No appointments for selected filters</p>
+            <p className="mt-1 text-sm text-ink-muted">
               Try changing date/doctor filter or add a new follow-up appointment.
             </p>
           </CardContent>
@@ -184,14 +184,14 @@ export function AppointmentCalendarPage() {
         (viewMode === "day" ? (
         <Card>
           <CardContent className="p-0">
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-line">
               {timeSlots.map((time) => {
                 const slotAppointments = filteredAppointments.filter(
                   (apt) => apt.time === time
                 );
                 return (
                   <div key={time} className="flex min-h-[80px]">
-                    <div className="flex w-20 shrink-0 items-start justify-center border-r border-slate-100 bg-slate-50 py-3 text-sm font-medium text-slate-500">
+                    <div className="flex w-20 shrink-0 items-start justify-center border-r border-line bg-hover py-3 text-sm font-medium text-ink-muted">
                       {time}
                     </div>
                     <div className="flex-1 p-2">
@@ -228,18 +228,18 @@ export function AppointmentCalendarPage() {
           <CardContent className="p-0 overflow-x-auto">
             <table className="w-full min-w-[800px]">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50">
-                  <th className="w-20 p-3 text-left text-sm font-medium text-slate-500">
+                <tr className="border-b border-line bg-hover">
+                  <th className="w-20 p-3 text-left text-sm font-medium text-ink-muted">
                     Time
                   </th>
                   {weekDays.map((day) => (
                     <th
                       key={day.toISOString()}
                       className={cn(
-                        "p-3 text-center text-sm font-medium cursor-pointer hover:bg-slate-100",
+                        "p-3 text-center text-sm font-medium cursor-pointer hover:bg-hover",
                         isSameDay(day, new Date())
                           ? "bg-primary-50 text-primary-600"
-                          : "text-slate-500"
+                          : "text-ink-muted"
                       )}
                       onClick={() => openBookModal(day)}
                     >
@@ -251,8 +251,8 @@ export function AppointmentCalendarPage() {
               </thead>
               <tbody>
                 {timeSlots.map((time) => (
-                  <tr key={time} className="border-b border-slate-100">
-                    <td className="p-3 text-sm text-slate-500 bg-slate-50">{time}</td>
+                  <tr key={time} className="border-b border-line">
+                    <td className="p-3 text-sm text-ink-muted bg-hover">{time}</td>
                     {weekDays.map((day) => {
                       const dayAppointments = filteredAppointments.filter(
                         (apt) =>
@@ -261,7 +261,7 @@ export function AppointmentCalendarPage() {
                       return (
                         <td
                           key={day.toISOString()}
-                          className="p-1 align-top min-h-[60px] cursor-pointer hover:bg-slate-50"
+                          className="p-1 align-top min-h-[60px] cursor-pointer hover:bg-hover"
                           onClick={() => openBookModal(day)}
                         >
                           {dayAppointments.map((apt) => (

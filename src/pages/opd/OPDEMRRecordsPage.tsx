@@ -39,8 +39,8 @@ export function OPDEMRRecordsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">EMR Records</h1>
-        <p className="text-slate-500">Search and reopen consultation records</p>
+        <h1 className="text-2xl font-bold text-ink">EMR Records</h1>
+        <p className="text-ink-muted">Search and reopen consultation records</p>
       </div>
 
       <Card className="p-4">
@@ -57,11 +57,11 @@ export function OPDEMRRecordsPage() {
           <Card key={record.id} className="p-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="font-semibold text-slate-900">Visit {record.visitId}</p>
-                <p className="text-sm text-slate-500">
+                <p className="font-semibold text-ink">Visit {record.visitId}</p>
+                <p className="text-sm text-ink-muted">
                   Patient {record.patientId} • Dr. {record.doctorName} • {formatDate(record.date)}
                 </p>
-                <p className="mt-1 text-sm text-slate-700">{record.diagnosis || "No diagnosis"}</p>
+                <p className="mt-1 text-sm text-ink-muted">{record.diagnosis || "No diagnosis"}</p>
               </div>
               <div className="flex items-center gap-2">
                 <Badge variant="primary">{record.prescription.length} meds</Badge>
@@ -79,7 +79,7 @@ export function OPDEMRRecordsPage() {
       </div>
 
       {filtered.length === 0 && (
-        <Card className="p-8 text-center text-slate-500">No EMR records found.</Card>
+        <Card className="p-8 text-center text-ink-muted">No EMR records found.</Card>
       )}
     </div>
   );

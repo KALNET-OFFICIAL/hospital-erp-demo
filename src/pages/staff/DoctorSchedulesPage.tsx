@@ -15,6 +15,7 @@ import { Modal, ModalBody, ModalFooter } from "@/components/ui/modal";
 import { cn } from "@/lib/utils";
 import { format, startOfWeek, addDays, isSameDay, addWeeks, subWeeks } from "date-fns";
 import { staff } from "@/lib/mock-data";
+import { getIdentityColor, getCurrentThemeMode } from "@/lib/theme";
 
 interface Schedule {
   id: string;
@@ -49,11 +50,14 @@ const mockSchedules: Schedule[] = [
   { id: "SCH020", doctorId: "DOC005", dayOfWeek: 0, startTime: "10:00", endTime: "14:00", type: "on-call" },
 ];
 
+// Schedule type is a category, not a state — colored via the identity
+// palette (getIdentityColor) below so each type keeps a stable, consistent
+// hue everywhere it appears instead of a hand-picked hex per type.
 const scheduleTypes = [
-  { value: "opd", label: "OPD", color: "bg-blue-100 text-blue-700 border-blue-200" },
-  { value: "surgery", label: "Surgery", color: "bg-red-100 text-red-700 border-red-200" },
-  { value: "rounds", label: "Rounds", color: "bg-green-100 text-green-700 border-green-200" },
-  { value: "on-call", label: "On-Call", color: "bg-amber-100 text-amber-700 border-amber-200" },
+  { value: "opd", label: "OPD" },
+  { value: "surgery", label: "Surgery" },
+  { value: "rounds", label: "Rounds" },
+  { value: "on-call", label: "On-Call" },
 ];
 
 const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -126,8 +130,8 @@ export function DoctorSchedulesPage() {
       .sort((a, b) => a.startTime.localeCompare(b.startTime));
   };
 
-  const getTypeStyle = (type: Schedule["type"]) => {
-    return scheduleTypes.find((t) => t.value === type)?.color || "";
+  const getTypeAccent = (type: Schedule["type"]) => {
+    return getIdentityColor(type, getCurrentThemeMode());
   };
 
   const getDoctorName = (doctorId: string) => {
@@ -139,8 +143,8 @@ export function DoctorSchedulesPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Doctor Schedules</h1>
-          <p className="text-slate-500">Manage doctor work schedules and shifts</p>
+          <h1 className="text-2xl font-bold text-ink">Doctor Schedules</h1>
+          <p className="text-ink-muted">Manage doctor work schedules and shifts</p>
         </div>
         <Button className="gap-2" onClick={() => openScheduleModal()}>
           <Plus size={16} />
@@ -152,7 +156,7 @@ export function DoctorSchedulesPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
           <select
-            className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="rounded-lg border border-line px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
             value={selectedDoctor}
             onChange={(e) => setSelectedDoctor(e.target.value)}
           >
@@ -168,7 +172,7 @@ export function DoctorSchedulesPage() {
           <Button variant="outline" size="sm" onClick={() => setCurrentWeek(subWeeks(currentWeek, 1))}>
             <ChevronLeft size={16} />
           </Button>
-          <span className="px-4 text-sm font-medium text-slate-700">
+          <span className="px-4 text-sm font-medium text-ink-muted">
             {format(currentWeek, "MMM d")} - {format(addDays(currentWeek, 6), "MMM d, yyyy")}
           </span>
           <Button variant="outline" size="sm" onClick={() => setCurrentWeek(addWeeks(currentWeek, 1))}>
@@ -182,32 +186,38 @@ export function DoctorSchedulesPage() {
 
       {/* Legend */}
       <div className="flex flex-wrap gap-4">
-        {scheduleTypes.map((type) => (
-          <div key={type.value} className="flex items-center gap-2">
-            <div className={cn("w-4 h-4 rounded border", type.color)} />
-            <span className="text-sm text-slate-600">{type.label}</span>
-          </div>
-        ))}
+        {scheduleTypes.map((type) => {
+          const accent = getTypeAccent(type.value as Schedule["type"]);
+          return (
+            <div key={type.value} className="flex items-center gap-2">
+              <div
+                className="w-4 h-4 rounded border"
+                style={{ backgroundColor: `${accent}1f`, borderColor: accent }}
+              />
+              <span className="text-sm text-ink-muted">{type.label}</span>
+            </div>
+          );
+        })}
       </div>
 
       {/* Calendar Grid */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div className="grid grid-cols-8 border-b border-gray-200">
-          <div className="p-3 text-center text-sm font-medium text-slate-500 bg-slate-50">
+      <div className="bg-paper rounded-xl border border-line overflow-hidden">
+        <div className="grid grid-cols-8 border-b border-line">
+          <div className="p-3 text-center text-sm font-medium text-ink-muted bg-slate-50">
             Time
           </div>
           {weekDays.map((day, i) => (
             <div
               key={i}
               className={cn(
-                "p-3 text-center border-l border-gray-200",
-                isSameDay(day, new Date()) ? "bg-blue-50" : "bg-slate-50"
+                "p-3 text-center border-l border-line",
+                isSameDay(day, new Date()) ? "bg-selected" : "bg-slate-50"
               )}
             >
-              <p className="text-xs text-slate-500">{dayNames[day.getDay()]}</p>
+              <p className="text-xs text-ink-muted">{dayNames[day.getDay()]}</p>
               <p className={cn(
                 "text-lg font-semibold",
-                isSameDay(day, new Date()) ? "text-blue-600" : "text-slate-900"
+                isSameDay(day, new Date()) ? "text-primary-600" : "text-ink"
               )}>
                 {format(day, "d")}
               </p>
@@ -215,10 +225,10 @@ export function DoctorSchedulesPage() {
           ))}
         </div>
 
-        <div className="divide-y divide-gray-100">
+        <div className="divide-y divide-line">
           {timeSlots.map((time) => (
             <div key={time} className="grid grid-cols-8 min-h-[60px]">
-              <div className="p-2 text-xs text-slate-500 bg-slate-50 border-r border-gray-100">
+              <div className="p-2 text-xs text-ink-muted bg-slate-50 border-r border-line">
                 {time}
               </div>
               {weekDays.map((day, dayIndex) => {
@@ -229,20 +239,21 @@ export function DoctorSchedulesPage() {
                   <div
                     key={dayIndex}
                     className={cn(
-                      "p-1 border-l border-gray-100 relative cursor-pointer hover:bg-slate-50",
-                      isSameDay(day, new Date()) && "bg-blue-50/30"
+                      "p-1 border-l border-line relative cursor-pointer hover:bg-hover",
+                      isSameDay(day, new Date()) && "bg-selected"
                     )}
                     onClick={() => openScheduleModal(undefined, day.getDay())}
                   >
-                    {daySchedules.map((schedule) => (
-                      schedule.startTime === time && (
+                    {daySchedules.map((schedule) => {
+                      const accent = getTypeAccent(schedule.type);
+                      return schedule.startTime === time && (
                         <div
                           key={schedule.id}
-                          className={cn(
-                            "p-1.5 rounded text-xs border cursor-pointer",
-                            getTypeStyle(schedule.type)
-                          )}
+                          className="p-1.5 rounded text-xs border cursor-pointer"
                           style={{
+                            backgroundColor: `${accent}1f`,
+                            borderColor: accent,
+                            color: accent,
                             position: "absolute",
                             top: "2px",
                             left: "2px",
@@ -264,8 +275,8 @@ export function DoctorSchedulesPage() {
                             <p className="truncate opacity-75">{schedule.location}</p>
                           )}
                         </div>
-                      )
-                    ))}
+                      );
+                    })}
                   </div>
                 );
               })}
@@ -284,9 +295,9 @@ export function DoctorSchedulesPage() {
         <ModalBody>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Doctor</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">Doctor</label>
               <select
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 value={formData.doctorId || ""}
                 onChange={(e) => setFormData({ ...formData, doctorId: e.target.value })}
               >
@@ -300,9 +311,9 @@ export function DoctorSchedulesPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Day of Week</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">Day of Week</label>
               <select
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 value={formData.dayOfWeek ?? 1}
                 onChange={(e) => setFormData({ ...formData, dayOfWeek: Number(e.target.value) })}
               >
@@ -314,19 +325,19 @@ export function DoctorSchedulesPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Start Time</label>
+                <label className="block text-sm font-medium text-ink-muted mb-1.5">Start Time</label>
                 <input
                   type="time"
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-line px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                   value={formData.startTime || "09:00"}
                   onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">End Time</label>
+                <label className="block text-sm font-medium text-ink-muted mb-1.5">End Time</label>
                 <input
                   type="time"
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-line px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                   value={formData.endTime || "17:00"}
                   onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
                 />
@@ -334,9 +345,9 @@ export function DoctorSchedulesPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Schedule Type</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">Schedule Type</label>
               <select
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 value={formData.type || "opd"}
                 onChange={(e) => setFormData({ ...formData, type: e.target.value as Schedule["type"] })}
               >
@@ -347,10 +358,10 @@ export function DoctorSchedulesPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Location</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">Location</label>
               <input
                 type="text"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 value={formData.location || ""}
                 onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                 placeholder="e.g., OPD Room 1, OT 2"
@@ -387,7 +398,7 @@ export function DoctorSchedulesPage() {
         title="Confirm Delete"
       >
         <ModalBody>
-          <p className="text-slate-600">
+          <p className="text-ink-muted">
             Are you sure you want to delete this schedule?
           </p>
         </ModalBody>

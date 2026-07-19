@@ -251,8 +251,8 @@ export function IPDAdmissionsPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">IPD Admissions</h1>
-          <p className="text-slate-500">Manage inpatient admissions and records</p>
+          <h1 className="text-2xl font-bold text-ink">IPD Admissions</h1>
+          <p className="text-ink-muted">Manage inpatient admissions and records</p>
         </div>
         <Button className="gap-2" onClick={() => setShowNewAdmissionModal(true)}>
           <Plus size={16} />
@@ -267,15 +267,15 @@ export function IPDAdmissionsPage() {
           tabIndex={0}
           onClick={() => setStatusFilter("all")}
           onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setStatusFilter("all")}
-          className="bg-white rounded-xl border border-gray-200 p-5 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5"
+          className="bg-paper rounded-xl border border-line p-5 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5"
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-              <BedDouble className="h-5 w-5 text-blue-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100">
+              <BedDouble className="h-5 w-5 text-ink-muted" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Total Admissions</p>
-              <p className="text-2xl font-bold text-slate-900">{stats.total}</p>
+              <p className="text-sm text-ink-muted">Total Admissions</p>
+              <p className="text-2xl font-bold text-ink">{stats.total}</p>
             </div>
           </div>
         </div>
@@ -284,15 +284,15 @@ export function IPDAdmissionsPage() {
           tabIndex={0}
           onClick={() => setStatusFilter("admitted")}
           onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setStatusFilter("admitted")}
-          className="bg-white rounded-xl border border-gray-200 p-5 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5"
+          className="bg-paper rounded-xl border border-line p-5 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5"
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
-              <User className="h-5 w-5 text-green-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-success-100">
+              <User className="h-5 w-5 text-success-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Currently Admitted</p>
-              <p className="text-2xl font-bold text-green-600">{stats.admitted}</p>
+              <p className="text-sm text-ink-muted">Currently Admitted</p>
+              <p className="text-2xl font-bold text-success-600">{stats.admitted}</p>
             </div>
           </div>
         </div>
@@ -303,15 +303,15 @@ export function IPDAdmissionsPage() {
           onKeyDown={(e) =>
             (e.key === "Enter" || e.key === " ") && setStatusFilter("discharged")
           }
-          className="bg-white rounded-xl border border-gray-200 p-5 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5"
+          className="bg-paper rounded-xl border border-line p-5 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5"
         >
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100">
-              <FileText className="h-5 w-5 text-slate-600" />
+              <FileText className="h-5 w-5 text-ink-muted" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Discharged</p>
-              <p className="text-2xl font-bold text-slate-600">{stats.discharged}</p>
+              <p className="text-sm text-ink-muted">Discharged</p>
+              <p className="text-2xl font-bold text-ink-muted">{stats.discharged}</p>
             </div>
           </div>
         </div>
@@ -320,15 +320,15 @@ export function IPDAdmissionsPage() {
           tabIndex={0}
           onClick={() => navigate("/reports/ipd")}
           onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && navigate("/reports/ipd")}
-          className="bg-white rounded-xl border border-gray-200 p-5 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5"
+          className="bg-paper rounded-xl border border-line p-5 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5"
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
-              <Clock className="h-5 w-5 text-purple-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+              <Clock className="h-5 w-5 text-primary-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Avg Stay (days)</p>
-              <p className="text-2xl font-bold text-purple-600">{stats.avgStay}</p>
+              <p className="text-sm text-ink-muted">Avg Stay (days)</p>
+              <p className="text-2xl font-bold text-primary-600">{stats.avgStay}</p>
             </div>
           </div>
         </div>
@@ -371,27 +371,27 @@ export function IPDAdmissionsPage() {
       </div>
 
       {/* Admissions Table */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-paper rounded-xl border border-line overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-50 border-b border-gray-200">
+            <thead className="bg-slate-50 border-b border-line">
               <tr>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Patient</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Ward / Bed</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Doctor</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Diagnosis</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Admission Date</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Status</th>
-                <th className="text-right text-sm font-medium text-slate-600 px-6 py-4">Actions</th>
+                <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Patient</th>
+                <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Ward / Bed</th>
+                <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Doctor</th>
+                <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Diagnosis</th>
+                <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Admission Date</th>
+                <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Status</th>
+                <th className="text-right text-sm font-medium text-ink-muted px-6 py-4">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-line">
               {filteredAdmissions.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="px-6 py-12 text-center">
                     <div className="flex flex-col items-center gap-2">
                       <AlertCircle className="h-8 w-8 text-slate-300" />
-                      <p className="text-slate-500">No admissions found</p>
+                      <p className="text-ink-muted">No admissions found</p>
                     </div>
                   </td>
                 </tr>
@@ -400,12 +400,12 @@ export function IPDAdmissionsPage() {
                   <tr key={admission.id} className="hover:bg-slate-50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100">
-                          <User className="h-5 w-5 text-blue-600" />
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100">
+                          <User className="h-5 w-5 text-ink-muted" />
                         </div>
                         <div>
-                          <p className="font-medium text-slate-900">{admission.patientName}</p>
-                          <p className="text-sm text-slate-500">ID: {admission.patientId}</p>
+                          <p className="font-medium text-ink">{admission.patientName}</p>
+                          <p className="text-sm text-ink-muted">ID: {admission.patientId}</p>
                         </div>
                       </div>
                     </td>
@@ -413,26 +413,26 @@ export function IPDAdmissionsPage() {
                       <div className="flex items-center gap-2">
                         <BedDouble className="h-4 w-4 text-slate-400" />
                         <div>
-                          <p className="font-medium text-slate-900">{admission.bedNumber}</p>
-                          <p className="text-sm text-slate-500">{admission.wardName}</p>
+                          <p className="font-medium text-ink">{admission.bedNumber}</p>
+                          <p className="text-sm text-ink-muted">{admission.wardName}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <Stethoscope className="h-4 w-4 text-slate-400" />
-                        <span className="text-slate-700">{admission.doctorName}</span>
+                        <span className="text-ink-muted">{admission.doctorName}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-slate-700 max-w-[200px] truncate" title={admission.diagnosis}>
+                      <p className="text-ink-muted max-w-[200px] truncate" title={admission.diagnosis}>
                         {admission.diagnosis}
                       </p>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-slate-400" />
-                        <span className="text-slate-700">
+                        <span className="text-ink-muted">
                           {format(new Date(admission.admissionDate), "dd MMM yyyy")}
                         </span>
                       </div>
@@ -475,11 +475,11 @@ export function IPDAdmissionsPage() {
         <ModalBody>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">
                 Select Patient
               </label>
               <select
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
                 value={selectedPatient}
                 onChange={(e) => setSelectedPatient(e.target.value)}
               >
@@ -499,9 +499,9 @@ export function IPDAdmissionsPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Ward</label>
+                <label className="block text-sm font-medium text-ink-muted mb-1.5">Ward</label>
                 <select
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
                   value={selectedWard}
                   onChange={(e) => {
                     setSelectedWard(e.target.value);
@@ -518,9 +518,9 @@ export function IPDAdmissionsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Bed</label>
+                <label className="block text-sm font-medium text-ink-muted mb-1.5">Bed</label>
                 <select
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
                   value={selectedBed}
                   onChange={(e) => setSelectedBed(e.target.value)}
                   disabled={!selectedWard}
@@ -536,11 +536,11 @@ export function IPDAdmissionsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">
                 Attending Doctor
               </label>
               <select
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
                 value={selectedDoctor}
                 onChange={(e) => setSelectedDoctor(e.target.value)}
               >
@@ -554,11 +554,11 @@ export function IPDAdmissionsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">
                 Diagnosis / Reason for Admission
               </label>
               <textarea
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
                 rows={3}
                 placeholder="Enter diagnosis or reason for admission..."
                 value={diagnosis}

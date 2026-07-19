@@ -119,7 +119,7 @@ export function PatientEditPage() {
   if (!patient) {
     return (
       <div className="flex h-96 items-center justify-center">
-        <p className="text-slate-500">Patient not found</p>
+        <p className="text-ink-muted">Patient not found</p>
       </div>
     );
   }
@@ -132,8 +132,8 @@ export function PatientEditPage() {
           <ArrowLeft size={20} />
         </Button>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Edit Patient</h1>
-          <p className="text-slate-500">Update patient information for {patient.id}</p>
+          <h1 className="text-2xl font-bold text-ink">Edit Patient</h1>
+          <p className="text-ink-muted">Update patient information for {patient.id}</p>
         </div>
       </div>
 

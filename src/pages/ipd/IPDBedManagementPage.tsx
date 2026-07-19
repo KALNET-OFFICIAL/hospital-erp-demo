@@ -54,7 +54,7 @@ export function IPDBedManagementPage() {
       case "occupied":
         return "bg-danger-100 border-danger-300 text-danger-700";
       case "maintenance":
-        return "bg-slate-100 border-slate-300 text-slate-500";
+        return "bg-slate-100 border-slate-300 text-ink-muted";
       case "reserved":
         return "bg-warning-100 border-warning-300 text-warning-700";
     }
@@ -72,8 +72,8 @@ export function IPDBedManagementPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Bed Management</h1>
-          <p className="text-slate-500">IPD bed allocation and status</p>
+          <h1 className="text-2xl font-bold text-ink">Bed Management</h1>
+          <p className="text-ink-muted">IPD bed allocation and status</p>
         </div>
         <Button className="gap-2" onClick={() => navigate("/ipd?new=true")}>
           <Plus size={16} />
@@ -87,11 +87,11 @@ export function IPDBedManagementPage() {
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100">
-                <BedDouble className="h-5 w-5 text-slate-600" />
+                <BedDouble className="h-5 w-5 text-ink-muted" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Total Beds</p>
-                <p className="text-xl font-bold text-slate-900">{stats.total}</p>
+                <p className="text-sm text-ink-muted">Total Beds</p>
+                <p className="text-xl font-bold text-ink">{stats.total}</p>
               </div>
             </div>
           </CardContent>
@@ -103,7 +103,7 @@ export function IPDBedManagementPage() {
                 <BedDouble className="h-5 w-5 text-success-600" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Available</p>
+                <p className="text-sm text-ink-muted">Available</p>
                 <p className="text-xl font-bold text-success-600">{stats.available}</p>
               </div>
             </div>
@@ -116,7 +116,7 @@ export function IPDBedManagementPage() {
                 <User className="h-5 w-5 text-danger-600" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Occupied</p>
+                <p className="text-sm text-ink-muted">Occupied</p>
                 <p className="text-xl font-bold text-danger-600">{stats.occupied}</p>
               </div>
             </div>
@@ -129,7 +129,7 @@ export function IPDBedManagementPage() {
                 <AlertTriangle className="h-5 w-5 text-warning-600" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Maintenance</p>
+                <p className="text-sm text-ink-muted">Maintenance</p>
                 <p className="text-xl font-bold text-warning-600">{stats.maintenance}</p>
               </div>
             </div>
@@ -237,23 +237,23 @@ export function IPDBedManagementPage() {
               .map((admission) => (
                 <div
                   key={admission.id}
-                  className="flex items-center gap-4 rounded-lg border border-slate-200 p-4"
+                  className="flex items-center gap-4 rounded-lg border border-line p-4"
                 >
                   <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary-100">
                     <User className="h-6 w-6 text-primary-600" />
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium text-slate-900">
+                    <p className="font-medium text-ink">
                       {admission.patientName}
                     </p>
-                    <p className="text-sm text-slate-500">{admission.diagnosis}</p>
+                    <p className="text-sm text-ink-muted">{admission.diagnosis}</p>
                   </div>
                   <div className="text-right">
                     <Badge variant="primary">{admission.bedNumber}</Badge>
-                    <p className="mt-1 text-sm text-slate-500">{admission.wardName}</p>
+                    <p className="mt-1 text-sm text-ink-muted">{admission.wardName}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-slate-500">{admission.doctorName}</p>
+                    <p className="text-sm text-ink-muted">{admission.doctorName}</p>
                   </div>
                 </div>
               ))}

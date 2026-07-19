@@ -35,8 +35,8 @@ export function AppointmentListPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Appointment List</h1>
-          <p className="text-slate-500">Track all bookings and consultation states</p>
+          <h1 className="text-2xl font-bold text-ink">Appointment List</h1>
+          <p className="text-ink-muted">Track all bookings and consultation states</p>
         </div>
         <Button onClick={() => setShowBookModal(true)} className="gap-2">
           <Plus size={16} />
@@ -53,7 +53,7 @@ export function AppointmentListPage() {
             onChange={(e) => setQuery(e.target.value)}
           />
           <select
-            className="h-10 rounded-lg border border-slate-300 px-3 text-sm"
+            className="h-10 rounded-lg border border-line px-3 text-sm"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
           >
@@ -72,9 +72,9 @@ export function AppointmentListPage() {
           <Card key={appointment.id} className="p-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="space-y-1">
-                <p className="font-semibold text-slate-900">{appointment.patientName}</p>
-                <p className="text-sm text-slate-500">{appointment.id}</p>
-                <div className="flex flex-wrap items-center gap-3 text-sm text-slate-600">
+                <p className="font-semibold text-ink">{appointment.patientName}</p>
+                <p className="text-sm text-ink-muted">{appointment.id}</p>
+                <div className="flex flex-wrap items-center gap-3 text-sm text-ink-muted">
                   <span className="flex items-center gap-1">
                     <User size={14} />
                     {appointment.doctorName}

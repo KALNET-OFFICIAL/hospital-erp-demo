@@ -62,15 +62,15 @@ const PrintPrescription = forwardRef<HTMLDivElement, PrintPrescriptionProps>(
         style={{ fontFamily: "Arial, sans-serif" }}
       >
         {/* Header */}
-        <div className="border-b-2 border-blue-600 pb-4 mb-4">
+        <div className="border-b-2 border-gray-800 pb-4 mb-4">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-2xl font-bold text-blue-800">{hospital.name}</h1>
+              <h1 className="text-2xl font-bold text-gray-900">{hospital.name}</h1>
               <p className="text-gray-600 mt-1">{hospital.address}</p>
               <p className="text-gray-600">Phone: {hospital.phone}</p>
             </div>
             <div className="text-right">
-              <p className="text-blue-800 font-bold text-lg">
+              <p className="text-gray-900 font-bold text-lg">
                 Dr. {data.doctorName}
               </p>
               {data.doctorQualification && (
@@ -82,7 +82,7 @@ const PrintPrescription = forwardRef<HTMLDivElement, PrintPrescriptionProps>(
                 </p>
               )}
               {data.department && (
-                <p className="text-blue-600 font-medium">{data.department}</p>
+                <p className="text-gray-600 font-medium">{data.department}</p>
               )}
             </div>
           </div>
@@ -167,18 +167,18 @@ const PrintPrescription = forwardRef<HTMLDivElement, PrintPrescriptionProps>(
 
         {/* Diagnosis */}
         {data.diagnosis && (
-          <div className="mb-6 p-3 bg-blue-50 rounded border-l-4 border-blue-500">
-            <h3 className="font-bold text-blue-800 mb-1 text-xs uppercase">
+          <div className="mb-6 p-3 bg-gray-50 rounded border-l-4 border-gray-800">
+            <h3 className="font-bold text-gray-900 mb-1 text-xs uppercase">
               Diagnosis
             </h3>
-            <p className="text-blue-900">{data.diagnosis}</p>
+            <p className="text-gray-900">{data.diagnosis}</p>
           </div>
         )}
 
         {/* Rx Symbol & Medicines */}
         <div className="mb-6">
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-3xl font-serif text-blue-600">℞</span>
+            <span className="text-3xl font-serif text-gray-800">℞</span>
             <h3 className="font-bold text-gray-800 text-xs uppercase">
               Medications
             </h3>

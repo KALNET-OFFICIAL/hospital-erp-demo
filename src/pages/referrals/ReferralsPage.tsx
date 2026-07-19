@@ -119,12 +119,12 @@ export function ReferralsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Patient Referrals</h1>
-        <p className="text-slate-500">Internal junior-to-senior and external specialist referrals</p>
+        <h1 className="text-2xl font-bold text-ink">Patient Referrals</h1>
+        <p className="text-ink-muted">Internal junior-to-senior and external specialist referrals</p>
       </div>
 
       <Card className="space-y-4 p-4">
-        <div className="flex items-center gap-2 text-slate-900">
+        <div className="flex items-center gap-2 text-ink">
           <Plus className="h-4 w-4" />
           <p className="font-semibold">Create Referral</p>
         </div>
@@ -225,14 +225,14 @@ export function ReferralsPage() {
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <div className="flex items-center gap-2">
-                  <p className="font-semibold text-slate-900">{referral.patientName}</p>
+                  <p className="font-semibold text-ink">{referral.patientName}</p>
                   <Badge variant={statusVariant[referral.status]}>{referral.status}</Badge>
                   <Badge variant={referral.priority === "critical" ? "danger" : referral.priority === "urgent" ? "warning" : "default"}>
                     {referral.priority}
                   </Badge>
                 </div>
-                <p className="text-sm text-slate-600">{referral.reason}</p>
-                <p className="text-xs text-slate-500">
+                <p className="text-sm text-ink-muted">{referral.reason}</p>
+                <p className="text-xs text-ink-muted">
                   {referral.toType === "internal" ? (
                     <span className="inline-flex items-center gap-1"><Stethoscope className="h-3 w-3" /> To: {referral.toDoctorName}</span>
                   ) : (
@@ -242,7 +242,7 @@ export function ReferralsPage() {
                   Requested {formatDate(referral.requestedAt)} by {referral.fromDoctorName}
                 </p>
                 {referral.attachments && referral.attachments.length > 0 && (
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-ink-muted">
                     Attachments: {referral.attachments.join(", ")}
                   </p>
                 )}
@@ -272,7 +272,7 @@ export function ReferralsPage() {
       </div>
 
       {visibleReferrals.length === 0 && (
-        <Card className="p-10 text-center text-slate-500">No referrals yet.</Card>
+        <Card className="p-10 text-center text-ink-muted">No referrals yet.</Card>
       )}
     </div>
   );

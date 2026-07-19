@@ -42,8 +42,8 @@ export function BillingListPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Billing</h1>
-          <p className="text-slate-500">Manage invoices and payments</p>
+          <h1 className="text-2xl font-bold text-ink">Billing</h1>
+          <p className="text-ink-muted">Manage invoices and payments</p>
         </div>
         <Button onClick={() => navigate("/billing/new")} className="gap-2">
           <Plus size={16} />
@@ -63,8 +63,8 @@ export function BillingListPage() {
           className="hover:shadow-lg hover:-translate-y-0.5"
         >
           <CardContent className="p-4">
-            <p className="text-sm text-slate-500">Total Invoices</p>
-            <p className="text-2xl font-bold text-slate-900">{invoices.length}</p>
+            <p className="text-sm text-ink-muted">Total Invoices</p>
+            <p className="text-2xl font-bold text-ink">{invoices.length}</p>
           </CardContent>
         </Card>
         <Card
@@ -74,7 +74,7 @@ export function BillingListPage() {
           className="hover:shadow-lg hover:-translate-y-0.5"
         >
           <CardContent className="p-4">
-            <p className="text-sm text-slate-500">Collected Today</p>
+            <p className="text-sm text-ink-muted">Collected Today</p>
             <p className="text-2xl font-bold text-success-600">
               {formatCurrency(totalCollected)}
             </p>
@@ -87,7 +87,7 @@ export function BillingListPage() {
           className="hover:shadow-lg hover:-translate-y-0.5"
         >
           <CardContent className="p-4">
-            <p className="text-sm text-slate-500">Pending Amount</p>
+            <p className="text-sm text-ink-muted">Pending Amount</p>
             <p className="text-2xl font-bold text-warning-600">
               {formatCurrency(totalPending)}
             </p>
@@ -109,7 +109,7 @@ export function BillingListPage() {
             </div>
             <div className="flex items-center gap-2">
               <select
-                className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                className="rounded-lg border border-line bg-paper px-3 py-2 text-sm text-ink"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
               >
@@ -157,7 +157,7 @@ export function BillingListPage() {
                     {invoice.type}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-slate-500">
+                <TableCell className="text-ink-muted">
                   {formatDate(invoice.createdAt)}
                 </TableCell>
                 <TableCell className="font-medium">

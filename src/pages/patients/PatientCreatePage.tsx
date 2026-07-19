@@ -93,8 +93,8 @@ export function PatientCreatePage() {
           <ArrowLeft size={20} />
         </Button>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Register New Patient</h1>
-          <p className="text-slate-500">Quick registration form</p>
+          <h1 className="text-2xl font-bold text-ink">Register New Patient</h1>
+          <p className="text-ink-muted">Quick registration form</p>
         </div>
       </div>
 

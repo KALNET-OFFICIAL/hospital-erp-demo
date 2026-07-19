@@ -165,8 +165,8 @@ export default function DoctorAvailabilityPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Doctor Availability</h1>
-          <p className="text-gray-500">Configure working hours and leaves</p>
+          <h1 className="text-2xl font-bold text-ink">Doctor Availability</h1>
+          <p className="text-ink-muted">Configure working hours and leaves</p>
         </div>
         <Button>
           <Save className="w-4 h-4 mr-2" />
@@ -189,8 +189,8 @@ export default function DoctorAvailabilityPage() {
           </div>
           {selectedDoctorInfo && (
             <div className="text-right">
-              <p className="text-sm text-gray-500">{selectedDoctorInfo.department}</p>
-              <p className="text-sm text-gray-400">{selectedDoctorInfo.phone}</p>
+              <p className="text-sm text-ink-muted">{selectedDoctorInfo.department}</p>
+              <p className="text-sm text-ink-muted">{selectedDoctorInfo.phone}</p>
             </div>
           )}
         </div>
@@ -209,8 +209,8 @@ export default function DoctorAvailabilityPage() {
                     onClick={() => handleToggleDay(schedule.day)}
                     className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                       schedule.isAvailable
-                        ? "bg-green-100 text-green-600"
-                        : "bg-gray-100 text-gray-400"
+                        ? "bg-success-50 text-success-600"
+                        : "bg-slate-100 text-ink-muted"
                     }`}
                   >
                     {schedule.isAvailable ? (
@@ -221,7 +221,7 @@ export default function DoctorAvailabilityPage() {
                   </button>
                   <div>
                     <p className="font-semibold capitalize">{schedule.day}</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-ink-muted">
                       {schedule.isAvailable
                         ? `${schedule.slots.length} slot(s)`
                         : "Not available"}
@@ -257,10 +257,10 @@ export default function DoctorAvailabilityPage() {
                   {schedule.slots.map((slot) => (
                     <div
                       key={slot.id}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      className="flex items-center justify-between p-3 bg-hover rounded-lg"
                     >
                       <div className="flex items-center gap-3">
-                        <Clock className="w-4 h-4 text-gray-400" />
+                        <Clock className="w-4 h-4 text-ink-muted" />
                         <span className="font-medium">
                           {slot.startTime} - {slot.endTime}
                         </span>
@@ -271,7 +271,7 @@ export default function DoctorAvailabilityPage() {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleDeleteSlot(schedule.day, slot.id)}
-                        className="text-red-500 hover:text-red-700"
+                        className="text-danger-500 hover:text-danger-700"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -296,12 +296,18 @@ export default function DoctorAvailabilityPage() {
           <Card className="p-4">
             <div className="space-y-3">
               {leaves.length === 0 ? (
-                <p className="text-gray-500 text-center py-4">No upcoming leaves</p>
+                <p className="text-ink-muted text-center py-4">No upcoming leaves</p>
               ) : (
                 leaves.map((leave) => (
                   <div
                     key={leave.id}
-                    className="p-3 bg-gray-50 rounded-lg border-l-4 border-orange-400"
+                    className={`p-3 bg-hover rounded-lg border-l-4 ${
+                      leave.status === "approved"
+                        ? "border-l-success-400"
+                        : leave.status === "rejected"
+                        ? "border-l-danger-400"
+                        : "border-l-warning-400"
+                    }`}
                   >
                     <div className="flex items-start justify-between">
                       <div>
@@ -317,7 +323,7 @@ export default function DoctorAvailabilityPage() {
                             year: "numeric",
                           })}
                         </p>
-                        <p className="text-sm text-gray-500">{leave.reason}</p>
+                        <p className="text-sm text-ink-muted">{leave.reason}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <Badge
@@ -336,7 +342,7 @@ export default function DoctorAvailabilityPage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleCancelLeave(leave.id)}
-                            className="text-red-500"
+                            className="text-danger-500"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
@@ -351,23 +357,23 @@ export default function DoctorAvailabilityPage() {
 
           {/* Quick Stats */}
           <Card className="p-4">
-            <h3 className="text-sm font-medium text-gray-500 mb-3">This Month</h3>
+            <h3 className="text-sm font-medium text-ink-muted mb-3">This Month</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="text-center">
                 <p className="text-2xl font-bold text-primary-600">24</p>
-                <p className="text-xs text-gray-500">Working Days</p>
+                <p className="text-xs text-ink-muted">Working Days</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-orange-600">2</p>
-                <p className="text-xs text-gray-500">Leave Days</p>
+                <p className="text-2xl font-bold text-warning-600">2</p>
+                <p className="text-xs text-ink-muted">Leave Days</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-green-600">156</p>
-                <p className="text-xs text-gray-500">Available Slots</p>
+                <p className="text-2xl font-bold text-success-600">156</p>
+                <p className="text-xs text-ink-muted">Available Slots</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-blue-600">89</p>
-                <p className="text-xs text-gray-500">Booked</p>
+                <p className="text-2xl font-bold text-ink">89</p>
+                <p className="text-xs text-ink-muted">Booked</p>
               </div>
             </div>
           </Card>

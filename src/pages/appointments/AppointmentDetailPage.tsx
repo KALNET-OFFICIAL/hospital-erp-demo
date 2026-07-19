@@ -21,6 +21,7 @@ import { Modal, ModalBody, ModalFooter } from "@/components/ui/modal";
 import { useHospitalOpsStore, useAuthStore } from "@/stores";
 import { patients, staff } from "@/lib/mock-data";
 import { formatDate, cn } from "@/lib/utils";
+import { getIdentityColor, getCurrentThemeMode } from "@/lib/theme";
 import type { AppointmentStatus } from "@/types";
 
 const statusOptions = [
@@ -72,8 +73,8 @@ export function AppointmentDetailPage() {
     return (
       <div className="flex h-96 items-center justify-center">
         <div className="text-center">
-          <AlertCircle className="mx-auto h-12 w-12 text-slate-300" />
-          <p className="mt-4 text-slate-500">Appointment not found</p>
+          <AlertCircle className="mx-auto h-12 w-12 text-ink-muted" />
+          <p className="mt-4 text-ink-muted">Appointment not found</p>
           <Button className="mt-4" onClick={() => navigate("/appointments")}>
             Back to Appointments
           </Button>
@@ -126,6 +127,9 @@ export function AppointmentDetailPage() {
   const canEdit = user?.role === "admin" || user?.role === "reception";
   const canStartConsultation = user?.role === "doctor" && appointment.status === "waiting";
   const canComplete = user?.role === "doctor" && appointment.status === "in-consultation";
+  // Appointment type is a category, not a state — colored via the identity
+  // palette so each type keeps a stable, consistent hue everywhere it appears.
+  const typeAccent = getIdentityColor(appointment.type, getCurrentThemeMode());
 
   return (
     <div className="space-y-6">
@@ -136,8 +140,8 @@ export function AppointmentDetailPage() {
             <ArrowLeft size={20} />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Appointment Details</h1>
-            <p className="text-slate-500">{appointment.id}</p>
+            <h1 className="text-2xl font-bold text-ink">Appointment Details</h1>
+            <p className="text-ink-muted">{appointment.id}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -204,8 +208,8 @@ export function AppointmentDetailPage() {
                       <Calendar size={18} className="text-primary-600" />
                     </div>
                     <div>
-                      <p className="text-sm text-slate-500">Date</p>
-                      <p className="font-medium text-slate-900">{formatDate(appointment.date)}</p>
+                      <p className="text-sm text-ink-muted">Date</p>
+                      <p className="font-medium text-ink">{formatDate(appointment.date)}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -213,8 +217,8 @@ export function AppointmentDetailPage() {
                       <Clock size={18} className="text-primary-600" />
                     </div>
                     <div>
-                      <p className="text-sm text-slate-500">Time</p>
-                      <p className="font-medium text-slate-900">{appointment.time}</p>
+                      <p className="text-sm text-ink-muted">Time</p>
+                      <p className="font-medium text-ink">{appointment.time}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -222,20 +226,23 @@ export function AppointmentDetailPage() {
                       <span className="text-lg font-bold text-warning-600">#{appointment.tokenNumber}</span>
                     </div>
                     <div>
-                      <p className="text-sm text-slate-500">Token Number</p>
-                      <p className="font-medium text-slate-900">{appointment.tokenNumber || "N/A"}</p>
+                      <p className="text-sm text-ink-muted">Token Number</p>
+                      <p className="font-medium text-ink">{appointment.tokenNumber || "N/A"}</p>
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm text-slate-500">Type</p>
-                    <Badge variant={appointment.type === "emergency" ? "danger" : "primary"} className="mt-1">
+                    <p className="text-sm text-ink-muted">Type</p>
+                    <span
+                      className="mt-1 inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+                      style={{ backgroundColor: `${typeAccent}1f`, color: typeAccent }}
+                    >
                       {appointment.type.toUpperCase()}
-                    </Badge>
+                    </span>
                   </div>
                   {appointment.notes && (
                     <div className="sm:col-span-2">
-                      <p className="text-sm text-slate-500">Notes</p>
-                      <p className="mt-1 text-slate-700">{appointment.notes}</p>
+                      <p className="text-sm text-ink-muted">Notes</p>
+                      <p className="mt-1 text-ink-muted">{appointment.notes}</p>
                     </div>
                   )}
                 </div>
@@ -253,14 +260,14 @@ export function AppointmentDetailPage() {
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-xl font-bold text-slate-600">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-selected text-xl font-bold text-ink-muted">
                   {appointment.patientName.charAt(0)}
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-slate-900">{appointment.patientName}</h3>
-                  <p className="text-sm text-slate-500">{appointment.patientId}</p>
+                  <h3 className="font-semibold text-ink">{appointment.patientName}</h3>
+                  <p className="text-sm text-ink-muted">{appointment.patientId}</p>
                   {patient && (
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-ink-muted">
                       {patient.phone} • {patient.gender} • {patient.bloodGroup || "Blood group N/A"}
                     </p>
                   )}
@@ -290,10 +297,10 @@ export function AppointmentDetailPage() {
                   {appointment.doctorName.charAt(0)}
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-slate-900">{appointment.doctorName}</h3>
-                  <p className="text-sm text-slate-500">{appointment.department}</p>
+                  <h3 className="font-semibold text-ink">{appointment.doctorName}</h3>
+                  <p className="text-sm text-ink-muted">{appointment.department}</p>
                   {doctor && (
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-ink-muted">
                       {doctor.specialization} • {doctor.qualification}
                     </p>
                   )}
@@ -391,8 +398,8 @@ export function AppointmentDetailPage() {
                     <Calendar size={14} className="text-primary-600" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-900">Appointment Created</p>
-                    <p className="text-xs text-slate-500">{formatDate(appointment.createdAt)}</p>
+                    <p className="text-sm font-medium text-ink">Appointment Created</p>
+                    <p className="text-xs text-ink-muted">{formatDate(appointment.createdAt)}</p>
                   </div>
                 </div>
                 {appointment.status === "completed" && (
@@ -401,8 +408,8 @@ export function AppointmentDetailPage() {
                       <CheckCircle size={14} className="text-success-600" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-slate-900">Consultation Completed</p>
-                      <p className="text-xs text-slate-500">Today</p>
+                      <p className="text-sm font-medium text-ink">Consultation Completed</p>
+                      <p className="text-xs text-ink-muted">Today</p>
                     </div>
                   </div>
                 )}
@@ -412,8 +419,8 @@ export function AppointmentDetailPage() {
                       <X size={14} className="text-danger-600" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-slate-900">Appointment Cancelled</p>
-                      <p className="text-xs text-slate-500">Today</p>
+                      <p className="text-sm font-medium text-ink">Appointment Cancelled</p>
+                      <p className="text-xs text-ink-muted">Today</p>
                     </div>
                   </div>
                 )}
@@ -430,7 +437,7 @@ export function AppointmentDetailPage() {
         title="Cancel Appointment"
       >
         <ModalBody>
-          <p className="text-slate-600 mb-4">
+          <p className="text-ink-muted mb-4">
             Are you sure you want to cancel this appointment? Please provide a reason.
           </p>
           <Input

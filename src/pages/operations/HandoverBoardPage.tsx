@@ -59,28 +59,28 @@ export function HandoverBoardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Handover Board</h1>
-        <p className="text-slate-500">Digital task handover across reception, doctors, billing and pharmacy</p>
+        <h1 className="text-2xl font-bold text-ink">Handover Board</h1>
+        <p className="text-ink-muted">Digital task handover across reception, doctors, billing and pharmacy</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
         <Card className="p-4">
-          <p className="text-sm text-slate-500">Pending</p>
+          <p className="text-sm text-ink-muted">Pending</p>
           <p className="text-2xl font-bold text-warning-700">{counts.pending}</p>
         </Card>
         <Card className="p-4">
-          <p className="text-sm text-slate-500">In Progress</p>
+          <p className="text-sm text-ink-muted">In Progress</p>
           <p className="text-2xl font-bold text-primary-700">{counts.inProgress}</p>
         </Card>
         <Card className="p-4">
-          <p className="text-sm text-slate-500">Completed</p>
+          <p className="text-sm text-ink-muted">Completed</p>
           <p className="text-2xl font-bold text-success-700">{counts.completed}</p>
         </Card>
       </div>
 
       <Card className="p-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="inline-flex items-center gap-2 text-slate-600">
+          <div className="inline-flex items-center gap-2 text-ink-muted">
             <Filter className="h-4 w-4" />
             Task Filter
           </div>
@@ -105,12 +105,12 @@ export function HandoverBoardPage() {
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <div className="flex items-center gap-2">
-                  <p className="font-semibold text-slate-900">{task.title}</p>
+                  <p className="font-semibold text-ink">{task.title}</p>
                   <Badge variant={statusVariant(task.status)}>{task.status}</Badge>
                   <Badge variant={priorityVariant(task.priority)}>{task.priority}</Badge>
                 </div>
-                <p className="text-sm text-slate-600">{task.description}</p>
-                <p className="text-xs text-slate-500">
+                <p className="text-sm text-ink-muted">{task.description}</p>
+                <p className="text-xs text-ink-muted">
                   {task.patientName ? `${task.patientName} • ` : ""}
                   Assigned: {task.assignedRole}
                   {task.dueAt ? ` • Due ${formatDate(task.dueAt)}` : ""}
@@ -144,8 +144,8 @@ export function HandoverBoardPage() {
 
       {visibleTasks.length === 0 && (
         <Card className="p-10 text-center">
-          <ListTodo className="mx-auto h-10 w-10 text-slate-300" />
-          <p className="mt-3 text-slate-500">No tasks for the selected filter.</p>
+          <ListTodo className="mx-auto h-10 w-10 text-ink-muted" />
+          <p className="mt-3 text-ink-muted">No tasks for the selected filter.</p>
         </Card>
       )}
     </div>

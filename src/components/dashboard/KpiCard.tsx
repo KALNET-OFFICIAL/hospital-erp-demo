@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { getIdentityColor, getCurrentThemeMode } from "@/lib/theme";
 
 interface KpiCardProps {
   title: string;
@@ -8,25 +9,15 @@ interface KpiCardProps {
   subtitle?: string;
   change?: string;
   icon?: ReactNode;
-  iconColor?: "blue" | "teal" | "purple" | "amber";
+  /** Identity key (e.g. a nav path or category name) the icon chip's
+   *  accent is hashed from — same key always yields the same color, kept
+   *  in sync with the sidebar/tag color for that module. Falls back to
+   *  `title` when omitted. */
+  iconColor?: string;
   loading?: boolean;
   to?: string;
   onClick?: () => void;
 }
-
-const iconColorConfig = {
-  blue: "bg-blue-50 text-blue-500",
-  teal: "bg-teal-50 text-teal-500",
-  purple: "bg-purple-50 text-purple-500",
-  amber: "bg-amber-50 text-amber-500",
-};
-
-const interactiveColorConfig = {
-  blue: "hover:shadow-xl hover:shadow-blue-200/80 focus-visible:ring-blue-400",
-  teal: "hover:shadow-xl hover:shadow-teal-200/80 focus-visible:ring-teal-400",
-  purple: "hover:shadow-xl hover:shadow-purple-200/80 focus-visible:ring-purple-400",
-  amber: "hover:shadow-xl hover:shadow-amber-200/80 focus-visible:ring-amber-400",
-};
 
 export function KpiCard({
   title,
@@ -34,13 +25,14 @@ export function KpiCard({
   subtitle,
   change,
   icon,
-  iconColor = "blue",
+  iconColor,
   loading = false,
   to,
   onClick,
 }: KpiCardProps) {
   const navigate = useNavigate();
   const isInteractive = Boolean(to || onClick);
+  const accent = getIdentityColor(iconColor ?? title, getCurrentThemeMode());
 
   const handleClick = () => {
     onClick?.();
@@ -51,14 +43,14 @@ export function KpiCard({
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+      <div className="bg-paper rounded-xl border border-line p-6 shadow-sm">
         <div className="animate-pulse space-y-4">
           <div className="flex items-center justify-between">
-            <div className="h-4 w-28 bg-gray-200 rounded"></div>
-            <div className="h-10 w-10 bg-gray-200 rounded-xl"></div>
+            <div className="h-4 w-28 bg-slate-200 rounded"></div>
+            <div className="h-10 w-10 bg-slate-200 rounded-xl"></div>
           </div>
-          <div className="h-10 w-24 bg-gray-200 rounded"></div>
-          <div className="h-4 w-32 bg-gray-200 rounded"></div>
+          <div className="h-10 w-24 bg-slate-200 rounded"></div>
+          <div className="h-4 w-32 bg-slate-200 rounded"></div>
         </div>
       </div>
     );
@@ -67,11 +59,9 @@ export function KpiCard({
   return (
     <div
       className={cn(
-        "bg-white rounded-xl border border-gray-200 p-6 shadow-sm transition-all duration-200",
-        isInteractive && [
-          "cursor-pointer hover:shadow-lg hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2",
-          interactiveColorConfig[iconColor],
-        ]
+        "bg-paper rounded-xl border border-line p-6 shadow-sm transition-all duration-200",
+        isInteractive &&
+          "cursor-pointer hover:shadow-lg hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
       )}
       role={isInteractive ? "button" : undefined}
       tabIndex={isInteractive ? 0 : undefined}
@@ -88,24 +78,27 @@ export function KpiCard({
       }
     >
       <div className="flex items-start justify-between mb-4">
-        <h3 className="text-sm font-medium text-gray-600">{title}</h3>
+        <h3 className="text-sm font-medium text-ink-muted">{title}</h3>
         {icon && (
-          <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center", iconColorConfig[iconColor])}>
+          <div
+            className="h-10 w-10 rounded-xl flex items-center justify-center"
+            style={{ backgroundColor: `${accent}1f`, color: accent }}
+          >
             {icon}
           </div>
         )}
       </div>
-      
+
       <div className="mb-3">
-        <p className="text-3xl font-bold text-gray-900">{value}</p>
+        <p className="text-3xl font-bold text-ink">{value}</p>
       </div>
-      
+
       {subtitle && (
-        <p className="text-sm text-gray-500 mb-2">{subtitle}</p>
+        <p className="text-sm text-ink-muted mb-2">{subtitle}</p>
       )}
-      
+
       {change && (
-        <p className="text-sm font-medium text-teal-600">{change}</p>
+        <p className="text-sm font-medium text-success-600">{change}</p>
       )}
     </div>
   );

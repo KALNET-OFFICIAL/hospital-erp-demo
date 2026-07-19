@@ -41,8 +41,8 @@ export function AppointmentQueuePage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Queue Management</h1>
-          <p className="text-slate-500">Today's OPD queue</p>
+          <h1 className="text-2xl font-bold text-ink">Queue Management</h1>
+          <p className="text-ink-muted">Today's OPD queue</p>
         </div>
         <Button variant="outline" className="gap-2">
           <RefreshCw size={16} />
@@ -65,42 +65,42 @@ export function AppointmentQueuePage() {
                   {currentPatient.tokenNumber}
                 </div>
                 <div>
-                  <p className="text-xl font-bold text-slate-900">
+                  <p className="text-xl font-bold text-ink">
                     {currentPatient.patientName}
                   </p>
-                  <p className="text-slate-600">{currentPatient.doctorName}</p>
+                  <p className="text-ink-muted">{currentPatient.doctorName}</p>
                 </div>
                 <Button variant="outline" size="icon" className="ml-auto">
                   <Volume2 size={18} />
                 </Button>
               </div>
             ) : (
-              <p className="text-slate-500">No patient in consultation</p>
+              <p className="text-ink-muted">No patient in consultation</p>
             )}
           </CardContent>
         </Card>
 
-        <Card className="border-2 border-slate-200">
+        <Card className="border-2 border-line">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">
+            <CardTitle className="text-sm font-medium text-ink-muted">
               UP NEXT
             </CardTitle>
           </CardHeader>
           <CardContent>
             {nextPatient ? (
               <div className="flex items-center gap-4">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-200 text-2xl font-bold text-slate-700">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-selected text-2xl font-bold text-ink-muted">
                   {nextPatient.tokenNumber}
                 </div>
                 <div>
-                  <p className="text-xl font-bold text-slate-900">
+                  <p className="text-xl font-bold text-ink">
                     {nextPatient.patientName}
                   </p>
-                  <p className="text-slate-600">{nextPatient.doctorName}</p>
+                  <p className="text-ink-muted">{nextPatient.doctorName}</p>
                 </div>
               </div>
             ) : (
-              <p className="text-slate-500">No patients waiting</p>
+              <p className="text-ink-muted">No patients waiting</p>
             )}
           </CardContent>
         </Card>
@@ -141,12 +141,12 @@ export function AppointmentQueuePage() {
       {/* Queue List */}
       <Card>
         <CardContent className="p-0">
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-line">
             {filteredAppointments.map((apt) => (
               <div
                 key={apt.id}
                 className={cn(
-                  "flex cursor-pointer items-center gap-4 p-4 transition-colors hover:bg-slate-50",
+                  "flex cursor-pointer items-center gap-4 p-4 transition-colors hover:bg-hover",
                   apt.status === "in-consultation" && "bg-primary-50"
                 )}
                 onClick={() => navigate(`/opd/consultation/${apt.id}`)}
@@ -158,15 +158,15 @@ export function AppointmentQueuePage() {
                       ? "bg-primary-500 text-white"
                       : apt.status === "completed"
                       ? "bg-success-100 text-success-600"
-                      : "bg-slate-100 text-slate-600"
+                      : "bg-selected text-ink-muted"
                   )}
                 >
                   {apt.tokenNumber}
                 </div>
                 <Avatar name={apt.patientName} size="md" />
                 <div className="flex-1">
-                  <p className="font-medium text-slate-900">{apt.patientName}</p>
-                  <p className="text-sm text-slate-500">
+                  <p className="font-medium text-ink">{apt.patientName}</p>
+                  <p className="text-sm text-ink-muted">
                     {apt.doctorName} • {apt.time}
                   </p>
                 </div>
@@ -183,7 +183,7 @@ export function AppointmentQueuePage() {
                 >
                   {apt.status.replace("-", " ")}
                 </Badge>
-                <ChevronRight size={20} className="text-slate-400" />
+                <ChevronRight size={20} className="text-ink-muted" />
               </div>
             ))}
           </div>

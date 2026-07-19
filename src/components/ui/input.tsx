@@ -14,7 +14,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         {label && (
-          <label className="mb-1.5 block text-sm font-medium text-slate-700">
+          <label className="mb-1.5 block text-sm font-medium text-ink-muted">
             {label}
             {props.required && <span className="ml-1 text-danger-500">*</span>}
           </label>
@@ -28,7 +28,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <input
             type={type}
             className={cn(
-              "flex h-10 w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm text-slate-900 placeholder:text-slate-400 transition-all duration-200",
+              "flex h-10 w-full rounded-lg border border-line bg-paper px-3.5 py-2 text-sm text-ink placeholder:text-slate-400 transition-all duration-200",
               "hover:border-slate-300",
               "focus:border-primary-500 focus:outline-none focus:ring-4 focus:ring-primary-500/10",
               "disabled:cursor-not-allowed disabled:bg-slate-50 disabled:opacity-50",
@@ -46,7 +46,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             </div>
           )}
         </div>
-        {helper && !error && <p className="mt-1.5 text-xs text-slate-500">{helper}</p>}
+        {helper && !error && <p className="mt-1.5 text-xs text-ink-muted">{helper}</p>}
         {error && (
           <p className="mt-1.5 text-xs text-danger-600 flex items-center gap-1">
             <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">

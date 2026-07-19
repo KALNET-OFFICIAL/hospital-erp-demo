@@ -182,7 +182,7 @@ export function BillingInvoiceDetailPage() {
   if (!invoice) {
     return (
       <Card className="p-8 text-center">
-        <p className="text-slate-600">Invoice not found.</p>
+        <p className="text-ink-muted">Invoice not found.</p>
         <Button className="mt-4" onClick={() => navigate("/billing")}>Back to Billing</Button>
       </Card>
     );
@@ -197,8 +197,8 @@ export function BillingInvoiceDetailPage() {
             Back
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Invoice Detail</h1>
-            <p className="text-slate-500">{invoice.id} • {invoice.patientName}</p>
+            <h1 className="text-2xl font-bold text-ink">Invoice Detail</h1>
+            <p className="text-ink-muted">{invoice.id} • {invoice.patientName}</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -234,26 +234,26 @@ export function BillingInvoiceDetailPage() {
               <Badge variant={paymentStatus === "paid" ? "success" : paymentStatus === "partial" ? "warning" : "danger"}>
                 {paymentStatus}
               </Badge>
-              <span className="text-sm text-slate-500">Created {formatDate(invoice.createdAt)}</span>
+              <span className="text-sm text-ink-muted">Created {formatDate(invoice.createdAt)}</span>
             </div>
 
             <div className="space-y-2">
               {invoiceItems.map((item) => (
-                <div key={item.id} className="flex items-center justify-between rounded-lg border border-slate-200 p-3">
+                <div key={item.id} className="flex items-center justify-between rounded-lg border border-line p-3">
                   <div>
-                    <p className="font-medium text-slate-900">{item.name}</p>
-                    <p className="text-sm text-slate-500">
+                    <p className="font-medium text-ink">{item.name}</p>
+                    <p className="text-sm text-ink-muted">
                       {item.quantity} x {formatCurrency(item.unitPrice)}
                     </p>
                   </div>
-                  <p className="font-semibold text-slate-900">{formatCurrency(item.total)}</p>
+                  <p className="font-semibold text-ink">{formatCurrency(item.total)}</p>
                 </div>
               ))}
             </div>
           </Card>
 
           <Card className="space-y-4 p-4">
-            <h2 className="text-lg font-semibold text-slate-900">Collect Payment</h2>
+            <h2 className="text-lg font-semibold text-ink">Collect Payment</h2>
             <div className="grid gap-3 sm:grid-cols-3">
               <Input
                 label="Amount"
@@ -280,7 +280,7 @@ export function BillingInvoiceDetailPage() {
           </Card>
 
           <Card className="space-y-4 p-4">
-            <h2 className="text-lg font-semibold text-slate-900">Adjustments</h2>
+            <h2 className="text-lg font-semibold text-ink">Adjustments</h2>
             <div className="grid gap-3 sm:grid-cols-3">
               <Input
                 label="Discount"
@@ -289,7 +289,7 @@ export function BillingInvoiceDetailPage() {
                 onChange={(e) => handleDiscountChange(Number(e.target.value) || 0)}
               />
               <div className="sm:col-span-2">
-                <p className="mb-2 text-sm text-slate-600">Final total is recalculated instantly.</p>
+                <p className="mb-2 text-sm text-ink-muted">Final total is recalculated instantly.</p>
                 <Button variant="outline" className="gap-2" onClick={() => setDiscount(invoice.discount)}>
                   <Undo2 className="h-4 w-4" />
                   Reset Discount
@@ -299,7 +299,7 @@ export function BillingInvoiceDetailPage() {
           </Card>
 
           <Card className="space-y-4 p-4">
-            <h2 className="text-lg font-semibold text-slate-900">Refund Request</h2>
+            <h2 className="text-lg font-semibold text-ink">Refund Request</h2>
             <div className="grid gap-3 sm:grid-cols-3">
               <Input
                 label="Amount"
@@ -322,12 +322,12 @@ export function BillingInvoiceDetailPage() {
             {refunds.length > 0 && (
               <div className="space-y-2">
                 {refunds.map((entry) => (
-                  <div key={entry.id} className="rounded-lg border border-slate-200 p-3">
+                  <div key={entry.id} className="rounded-lg border border-line p-3">
                     <div className="flex items-center justify-between">
-                      <p className="font-medium text-slate-900">{entry.id}</p>
+                      <p className="font-medium text-ink">{entry.id}</p>
                       <Badge variant="warning">Pending</Badge>
                     </div>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-ink-muted">
                       {formatCurrency(entry.amount)} • {entry.reason}
                     </p>
                   </div>
@@ -339,32 +339,32 @@ export function BillingInvoiceDetailPage() {
 
         <div>
           <Card className="space-y-2 p-4 text-sm">
-            <p className="text-slate-500">Patient</p>
-            <p className="font-semibold text-slate-900">{invoice.patientName}</p>
-            <p className="text-slate-500">{invoice.patientId}</p>
-            <div className="my-3 border-t border-slate-200" />
+            <p className="text-ink-muted">Patient</p>
+            <p className="font-semibold text-ink">{invoice.patientName}</p>
+            <p className="text-ink-muted">{invoice.patientId}</p>
+            <div className="my-3 border-t border-line" />
             <div className="flex justify-between">
-              <span className="text-slate-500">Subtotal</span>
+              <span className="text-ink-muted">Subtotal</span>
               <span>{formatCurrency(subtotal)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Tax</span>
+              <span className="text-ink-muted">Tax</span>
               <span>{formatCurrency(tax)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Discount</span>
+              <span className="text-ink-muted">Discount</span>
               <span>-{formatCurrency(discount)}</span>
             </div>
-            <div className="flex justify-between border-t border-slate-200 pt-2 text-base font-semibold text-slate-900">
+            <div className="flex justify-between border-t border-line pt-2 text-base font-semibold text-ink">
               <span>Total</span>
               <span>{formatCurrency(grandTotal)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Paid</span>
+              <span className="text-ink-muted">Paid</span>
               <span className="text-success-700">{formatCurrency(paidAmount)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Due</span>
+              <span className="text-ink-muted">Due</span>
               <span className={due === 0 ? "text-success-700" : "text-warning-700"}>{formatCurrency(due)}</span>
             </div>
           </Card>

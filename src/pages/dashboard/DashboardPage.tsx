@@ -26,11 +26,21 @@ import { KpiCard } from "@/components/dashboard/KpiCard";
 import { BookAppointmentModal } from "@/components/appointments/BookAppointmentModal";
 import { formatCurrency } from "@/lib/utils";
 import { dashboardStats, revenueData, departmentRevenue, beds } from "@/lib/mock-data";
-import { useAuthStore, useHospitalOpsStore } from "@/stores";
+import { useAuthStore, useHospitalOpsStore, useThemeStore } from "@/stores";
+import { getChartColors, getChartTooltipStyle, getIdentityColor } from "@/lib/theme";
 
 export function DashboardPage() {
   const { user } = useAuthStore();
   const { appointments } = useHospitalOpsStore();
+  const { theme } = useThemeStore();
+  const mode =
+    theme === "dark" ||
+    (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ? "dark"
+      : "light";
+  const chartColors = getChartColors(mode);
+  const tooltipStyle = getChartTooltipStyle(mode);
+  const revenueColor = getIdentityColor("revenue", mode);
   const [showBookModal, setShowBookModal] = useState(false);
 
   const visibleAppointments =
@@ -47,10 +57,10 @@ export function DashboardPage() {
       {/* Welcome Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl font-bold text-ink mb-2">
             Welcome back, {user?.name?.split(" ")[0]}! 👋
           </h1>
-          <p className="text-gray-600">Here's what's happening at your hospital today</p>
+          <p className="text-ink-muted">Here's what's happening at your hospital today</p>
         </div>
         <Button onClick={() => setShowBookModal(true)} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
@@ -99,40 +109,33 @@ export function DashboardPage() {
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Revenue Chart */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm lg:col-span-2">
+        <div className="bg-paper rounded-xl border border-line p-6 shadow-sm lg:col-span-2">
           <div className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">Revenue Overview</h3>
-            <p className="text-sm text-gray-500 mt-1">Last 6 months</p>
+            <h3 className="text-lg font-semibold text-ink">Revenue Overview</h3>
+            <p className="text-sm text-ink-muted mt-1">Last 6 months</p>
           </div>
           <ResponsiveContainer width="100%" height={280}>
             <AreaChart data={revenueData}>
               <defs>
                 <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
+                  <stop offset="0%" stopColor={revenueColor} stopOpacity={0.3} />
+                  <stop offset="95%" stopColor={revenueColor} stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+              <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
               <XAxis
                 dataKey="month"
-                stroke="#9CA3AF"
+                stroke={chartColors.axis}
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
               />
-              <YAxis stroke="#9CA3AF" fontSize={12} tickLine={false} axisLine={false} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "white",
-                  border: "1px solid #E5E7EB",
-                  borderRadius: "8px",
-                  fontSize: "12px",
-                }}
-              />
+              <YAxis stroke={chartColors.axis} fontSize={12} tickLine={false} axisLine={false} />
+              <Tooltip {...tooltipStyle} />
               <Area
                 type="monotone"
                 dataKey="revenue"
-                stroke="#3B82F6"
+                stroke={revenueColor}
                 strokeWidth={2}
                 fill="url(#revenueGradient)"
               />
@@ -141,10 +144,10 @@ export function DashboardPage() {
         </div>
 
         {/* Department Revenue Pie Chart */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+        <div className="bg-paper rounded-xl border border-line p-6 shadow-sm">
           <div className="mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Department Revenue</h3>
-            <p className="text-sm text-gray-500 mt-1">Current distribution</p>
+            <h3 className="text-lg font-semibold text-ink">Department Revenue</h3>
+            <p className="text-sm text-ink-muted mt-1">Current distribution</p>
           </div>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
@@ -158,9 +161,10 @@ export function DashboardPage() {
                 dataKey="revenue"
               >
                 {departmentRevenue.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
+                  <Cell key={`cell-${index}`} fill={getIdentityColor(entry.department, mode)} />
                 ))}
               </Pie>
+              <Tooltip {...tooltipStyle} formatter={(value) => formatCurrency(Number(value))} />
             </PieChart>
           </ResponsiveContainer>
           <div className="mt-4 space-y-3">
@@ -169,11 +173,11 @@ export function DashboardPage() {
                 <div className="flex items-center gap-2">
                   <div
                     className="h-3 w-3 rounded-full"
-                    style={{ backgroundColor: dept.color }}
+                    style={{ backgroundColor: getIdentityColor(dept.department, mode) }}
                   />
-                  <span className="text-gray-700">{dept.department}</span>
+                  <span className="text-ink-muted">{dept.department}</span>
                 </div>
-                <span className="font-medium text-gray-900">{formatCurrency(dept.revenue)}</span>
+                <span className="font-medium text-ink">{formatCurrency(dept.revenue)}</span>
               </div>
             ))}
           </div>
@@ -183,11 +187,11 @@ export function DashboardPage() {
       {/* Appointments and Bed Status */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Today's Appointments */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+        <div className="bg-paper rounded-xl border border-line p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">Today's Appointments</h3>
+            <h3 className="text-lg font-semibold text-ink">Today's Appointments</h3>
             <Link to="/appointments">
-              <Button variant="link" size="sm" className="text-blue-600">
+              <Button variant="link" size="sm">
                 View all
               </Button>
             </Link>
@@ -196,16 +200,16 @@ export function DashboardPage() {
             {todayAppointments.map((appointment) => (
               <div
                 key={appointment.id}
-                className="flex items-center justify-between p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+                className="flex items-center justify-between p-4 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors"
               >
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-gray-900 text-sm truncate">
+                  <p className="font-medium text-ink text-sm truncate">
                     {appointment.patientName}
                   </p>
-                  <p className="text-xs text-gray-500 mt-0.5">{appointment.doctorName}</p>
+                  <p className="text-xs text-ink-muted mt-0.5">{appointment.doctorName}</p>
                 </div>
                 <div className="flex items-center gap-3 ml-4">
-                  <span className="text-sm text-gray-600">{appointment.time}</span>
+                  <span className="text-sm text-ink-muted">{appointment.time}</span>
                   <Badge
                     variant={
                       appointment.status === "cancelled"
@@ -225,17 +229,17 @@ export function DashboardPage() {
         </div>
 
         {/* Bed Status */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+        <div className="bg-paper rounded-xl border border-line p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">Bed Status</h3>
+            <h3 className="text-lg font-semibold text-ink">Bed Status</h3>
             <div className="flex items-center gap-4 text-xs">
               <div className="flex items-center gap-1.5">
-                <div className="h-3 w-3 rounded-full bg-teal-500" />
-                <span className="text-gray-600">Available ({availableBeds})</span>
+                <div className="h-3 w-3 rounded-full bg-success-500" />
+                <span className="text-ink-muted">Available ({availableBeds})</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="h-3 w-3 rounded-full bg-blue-500" />
-                <span className="text-gray-600">Occupied ({occupiedBeds})</span>
+                <div className="h-3 w-3 rounded-full bg-danger-500" />
+                <span className="text-ink-muted">Occupied ({occupiedBeds})</span>
               </div>
             </div>
           </div>
@@ -245,16 +249,40 @@ export function DashboardPage() {
                 key={bed.id}
                 className={`p-4 rounded-lg border-2 text-center transition-all ${
                   bed.status === "available"
-                    ? "border-teal-200 bg-teal-50"
+                    ? "border-success-200 bg-success-50"
                     : bed.status === "occupied"
-                    ? "border-blue-200 bg-blue-50"
+                    ? "border-danger-200 bg-danger-50"
                     : bed.status === "reserved"
-                    ? "border-amber-200 bg-amber-50"
-                    : "border-gray-200 bg-gray-50"
+                    ? "border-warning-200 bg-warning-50"
+                    : "border-line bg-slate-50"
                 }`}
               >
-                <p className="text-sm font-semibold text-gray-900">{bed.id}</p>
-                <p className="text-xs text-gray-600 mt-1 capitalize">{bed.status}</p>
+                <p
+                  className={`text-sm font-semibold ${
+                    bed.status === "available"
+                      ? "text-success-700"
+                      : bed.status === "occupied"
+                      ? "text-danger-700"
+                      : bed.status === "reserved"
+                      ? "text-warning-700"
+                      : "text-ink"
+                  }`}
+                >
+                  {bed.id}
+                </p>
+                <p
+                  className={`text-xs mt-1 capitalize ${
+                    bed.status === "available"
+                      ? "text-success-600"
+                      : bed.status === "occupied"
+                      ? "text-danger-600"
+                      : bed.status === "reserved"
+                      ? "text-warning-600"
+                      : "text-ink-muted"
+                  }`}
+                >
+                  {bed.status}
+                </p>
               </div>
             ))}
           </div>

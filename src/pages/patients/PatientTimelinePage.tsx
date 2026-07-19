@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select } from "@/components/ui/select";
 import { patients } from "@/lib/mock-data";
 import { formatDate, formatCurrency } from "@/lib/utils";
+import { getIdentityColor, getCurrentThemeMode } from "@/lib/theme";
 import type { EMRRecord } from "@/types";
 
 const STORAGE_KEY = "hos_emr_records";
@@ -169,31 +170,15 @@ const eventIcons: Record<string, React.ReactNode> = {
   document: <FileText className="w-4 h-4" />,
 };
 
-const eventColors: Record<string, string> = {
-  consultation: "bg-blue-100 text-blue-600 border-blue-200",
-  prescription: "bg-green-100 text-green-600 border-green-200",
-  lab: "bg-purple-100 text-purple-600 border-purple-200",
-  billing: "bg-yellow-100 text-yellow-600 border-yellow-200",
-  admission: "bg-orange-100 text-orange-600 border-orange-200",
-  discharge: "bg-teal-100 text-teal-600 border-teal-200",
-  procedure: "bg-red-100 text-red-600 border-red-200",
-  document: "bg-gray-100 text-gray-600 border-gray-200",
-};
-
-const lineColors: Record<string, string> = {
-  consultation: "border-blue-300",
-  prescription: "border-green-300",
-  lab: "border-purple-300",
-  billing: "border-yellow-300",
-  admission: "border-orange-300",
-  discharge: "border-teal-300",
-  procedure: "border-red-300",
-  document: "border-gray-300",
-};
+// Event type is a category, not a state — colored via the identity palette
+// (getIdentityColor) so each type keeps a stable hue everywhere it appears
+// (timeline dot, icon chip, card rail, type badge) instead of a hand-picked
+// hex per type.
 
 export default function PatientTimelinePage() {
   const { patientId } = useParams();
   const [selectedFilter, setSelectedFilter] = useState("all");
+  const mode = getCurrentThemeMode();
 
   const patient = patients.find((p) => p.id === patientId) || patients[0];
   const emrRecords = readEMRRecords().filter((record) => record.patientId === patient.id);
@@ -293,8 +278,8 @@ export default function PatientTimelinePage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Patient Timeline</h1>
-            <p className="text-gray-500">{patient.name} ({patient.id})</p>
+            <h1 className="text-2xl font-bold text-ink">Patient Timeline</h1>
+            <p className="text-ink-muted">{patient.name} ({patient.id})</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -317,23 +302,23 @@ export default function PatientTimelinePage() {
           </div>
           <div className="flex-1">
             <h2 className="text-lg font-semibold">{patient.name}</h2>
-            <p className="text-gray-500">
+            <p className="text-ink-muted">
               {patient.dob ? `${new Date().getFullYear() - new Date(patient.dob).getFullYear()} yrs` : 'N/A'} / {patient.gender} | {patient.phone}
             </p>
-            <p className="text-sm text-gray-400">Blood Group: {patient.bloodGroup}</p>
+            <p className="text-sm text-ink-muted">Blood Group: {patient.bloodGroup}</p>
           </div>
           <div className="grid grid-cols-3 gap-6 text-center">
             <div>
               <p className="text-2xl font-bold text-primary-600">12</p>
-              <p className="text-xs text-gray-500">Total Visits</p>
+              <p className="text-xs text-ink-muted">Total Visits</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-green-600">8</p>
-              <p className="text-xs text-gray-500">Prescriptions</p>
+              <p className="text-2xl font-bold" style={{ color: getIdentityColor("prescriptions", mode) }}>8</p>
+              <p className="text-xs text-ink-muted">Prescriptions</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-orange-600">2</p>
-              <p className="text-xs text-gray-500">Admissions</p>
+              <p className="text-2xl font-bold" style={{ color: getIdentityColor("admissions", mode) }}>2</p>
+              <p className="text-xs text-ink-muted">Admissions</p>
             </div>
           </div>
         </div>
@@ -341,7 +326,7 @@ export default function PatientTimelinePage() {
 
       {/* Filters */}
       <div className="flex items-center gap-4">
-        <Filter className="w-4 h-4 text-gray-400" />
+        <Filter className="w-4 h-4 text-slate-400" />
         <div className="flex gap-2 overflow-x-auto pb-2">
           {["all", "consultation", "prescription", "lab", "billing", "admission", "procedure"].map(
             (filter) => (
@@ -351,7 +336,7 @@ export default function PatientTimelinePage() {
                 className={`px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
                   selectedFilter === filter
                     ? "bg-primary-100 text-primary-700"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    : "bg-slate-100 text-ink-muted hover:bg-slate-200"
                 }`}
               >
                 {filter === "all" ? "All Events" : filter.charAt(0).toUpperCase() + filter.slice(1)}
@@ -367,43 +352,53 @@ export default function PatientTimelinePage() {
           <div key={date}>
             {/* Date Header */}
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-                <Calendar className="w-5 h-5 text-gray-600" />
+              <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
+                <Calendar className="w-5 h-5 text-ink-muted" />
               </div>
               <div>
-                <p className="font-semibold text-gray-900">{date}</p>
-                <p className="text-xs text-gray-500">{events.length} event(s)</p>
+                <p className="font-semibold text-ink">{date}</p>
+                <p className="text-xs text-ink-muted">{events.length} event(s)</p>
               </div>
             </div>
 
             {/* Events */}
-            <div className="ml-5 pl-5 border-l-2 border-gray-200 space-y-4">
-              {events.map((event, index) => (
+            <div className="ml-5 pl-5 border-l-2 border-line space-y-4">
+              {events.map((event) => {
+                const accent = getIdentityColor(event.type, mode);
+                return (
                 <div key={event.id} className="relative">
                   {/* Timeline dot */}
                   <div
-                    className={`absolute -left-[29px] w-4 h-4 rounded-full border-2 ${eventColors[event.type]}`}
+                    className="absolute -left-[29px] w-4 h-4 rounded-full border-2"
+                    style={{ backgroundColor: `${accent}1f`, borderColor: accent }}
                   />
 
                   {/* Event Card */}
-                  <Card className={`p-4 hover:shadow-md transition-shadow border-l-4 ${lineColors[event.type]}`}>
+                  <Card
+                    className="p-4 hover:shadow-md transition-shadow border-l-4"
+                    style={{ borderLeftColor: accent }}
+                  >
                     <div className="flex items-start justify-between">
                       <div className="flex items-start gap-3">
                         <div
-                          className={`w-10 h-10 rounded-lg flex items-center justify-center ${eventColors[event.type]}`}
+                          className="w-10 h-10 rounded-lg flex items-center justify-center"
+                          style={{ backgroundColor: `${accent}1f`, color: accent }}
                         >
                           {eventIcons[event.type]}
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
-                            <h3 className="font-semibold text-gray-900">{event.title}</h3>
-                            <Badge variant="primary" className="text-xs">
+                            <h3 className="font-semibold text-ink">{event.title}</h3>
+                            <Badge
+                              className="text-xs"
+                              style={{ backgroundColor: `${accent}1f`, color: accent }}
+                            >
                               {event.type}
                             </Badge>
                           </div>
-                          <p className="text-sm text-gray-600 mt-1">{event.description}</p>
+                          <p className="text-sm text-ink-muted mt-1">{event.description}</p>
                           {event.doctor && (
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-ink-muted mt-1">
                               👨‍⚕️ {event.doctor}
                               {event.department && ` • ${event.department}`}
                             </p>
@@ -411,15 +406,15 @@ export default function PatientTimelinePage() {
 
                           {/* Event Details */}
                           {event.details && (
-                            <div className="mt-3 p-3 bg-gray-50 rounded-lg text-sm">
+                            <div className="mt-3 p-3 bg-bg rounded-lg text-sm">
                               {event.type === "consultation" && event.details.diagnosis && (
                                 <div>
-                                  <p className="text-gray-600">
+                                  <p className="text-ink-muted">
                                     <span className="font-medium">Diagnosis:</span>{" "}
                                     {event.details.diagnosis}
                                   </p>
                                   {event.details.symptoms && (
-                                    <p className="text-gray-500 text-xs mt-1">
+                                    <p className="text-ink-muted text-xs mt-1">
                                       Symptoms: {event.details.symptoms.join(", ")}
                                     </p>
                                   )}
@@ -427,8 +422,8 @@ export default function PatientTimelinePage() {
                               )}
                               {event.type === "prescription" && event.details.medicines && (
                                 <div>
-                                  <p className="font-medium text-gray-700 mb-1">Medicines:</p>
-                                  <ul className="list-disc list-inside text-gray-600 text-xs">
+                                  <p className="font-medium text-ink-muted mb-1">Medicines:</p>
+                                  <ul className="list-disc list-inside text-ink-muted text-xs">
                                     {event.details.medicines.map((med: string, i: number) => (
                                       <li key={i}>{med}</li>
                                     ))}
@@ -437,8 +432,8 @@ export default function PatientTimelinePage() {
                               )}
                               {event.type === "lab" && event.details.tests && (
                                 <div>
-                                  <p className="font-medium text-gray-700 mb-1">Tests:</p>
-                                  <ul className="list-disc list-inside text-gray-600 text-xs">
+                                  <p className="font-medium text-ink-muted mb-1">Tests:</p>
+                                  <ul className="list-disc list-inside text-ink-muted text-xs">
                                     {event.details.tests.map((test: string, i: number) => (
                                       <li key={i}>{test}</li>
                                     ))}
@@ -462,7 +457,7 @@ export default function PatientTimelinePage() {
                                     Ward: <span className="font-medium">{event.details.ward}</span>,
                                     Bed: <span className="font-medium">{event.details.bed}</span>
                                   </p>
-                                  <p className="text-gray-500 text-xs mt-1">
+                                  <p className="text-ink-muted text-xs mt-1">
                                     Reason: {event.details.reason}
                                   </p>
                                 </div>
@@ -472,9 +467,9 @@ export default function PatientTimelinePage() {
                                   <p>
                                     <span className="font-medium">{event.details.procedure}</span>
                                   </p>
-                                  <p className="text-gray-500 text-xs mt-1">
+                                  <p className="text-ink-muted text-xs mt-1">
                                     Duration: {event.details.duration} • Outcome:{" "}
-                                    <span className="text-green-600">{event.details.outcome}</span>
+                                    <span className="text-success-600">{event.details.outcome}</span>
                                   </p>
                                 </div>
                               )}
@@ -482,11 +477,11 @@ export default function PatientTimelinePage() {
                                 <div>
                                   <p>
                                     Condition:{" "}
-                                    <span className="text-green-600 font-medium">
+                                    <span className="text-success-600 font-medium">
                                       {event.details.condition}
                                     </span>
                                   </p>
-                                  <p className="text-gray-500 text-xs mt-1">
+                                  <p className="text-ink-muted text-xs mt-1">
                                     Follow-up: {formatDate(String(event.details.followUp ?? event.date))}
                                   </p>
                                 </div>
@@ -495,7 +490,7 @@ export default function PatientTimelinePage() {
                           )}
                         </div>
                       </div>
-                      <div className="text-right text-xs text-gray-500">
+                      <div className="text-right text-xs text-ink-muted">
                         {new Date(event.date).toLocaleTimeString("en-IN", {
                           hour: "2-digit",
                           minute: "2-digit",
@@ -504,7 +499,8 @@ export default function PatientTimelinePage() {
                     </div>
                   </Card>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         ))}
@@ -512,8 +508,8 @@ export default function PatientTimelinePage() {
 
       {filteredEvents.length === 0 && (
         <div className="text-center py-12">
-          <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500">No timeline events found</p>
+          <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+          <p className="text-ink-muted">No timeline events found</p>
         </div>
       )}
     </div>

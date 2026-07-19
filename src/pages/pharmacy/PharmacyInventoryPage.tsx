@@ -40,8 +40,8 @@ export function PharmacyInventoryPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Pharmacy Inventory</h1>
-          <p className="text-slate-500">Manage medicine stock and inventory</p>
+          <h1 className="text-2xl font-bold text-ink">Pharmacy Inventory</h1>
+          <p className="text-ink-muted">Manage medicine stock and inventory</p>
         </div>
         <Button className="gap-2">
           <Plus size={16} />
@@ -66,8 +66,8 @@ export function PharmacyInventoryPage() {
                 <Package className="h-5 w-5 text-primary-600" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Total Items</p>
-                <p className="text-xl font-bold text-slate-900">{medicines.length}</p>
+                <p className="text-sm text-ink-muted">Total Items</p>
+                <p className="text-xl font-bold text-ink">{medicines.length}</p>
               </div>
             </div>
           </CardContent>
@@ -84,7 +84,7 @@ export function PharmacyInventoryPage() {
                 <AlertTriangle className="h-5 w-5 text-warning-600" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Low Stock</p>
+                <p className="text-sm text-ink-muted">Low Stock</p>
                 <p className="text-xl font-bold text-warning-600">{lowStockCount}</p>
               </div>
             </div>
@@ -97,8 +97,8 @@ export function PharmacyInventoryPage() {
           className="hover:shadow-lg hover:-translate-y-0.5"
         >
           <CardContent className="p-4">
-            <p className="text-sm text-slate-500">Categories</p>
-            <p className="text-xl font-bold text-slate-900">{categories.length}</p>
+            <p className="text-sm text-ink-muted">Categories</p>
+            <p className="text-xl font-bold text-ink">{categories.length}</p>
           </CardContent>
         </Card>
         <Card
@@ -108,7 +108,7 @@ export function PharmacyInventoryPage() {
           className="hover:shadow-lg hover:-translate-y-0.5"
         >
           <CardContent className="p-4">
-            <p className="text-sm text-slate-500">Total Value</p>
+            <p className="text-sm text-ink-muted">Total Value</p>
             <p className="text-xl font-bold text-success-600">
               {formatCurrency(totalValue)}
             </p>
@@ -146,7 +146,7 @@ export function PharmacyInventoryPage() {
               />
             </div>
             <select
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
+              className="rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
             >
@@ -180,8 +180,8 @@ export function PharmacyInventoryPage() {
               <TableRow key={medicine.id}>
                 <TableCell>
                   <div>
-                    <p className="font-medium text-slate-900">{medicine.name}</p>
-                    <p className="text-sm text-slate-500">{medicine.genericName}</p>
+                    <p className="font-medium text-ink">{medicine.name}</p>
+                    <p className="text-sm text-ink-muted">{medicine.genericName}</p>
                   </div>
                 </TableCell>
                 <TableCell>
@@ -193,16 +193,16 @@ export function PharmacyInventoryPage() {
                       "font-medium",
                       medicine.stock <= medicine.minStock
                         ? "text-danger-600"
-                        : "text-slate-900"
+                        : "text-ink"
                     )}
                   >
                     {medicine.stock}
                   </span>
-                  <span className="text-slate-400"> / {medicine.minStock} min</span>
+                  <span className="text-ink-muted"> / {medicine.minStock} min</span>
                 </TableCell>
                 <TableCell>{formatCurrency(medicine.unitPrice)}</TableCell>
-                <TableCell className="text-slate-500">{medicine.batchNumber}</TableCell>
-                <TableCell className="text-slate-500">
+                <TableCell className="text-ink-muted">{medicine.batchNumber}</TableCell>
+                <TableCell className="text-ink-muted">
                   {formatDate(medicine.expiryDate)}
                 </TableCell>
                 <TableCell>

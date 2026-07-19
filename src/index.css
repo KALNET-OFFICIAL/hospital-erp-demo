@@ -1,104 +1,222 @@
 @import "tailwindcss";
 
+/* Dark mode is toggled by adding/removing .dark on <html> (see
+   useThemeStore in src/stores/index.ts) — point Tailwind's dark: variant
+   at that class instead of the OS prefers-color-scheme default. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
-  /* Hospital OS Enhanced Color Palette */
-  
-  /* Primary - Medical Trust Blue */
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
+  /* KALNET dense monochrome-first theme.
+     Two-tone neutral surfaces + ink text + a status palette (state only)
+     + an identity palette (category/module only). Structural chrome
+     (buttons, focus rings, nav) uses ink, never a saturated brand blue.
+     All values below are light-mode defaults; the .dark block further
+     down redefines the same custom properties for dark mode, so every
+     utility class that references them (bg-primary-600, text-slate-900,
+     bg-teal-100, ...) is dark-mode-correct with zero per-component work. */
 
-  /* Teal - Success & Health */
-  --color-teal-50: #f0fdfa;
-  --color-teal-100: #ccfbf1;
-  --color-teal-200: #99f6e4;
-  --color-teal-300: #5eead4;
-  --color-teal-400: #2dd4bf;
-  --color-teal-500: #14b8a6;
-  --color-teal-600: #0d9488;
-  --color-teal-700: #0f766e;
-  --color-teal-800: #115e59;
-  --color-teal-900: #134e4a;
+  /* Semantic surface/text/line tokens */
+  --color-bg: #f5f5f5;
+  --color-paper: #ffffff;
+  --color-ink: #111111;
+  --color-ink-muted: #666666;
+  --color-line: rgba(0, 0, 0, 0.08);
+  --color-hover: rgba(0, 0, 0, 0.04);
+  --color-selected: rgba(0, 0, 0, 0.06);
+  /* Text color for content sitting on a primary/ink-filled surface (a
+     default button, an active nav pill) — inverts alongside primary so
+     white-on-ink in light mode becomes ink-on-white in dark mode. */
+  --color-on-ink: #ffffff;
 
-  /* Violet - IPD & Special Features */
-  --color-violet-50: #faf5ff;
-  --color-violet-100: #f3e8ff;
-  --color-violet-200: #e9d5ff;
-  --color-violet-300: #d8b4fe;
-  --color-violet-400: #c084fc;
-  --color-violet-500: #a855f7;
-  --color-violet-600: #9333ea;
-  --color-violet-700: #7e22ce;
-  --color-violet-800: #6b21a8;
-  --color-violet-900: #581c87;
+  /* Primary/action = ink, not a brand blue */
+  --color-primary-50: #f2f2f2;
+  --color-primary-100: #e0e0e0;
+  --color-primary-200: #c6c6c6;
+  --color-primary-300: #a3a3a3;
+  --color-primary-400: #737373;
+  --color-primary-500: #454545;
+  --color-primary-600: #111111;
+  --color-primary-700: #0a0a0a;
+  --color-primary-800: #050505;
+  --color-primary-900: #000000;
 
-  /* Success - Green */
-  --color-success-50: #f0fdf4;
-  --color-success-100: #dcfce7;
-  --color-success-200: #bbf7d0;
-  --color-success-300: #86efac;
-  --color-success-400: #4ade80;
-  --color-success-500: #22c55e;
-  --color-success-600: #16a34a;
-  --color-success-700: #15803d;
-  --color-success-800: #166534;
-  --color-success-900: #14532d;
+  /* Identity accent tokens (repointed from arbitrary brights to two of the
+     8 categorical identity hues below, so existing accent="teal"/"violet"
+     usages become identity-consistent instead of decorative). */
+  --color-teal-50: #eafaf3;
+  --color-teal-100: #cdf1e2;
+  --color-teal-200: #9de3c9;
+  --color-teal-300: #63cda8;
+  --color-teal-400: #34b287;
+  --color-teal-500: #1baf7a;
+  --color-teal-600: #17966a;
+  --color-teal-700: #147a58;
+  --color-teal-800: #12604a;
+  --color-teal-900: #0f4f3d;
 
-  /* Warning - Amber */
-  --color-warning-50: #fffbeb;
-  --color-warning-100: #fef3c7;
-  --color-warning-200: #fde68a;
-  --color-warning-300: #fcd34d;
-  --color-warning-400: #fbbf24;
-  --color-warning-500: #f59e0b;
-  --color-warning-600: #d97706;
-  --color-warning-700: #b45309;
-  --color-warning-800: #92400e;
-  --color-warning-900: #78350f;
+  --color-violet-50: #f2f0fa;
+  --color-violet-100: #e1dcf3;
+  --color-violet-200: #c3b9e8;
+  --color-violet-300: #a08fd9;
+  --color-violet-400: #7a67c4;
+  --color-violet-500: #4a3aa7;
+  --color-violet-600: #3f3190;
+  --color-violet-700: #342876;
+  --color-violet-800: #2a2060;
+  --color-violet-900: #21194c;
 
-  /* Danger - Rose */
-  --color-danger-50: #fff1f2;
-  --color-danger-100: #ffe4e6;
-  --color-danger-200: #fecdd3;
-  --color-danger-300: #fda4af;
-  --color-danger-400: #fb7185;
-  --color-danger-500: #f43f5e;
-  --color-danger-600: #e11d48;
-  --color-danger-700: #be123c;
-  --color-danger-800: #9f1239;
-  --color-danger-900: #881337;
+  /* Status palette — reserved exclusively for state, 4 hues */
+  --color-success-50: #eafbea;
+  --color-success-100: #cdf3cd;
+  --color-success-200: #9fe69f;
+  --color-success-300: #69d269;
+  --color-success-400: #3abd3a;
+  --color-success-500: #0ca30c;
+  --color-success-600: #0a8c0a;
+  --color-success-700: #087008;
+  --color-success-800: #075a07;
+  --color-success-900: #054905;
 
-  /* Neutrals - Slate (refined grays) */
-  --color-slate-50: #f8fafc;
-  --color-slate-100: #f1f5f9;
-  --color-slate-200: #e2e8f0;
-  --color-slate-300: #cbd5e1;
-  --color-slate-400: #94a3b8;
-  --color-slate-500: #64748b;
-  --color-slate-600: #475569;
-  --color-slate-700: #334155;
-  --color-slate-800: #1e293b;
-  --color-slate-900: #0f172a;
+  --color-warning-50: #fff8e8;
+  --color-warning-100: #ffedc2;
+  --color-warning-200: #ffdb8a;
+  --color-warning-300: #fec552;
+  --color-warning-400: #fdb62f;
+  --color-warning-500: #fab219;
+  --color-warning-600: #d99209;
+  --color-warning-700: #b47607;
+  --color-warning-800: #915d08;
+  --color-warning-900: #784c0a;
 
-  /* Sidebar Colors */
-  --color-sidebar: #0f172a;
-  --color-sidebar-hover: #1e293b;
-  --color-sidebar-active: #2563eb;
+  --color-serious-50: #fdf1eb;
+  --color-serious-100: #fbdcca;
+  --color-serious-200: #f7bb9c;
+  --color-serious-300: #f29b6f;
+  --color-serious-400: #ef8c5f;
+  --color-serious-500: #ec835a;
+  --color-serious-600: #d1613a;
+  --color-serious-700: #ab4d2f;
+  --color-serious-800: #863c25;
+  --color-serious-900: #6d301e;
 
-  /* Shadow Palette */
+  --color-danger-50: #fdecec;
+  --color-danger-100: #fad0d0;
+  --color-danger-200: #f4a5a5;
+  --color-danger-300: #ea7373;
+  --color-danger-400: #e0504f;
+  --color-danger-500: #d03b3b;
+  --color-danger-600: #b32d2d;
+  --color-danger-700: #8f2424;
+  --color-danger-800: #711d1d;
+  --color-danger-900: #5c1818;
+
+  /* Identity palette — 8 categorical hues for module/category identity
+     only (sidebar icons, KpiCard chips, category tags, chart series).
+     Always pulled centrally via getIdentityColor() in src/lib/theme.ts,
+     never hand-picked per page. */
+  --color-identity-1: #2a78d6; /* blue */
+  --color-identity-2: #1baf7a; /* aqua */
+  --color-identity-3: #eda100; /* yellow */
+  --color-identity-4: #008300; /* green */
+  --color-identity-5: #4a3aa7; /* violet */
+  --color-identity-6: #e34948; /* red */
+  --color-identity-7: #e87ba4; /* magenta */
+  --color-identity-8: #eb6834; /* orange */
+
+  /* General neutral ramp — borders, secondary text, subtle backgrounds.
+     Full gradation (not just endpoints) so dark mode has correct contrast
+     at every step, not just the extremes. */
+  --color-slate-50: #f5f5f5;
+  --color-slate-100: #ebebeb;
+  --color-slate-200: #dcdcdc;
+  --color-slate-300: #c2c2c2;
+  --color-slate-400: #9c9c9c;
+  --color-slate-500: #767676;
+  --color-slate-600: #5b5b5b;
+  --color-slate-700: #434343;
+  --color-slate-800: #262626;
+  --color-slate-900: #111111;
+
+  /* Sidebar = same base tone as the page, not a separate navy */
+  --color-sidebar: #f5f5f5;
+  --color-sidebar-hover: rgba(0, 0, 0, 0.04);
+  --color-sidebar-active: #ffffff;
+
+  /* Shadow palette — kept subtle/flat to match the monochrome look */
   --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.03);
-  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08);
-  --shadow-base: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.08);
-  --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
-  --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.08);
-  --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.20);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+  --shadow-base: 0 2px 6px -1px rgb(0 0 0 / 0.05), 0 1px 3px -1px rgb(0 0 0 / 0.05);
+  --shadow-md: 0 6px 12px -3px rgb(0 0 0 / 0.06), 0 3px 5px -3px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 12px 20px -5px rgb(0 0 0 / 0.08), 0 6px 8px -6px rgb(0 0 0 / 0.06);
+  --shadow-xl: 0 20px 40px -12px rgb(0 0 0 / 0.18);
+}
+
+/* Dark mode: redefine the same custom properties. Every Tailwind utility
+   generated from @theme (bg-primary-600, text-slate-900, bg-teal-100, ...)
+   reads var(--color-x) at render time, so this single block makes the
+   entire app dark-mode-correct with no !important and no class-name
+   matching. */
+.dark {
+  --color-bg: #0a0a0a;
+  --color-paper: #1d1d1f;
+  --color-ink: #f5f5f4;
+  --color-ink-muted: #9a9a97;
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-hover: rgba(255, 255, 255, 0.06);
+  --color-selected: rgba(255, 255, 255, 0.09);
+  --color-on-ink: #0a0a0a;
+
+  --color-primary-50: #0d0d0d;
+  --color-primary-100: #161616;
+  --color-primary-200: #232323;
+  --color-primary-300: #3a3a3a;
+  --color-primary-400: #5c5c5c;
+  --color-primary-500: #8a8a8a;
+  --color-primary-600: #f5f5f4;
+  --color-primary-700: #e5e5e4;
+  --color-primary-800: #d0d0cf;
+  --color-primary-900: #b5b5b4;
+
+  /* teal/violet/success/warning/serious/danger intentionally do NOT get a
+     dark override: each is used both as pale-tint-with-dark-text (a Badge)
+     and as a solid-fill-with-white-text (a Button) at the SAME token index
+     (e.g. success-600 is both Badge's text color and Button's fill). A
+     single hue can't be simultaneously "bright enough to read on a dark
+     tint" and "dark enough to hold white text" — so, matching the
+     reference theme's mode-invariant statusTokens, these stay identical in
+     both modes. Only the neutral/ink tokens above (bg/paper/ink/slate/
+     primary), which have no such dual role, actually invert. */
+
+  --color-identity-1: #3987e5;
+  --color-identity-2: #199e70;
+  --color-identity-3: #c98500;
+  --color-identity-4: #2fa62f;
+  --color-identity-5: #9085e9;
+  --color-identity-6: #e66767;
+  --color-identity-7: #d55181;
+  --color-identity-8: #d95926;
+
+  --color-slate-50: #111111;
+  --color-slate-100: #1a1a1a;
+  --color-slate-200: #262626;
+  --color-slate-300: #3a3a3a;
+  --color-slate-400: #5c5c5c;
+  --color-slate-500: #7a7a7a;
+  --color-slate-600: #9a9a9a;
+  --color-slate-700: #b8b8b8;
+  --color-slate-800: #dcdcdc;
+  --color-slate-900: #f5f5f4;
+
+  --color-sidebar: #0a0a0a;
+  --color-sidebar-hover: rgba(255, 255, 255, 0.06);
+  --color-sidebar-active: #1d1d1f;
+
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.35);
+  --shadow-base: 0 2px 6px -1px rgb(0 0 0 / 0.4), 0 1px 3px -1px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 6px 12px -3px rgb(0 0 0 / 0.45), 0 3px 5px -3px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 12px 20px -5px rgb(0 0 0 / 0.5), 0 6px 8px -6px rgb(0 0 0 / 0.45);
+  --shadow-xl: 0 20px 40px -12px rgb(0 0 0 / 0.6);
 }
 
 /* Typography Utilities */
@@ -151,282 +269,43 @@
 
 body {
   font-family: "Inter", system-ui, -apple-system, sans-serif;
-  background-color: #f8fafc;
-  color: #1e293b;
+  background-color: var(--color-bg);
+  color: var(--color-ink);
   min-height: 100vh;
   font-size: 0.875rem; /* 14px default */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Dark Mode Styles */
-.dark body,
-html.dark body {
-  background-color: #0f172a;
-  color: #e2e8f0;
-}
-
-/* Background overrides */
-.dark .bg-white {
-  background-color: #1e293b !important;
-}
-
-.dark .bg-slate-50 {
-  background-color: #0f172a !important;
-}
-
-.dark .bg-slate-100 {
-  background-color: #1e293b !important;
-}
-
-.dark .bg-gray-50 {
-  background-color: #0f172a !important;
-}
-
-.dark .bg-gray-100 {
-  background-color: #1e293b !important;
-}
-
-/* Text color overrides */
-.dark .text-slate-900 {
-  color: #f1f5f9 !important;
-}
-
-.dark .text-slate-800 {
-  color: #e2e8f0 !important;
-}
-
-.dark .text-slate-700 {
-  color: #cbd5e1 !important;
-}
-
-.dark .text-slate-600 {
-  color: #94a3b8 !important;
-}
-
-.dark .text-slate-500 {
-  color: #94a3b8 !important;
-}
-
-.dark .text-slate-400 {
-  color: #64748b !important;
-}
-
-.dark .text-gray-900 {
-  color: #f1f5f9 !important;
-}
-
-.dark .text-gray-700 {
-  color: #cbd5e1 !important;
-}
-
-.dark .text-gray-600 {
-  color: #94a3b8 !important;
-}
-
-.dark .text-gray-500 {
-  color: #94a3b8 !important;
-}
-
-/* Border overrides */
-.dark .border-slate-200 {
-  border-color: #334155 !important;
-}
-
-.dark .border-slate-300 {
-  border-color: #475569 !important;
-}
-
-.dark .border-gray-200 {
-  border-color: #334155 !important;
-}
-
-.dark .border-gray-300 {
-  border-color: #475569 !important;
-}
-
-/* Form elements */
-.dark input,
-.dark select,
-.dark textarea {
-  background-color: #1e293b !important;
-  border-color: #475569 !important;
-  color: #e2e8f0 !important;
-}
-
-.dark input::placeholder,
-.dark textarea::placeholder {
-  color: #64748b !important;
-}
-
+/* Form elements: rely on their own component classes for background/border
+   (see components/ui/input.tsx, select.tsx) — only cross-cutting bits that
+   can't be scoped to those components stay here. */
 .dark input:focus,
 .dark select:focus,
 .dark textarea:focus {
-  border-color: #3b82f6 !important;
   outline: none;
 }
 
-/* Sidebar */
-.dark aside,
-.dark [class*="sidebar"] {
-  background-color: #0f172a !important;
-  border-color: #1e293b !important;
-}
-
-.dark aside a,
-.dark aside button,
-.dark [class*="sidebar"] a,
-.dark [class*="sidebar"] button {
-  color: #cbd5e1 !important;
-}
-
-.dark aside a:hover,
-.dark aside button:hover,
-.dark [class*="sidebar"] a:hover,
-.dark [class*="sidebar"] button:hover {
-  background-color: #1e293b !important;
-}
-
-/* Keep active sidebar links blue in dark mode */
-.dark aside a[aria-current="page"],
-.dark [class*="sidebar"] a[aria-current="page"],
-.dark aside a[aria-current="page"]:hover,
-.dark [class*="sidebar"] a[aria-current="page"]:hover {
-  background-color: #2563eb !important;
-  color: #ffffff !important;
-}
-
-.dark aside .text-white,
-.dark [class*="sidebar"] .text-white {
-  color: #ffffff !important;
-}
-
-/* Header/Topbar */
-.dark header {
-  background-color: #0f172a !important;
-  border-color: #1e293b !important;
-}
-
-/* Cards */
-.dark [class*="card"],
-.dark .rounded-xl,
-.dark .rounded-lg {
-  background-color: #1e293b;
-  border-color: #334155;
-}
-
-/* Shadows */
-.dark .shadow-sm {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.4) !important;
-}
-
-.dark .shadow-md {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4) !important;
-}
-
-.dark .shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4) !important;
-}
-
-/* Tables */
-.dark table {
-  background-color: #1e293b;
-}
-
-.dark table th {
-  background-color: #0f172a !important;
-  color: #cbd5e1 !important;
-  border-color: #334155 !important;
-}
-
-.dark table td {
-  border-color: #334155 !important;
-  color: #e2e8f0;
-}
-
-.dark table tr:hover {
-  background-color: #334155 !important;
-}
-
-.dark tbody tr {
-  border-color: #334155 !important;
-}
-
-/* Hover states */
-.dark .hover\:bg-slate-50:hover {
-  background-color: #334155 !important;
-}
-
-.dark .hover\:bg-slate-100:hover {
-  background-color: #334155 !important;
-}
-
-.dark .hover\:bg-gray-50:hover {
-  background-color: #334155 !important;
-}
-
-/* Dividers */
-.dark .divide-slate-100 > * + * {
-  border-color: #334155 !important;
-}
-
-.dark .divide-slate-200 > * + * {
-  border-color: #334155 !important;
-}
-
-.dark .divide-gray-100 > * + * {
-  border-color: #334155 !important;
-}
-
-/* Modal/Dialog backgrounds */
+/* Modal/Dialog backdrop */
 .dark .bg-black\/50,
 .dark [class*="backdrop"] {
-  background-color: rgba(0, 0, 0, 0.7) !important;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
-/* Dropdown menus */
-.dark [role="menu"],
-.dark [role="listbox"],
-.dark .dropdown-content {
-  background-color: #1e293b !important;
-  border-color: #334155 !important;
-}
-
-/* Ring colors */
-.dark .ring-slate-200 {
-  --tw-ring-color: #334155 !important;
-}
-
-/* Search bar specific */
-.dark .bg-slate-50.pl-10,
-.dark input[type="text"],
-.dark input[type="search"] {
-  background-color: #1e293b !important;
-  border-color: #475569 !important;
-  color: #e2e8f0 !important;
-}
-
-/* Recharts / Chart overrides */
+/* Recharts chrome that can't be reached via className (SVG stroke/fill
+   are set by the library's own inline styles unless overridden here). */
 .dark .recharts-cartesian-grid line {
-  stroke: #334155;
+  stroke: var(--color-line);
 }
 
 .dark .recharts-text {
-  fill: #94a3b8;
+  fill: var(--color-ink-muted);
 }
 
 .dark .recharts-tooltip-wrapper .recharts-default-tooltip {
-  background-color: #1e293b !important;
-  border-color: #334155 !important;
-}
-
-/* Calendar grid */
-.dark .bg-blue-50 {
-  background-color: rgba(59, 130, 246, 0.15) !important;
-}
-
-.dark .bg-blue-50\/30 {
-  background-color: rgba(59, 130, 246, 0.1) !important;
+  background-color: var(--color-paper) !important;
+  border-color: var(--color-line) !important;
 }
 
 #root {
@@ -440,14 +319,14 @@ html.dark body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--color-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--color-slate-300);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--color-slate-400);
 }

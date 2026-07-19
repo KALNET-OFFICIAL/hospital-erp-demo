@@ -12,6 +12,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import type { BadgeProps } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 
 interface LowStockItem {
@@ -90,6 +99,17 @@ const mockLowStockItems: LowStockItem[] = [
   },
 ];
 
+type StockLevel = "critical" | "low" | "warning";
+
+const stockLevelMeta: Record<
+  StockLevel,
+  { variant: BadgeProps["variant"]; chipBg: string; chipText: string; barFill: string }
+> = {
+  critical: { variant: "danger", chipBg: "bg-danger-50", chipText: "text-danger-600", barFill: "bg-danger-500" },
+  low: { variant: "serious", chipBg: "bg-serious-50", chipText: "text-serious-600", barFill: "bg-serious-500" },
+  warning: { variant: "warning", chipBg: "bg-warning-50", chipText: "text-warning-600", barFill: "bg-warning-500" },
+};
+
 export function PharmacyLowStockPage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
@@ -120,7 +140,7 @@ export function PharmacyLowStockPage() {
     }
   };
 
-  const getStockLevel = (current: number, min: number) => {
+  const getStockLevel = (current: number, min: number): StockLevel => {
     const percentage = (current / min) * 100;
     if (percentage < 50) return "critical";
     if (percentage < 80) return "low";
@@ -132,8 +152,8 @@ export function PharmacyLowStockPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Low Stock Alerts</h1>
-          <p className="text-slate-500">Items below minimum stock level</p>
+          <h1 className="text-2xl font-bold text-ink">Low Stock Alerts</h1>
+          <p className="text-ink-muted">Items below minimum stock level</p>
         </div>
         <div className="flex gap-2">
           <Link to="/pharmacy/purchases/new">
@@ -147,36 +167,36 @@ export function PharmacyLowStockPage() {
 
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100">
-              <AlertTriangle className="h-5 w-5 text-amber-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-warning-50">
+              <AlertTriangle className="h-5 w-5 text-warning-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Total Low Stock</p>
-              <p className="text-2xl font-bold text-amber-600">{mockLowStockItems.length}</p>
+              <p className="text-sm text-ink-muted">Total Low Stock</p>
+              <p className="text-2xl font-bold text-warning-600">{mockLowStockItems.length}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100">
-              <TrendingDown className="h-5 w-5 text-red-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-danger-50">
+              <TrendingDown className="h-5 w-5 text-danger-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Critical Level</p>
-              <p className="text-2xl font-bold text-red-600">{criticalCount}</p>
+              <p className="text-sm text-ink-muted">Critical Level</p>
+              <p className="text-2xl font-bold text-danger-600">{criticalCount}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-              <Package className="h-5 w-5 text-blue-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+              <Package className="h-5 w-5 text-primary-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Selected for Order</p>
-              <p className="text-2xl font-bold text-blue-600">{selectedItems.length}</p>
+              <p className="text-sm text-ink-muted">Selected for Order</p>
+              <p className="text-2xl font-bold text-ink">{selectedItems.length}</p>
             </div>
           </div>
         </div>
@@ -209,104 +229,92 @@ export function PharmacyLowStockPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-slate-50 border-b border-gray-200">
-              <tr>
-                <th className="px-6 py-4 text-left">
-                  <input
-                    type="checkbox"
-                    checked={selectedItems.length === filteredItems.length && filteredItems.length > 0}
-                    onChange={selectAll}
-                    className="h-4 w-4 rounded border-gray-300"
-                  />
-                </th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Medicine</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Category</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Stock Status</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Supplier</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Reorder Qty</th>
-                <th className="text-right text-sm font-medium text-slate-600 px-6 py-4">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {filteredItems.map((item) => {
-                const level = getStockLevel(item.currentStock, item.minStockLevel);
-                return (
-                  <tr key={item.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-4">
-                      <input
-                        type="checkbox"
-                        checked={selectedItems.includes(item.id)}
-                        onChange={() => toggleSelection(item.id)}
-                        className="h-4 w-4 rounded border-gray-300"
-                      />
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className={cn(
-                          "flex h-10 w-10 items-center justify-center rounded-lg",
-                          level === "critical" ? "bg-red-100" : "bg-amber-100"
-                        )}>
-                          <Pill className={cn(
-                            "h-5 w-5",
-                            level === "critical" ? "text-red-600" : "text-amber-600"
-                          )} />
-                        </div>
-                        <div>
-                          <p className="font-medium text-slate-900">{item.name}</p>
-                          <p className="text-sm text-slate-500">{item.genericName}</p>
-                        </div>
+      <div className="bg-paper rounded-xl border border-line overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>
+                <input
+                  type="checkbox"
+                  checked={selectedItems.length === filteredItems.length && filteredItems.length > 0}
+                  onChange={selectAll}
+                  className="h-4 w-4 rounded border-line"
+                />
+              </TableHead>
+              <TableHead>Medicine</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Stock Status</TableHead>
+              <TableHead>Supplier</TableHead>
+              <TableHead>Reorder Qty</TableHead>
+              <TableHead className="text-right">Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredItems.map((item) => {
+              const level = getStockLevel(item.currentStock, item.minStockLevel);
+              const meta = stockLevelMeta[level];
+              return (
+                <TableRow key={item.id}>
+                  <TableCell>
+                    <input
+                      type="checkbox"
+                      checked={selectedItems.includes(item.id)}
+                      onChange={() => toggleSelection(item.id)}
+                      className="h-4 w-4 rounded border-line"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <div className={cn("flex h-10 w-10 items-center justify-center rounded-lg", meta.chipBg)}>
+                        <Pill className={cn("h-5 w-5", meta.chipText)} />
                       </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <Badge variant="default">{item.category}</Badge>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <span className={cn(
-                            "font-medium",
-                            level === "critical" ? "text-red-600" : "text-amber-600"
-                          )}>
-                            {item.currentStock}
-                          </span>
-                          <span className="text-slate-400">/ {item.minStockLevel} {item.unit}s</span>
-                        </div>
-                        <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
-                          <div
-                            className={cn(
-                              "h-full rounded-full",
-                              level === "critical" ? "bg-red-500" : "bg-amber-500"
-                            )}
-                            style={{ width: `${Math.min((item.currentStock / item.minStockLevel) * 100, 100)}%` }}
-                          />
-                        </div>
+                      <div>
+                        <p className="font-medium text-ink">{item.name}</p>
+                        <p className="text-sm text-ink-muted">{item.genericName}</p>
                       </div>
-                    </td>
-                    <td className="px-6 py-4 text-slate-700">{item.supplier}</td>
-                    <td className="px-6 py-4 text-slate-900 font-medium">{item.reorderQuantity}</td>
-                    <td className="px-6 py-4">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="gap-1"
-                        onClick={() =>
-                          navigate(
-                            `/pharmacy/purchases?new=true&items=${encodeURIComponent(item.id)}`
-                          )
-                        }
-                      >
-                        Order <ArrowRight size={14} />
-                      </Button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="default">{item.category}</Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className={cn("font-medium", meta.chipText)}>
+                          {item.currentStock}
+                        </span>
+                        <span className="text-ink-muted">/ {item.minStockLevel} {item.unit}s</span>
+                        <Badge variant={meta.variant}>{level}</Badge>
+                      </div>
+                      <div className="w-24 h-2 bg-slate-200 rounded-full overflow-hidden">
+                        <div
+                          className={cn("h-full rounded-full", meta.barFill)}
+                          style={{ width: `${Math.min((item.currentStock / item.minStockLevel) * 100, 100)}%` }}
+                        />
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-ink-muted">{item.supplier}</TableCell>
+                  <TableCell className="text-ink font-medium">{item.reorderQuantity}</TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="gap-1"
+                      onClick={() =>
+                        navigate(
+                          `/pharmacy/purchases?new=true&items=${encodeURIComponent(item.id)}`
+                        )
+                      }
+                    >
+                      Order <ArrowRight size={14} />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

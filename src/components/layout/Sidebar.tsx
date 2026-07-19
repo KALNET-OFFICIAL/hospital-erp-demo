@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useSidebarStore, useAuthStore, useThemeStore } from "@/stores";
+import { getIdentityColor } from "@/lib/theme";
+import { getSidebarWidth } from "@/lib/layout";
 import type { UserRole } from "@/types";
 import {
   LayoutDashboard,
@@ -337,8 +339,11 @@ export function Sidebar() {
   const { theme } = useThemeStore();
   const location = useLocation();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
-  
-  const isDark = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+  // Only used to pick which identity-hue variant (light/dark) to hash
+  // module icons from — never for className branching, which the token
+  // system in index.css now handles automatically via the .dark selector.
+  const mode = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
 
   const userRole = user?.role || "admin";
   
@@ -400,39 +405,33 @@ export function Sidebar() {
 
   return (
     <aside
-      className={cn(
-        "fixed left-0 top-0 z-40 flex h-screen flex-col border-r transition-all duration-300",
-        isDark ? "bg-slate-900 border-slate-700" : "bg-white border-gray-200",
-        isCollapsed ? "w-[80px]" : "w-[256px]"
-      )}
+      className="fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-line bg-bg transition-[width] duration-300 ease-out"
+      style={{ width: getSidebarWidth(isCollapsed) }}
     >
-      {/* Logo */}
-      <div className={cn(
-        "flex h-16 items-center justify-between px-4 border-b",
-        isDark ? "border-slate-700" : "border-gray-200"
-      )}>
-        {!isCollapsed && (
-          <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600">
-              <Activity className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <h1 className={cn("text-lg font-bold leading-none", isDark ? "text-white" : "text-slate-900")}>KALNET</h1>
-              <p className={cn("text-xs mt-0.5", isDark ? "text-slate-400" : "text-slate-500")}>Hospital OS</p>
-            </div>
-          </div>
-        )}
-        {isCollapsed && (
-          <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600">
-            <Activity className="h-5 w-5 text-white" />
-          </div>
-        )}
+      {/* Logo — icon tile stays put, label fades/collapses beside it so the
+          whole header animates in sync with the sidebar's width transition
+          instead of instantly swapping between two separate layouts. */}
+      <div className="flex h-16 items-center gap-2 px-4 border-b border-line overflow-hidden">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-600">
+          <Activity className="h-5 w-5 text-on-ink" />
+        </div>
+        <div
+          className={cn(
+            "overflow-hidden whitespace-nowrap transition-all duration-300 ease-out",
+            isCollapsed ? "max-w-0 opacity-0" : "max-w-[160px] opacity-100"
+          )}
+        >
+          <h1 className="text-lg font-bold leading-none text-ink">KALNET</h1>
+          <p className="text-xs mt-0.5 text-ink-muted">Hospital OS</p>
+        </div>
       </div>
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto py-4">
         <ul className="space-y-1 px-3">
-          {navItems.map((item) => (
+          {navItems.map((item) => {
+            const accent = getIdentityColor(item.href ?? item.label, mode);
+            return (
             <li key={item.label}>
               {item.children ? (
                 // Expandable menu item
@@ -442,49 +441,64 @@ export function Sidebar() {
                     className={cn(
                       "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[15px] font-medium transition-colors",
                       hasActiveChild(item)
-                        ? "text-blue-500 bg-blue-600/10"
-                        : isDark ? "text-slate-300 hover:bg-slate-800" : "text-slate-700 hover:bg-gray-100",
+                        ? "text-ink bg-selected"
+                        : "text-ink-muted hover:bg-hover",
                       isCollapsed && "justify-center px-2"
                     )}
                     title={isCollapsed ? item.label : undefined}
                   >
-                    {item.icon}
-                    {!isCollapsed && (
-                      <>
-                        <span className="flex-1 text-left">{item.label}</span>
-                        <ChevronDown
-                          size={16}
-                          className={cn(
-                            "transition-transform",
-                            hasActiveChild(item) ? "text-blue-500" : isDark ? "text-slate-500" : "text-slate-400",
-                            expandedItems.includes(item.label) && "rotate-180"
-                          )}
-                        />
-                      </>
-                    )}
+                    <span className="shrink-0" style={{ color: accent }}>{item.icon}</span>
+                    <span
+                      className={cn(
+                        "flex-1 text-left overflow-hidden whitespace-nowrap transition-all duration-300 ease-out",
+                        isCollapsed ? "max-w-0 opacity-0" : "max-w-[160px] opacity-100"
+                      )}
+                    >
+                      {item.label}
+                    </span>
+                    <ChevronDown
+                      size={16}
+                      className={cn(
+                        "shrink-0 overflow-hidden text-slate-400 transition-all duration-300 ease-out",
+                        expandedItems.includes(item.label) && "rotate-180",
+                        isCollapsed ? "max-w-0 opacity-0" : "max-w-[16px] opacity-100"
+                      )}
+                    />
                   </button>
-                  {!isCollapsed && expandedItems.includes(item.label) && (
-                    <ul className="mt-1 space-y-1 pl-4">
-                      {item.children.map((child) => (
-                        <li key={child.href}>
-                          <NavLink
-                            to={child.href!}
-                            end
-                            className={({ isActive }) =>
-                              cn(
-                                "flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors",
-                                isActive
-                                  ? "bg-blue-600 text-white font-medium"
-                                  : isDark ? "text-slate-400 hover:bg-slate-800 hover:text-slate-200" : "text-slate-600 hover:bg-gray-50 hover:text-slate-900"
-                              )
-                            }
-                          >
-                            {child.icon}
-                            <span>{child.label}</span>
-                          </NavLink>
-                        </li>
-                      ))}
-                    </ul>
+                  {/* Grid-rows trick animates to the content's natural
+                      height smoothly (no JS measurement needed) instead of
+                      the submenu popping open/closed instantly. */}
+                  {!isCollapsed && (
+                    <div
+                      className={cn(
+                        "grid transition-[grid-template-rows] duration-200 ease-out",
+                        expandedItems.includes(item.label) ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                      )}
+                    >
+                      <div className="overflow-hidden">
+                        <ul className="mt-1 ml-5 space-y-1 border-l border-line pl-3">
+                          {item.children.map((child) => (
+                            <li key={child.href}>
+                              <NavLink
+                                to={child.href!}
+                                end
+                                className={({ isActive }) =>
+                                  cn(
+                                    "flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors",
+                                    isActive
+                                      ? "bg-selected text-ink font-medium"
+                                      : "text-ink-muted hover:bg-hover hover:text-ink"
+                                  )
+                                }
+                              >
+                                {child.icon}
+                                <span>{child.label}</span>
+                              </NavLink>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
                   )}
                 </div>
               ) : (
@@ -495,29 +509,34 @@ export function Sidebar() {
                     cn(
                       "flex items-center gap-3 rounded-lg px-3 py-2.5 text-[15px] font-medium transition-colors",
                       isActive
-                        ? "bg-blue-600 text-white"
-                        : isDark ? "text-slate-300 hover:bg-slate-800" : "text-slate-700 hover:bg-gray-100",
+                        ? "bg-selected text-ink"
+                        : "text-ink-muted hover:bg-hover",
                       isCollapsed && "justify-center px-2"
                     )
                   }
                   title={isCollapsed ? item.label : undefined}
                 >
-                  {item.icon}
-                  {!isCollapsed && <span>{item.label}</span>}
+                  <span className="shrink-0" style={{ color: accent }}>{item.icon}</span>
+                  <span
+                    className={cn(
+                      "overflow-hidden whitespace-nowrap transition-all duration-300 ease-out",
+                      isCollapsed ? "max-w-0 opacity-0" : "max-w-[160px] opacity-100"
+                    )}
+                  >
+                    {item.label}
+                  </span>
                 </NavLink>
               )}
             </li>
-          ))}
+            );
+          })}
         </ul>
       </nav>
 
       {/* Collapse Toggle */}
       <button
         onClick={toggle}
-        className={cn(
-          "flex h-12 items-center justify-center border-t transition-colors",
-          isDark ? "border-slate-700 text-slate-500 hover:bg-slate-800 hover:text-slate-300" : "border-gray-200 text-slate-400 hover:bg-gray-50 hover:text-slate-600"
-        )}
+        className="flex h-12 items-center justify-center border-t border-line text-ink-muted hover:bg-hover hover:text-ink transition-colors"
       >
         {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
       </button>

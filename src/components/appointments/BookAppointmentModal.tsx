@@ -255,7 +255,7 @@ export function BookAppointmentModal({
           <div className="space-y-4">
             {/* Patient Selection */}
             <div>
-              <label className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-1.5">
+              <label className="flex items-center gap-2 text-sm font-medium text-ink-muted mb-1.5">
                 <User size={16} />
                 Patient *
               </label>
@@ -269,7 +269,7 @@ export function BookAppointmentModal({
 
             {/* Doctor Selection */}
             <div>
-              <label className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-1.5">
+              <label className="flex items-center gap-2 text-sm font-medium text-ink-muted mb-1.5">
                 <Stethoscope size={16} />
                 Doctor *
               </label>
@@ -283,14 +283,14 @@ export function BookAppointmentModal({
 
             {/* Doctor Info */}
             {selectedDoctorId && (
-              <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg text-sm">
+              <div className="flex items-center justify-between p-3 bg-selected rounded-lg text-sm">
                 <div>
-                  <span className="font-medium text-slate-900">{selectedDoctor?.name}</span>
-                  <span className="text-slate-500 ml-2">{selectedDoctor?.department}</span>
+                  <span className="font-medium text-ink">{selectedDoctor?.name}</span>
+                  <span className="text-ink-muted ml-2">{selectedDoctor?.department}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   {selectedDoctor?.consultationFee && (
-                    <span className="text-slate-700">
+                    <span className="text-ink-muted">
                       Fee: {formatCurrency(selectedDoctor.consultationFee)}
                     </span>
                   )}
@@ -304,7 +304,7 @@ export function BookAppointmentModal({
             {/* Date and Time */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-1.5">
+                <label className="flex items-center gap-2 text-sm font-medium text-ink-muted mb-1.5">
                   <Calendar size={16} />
                   Date *
                 </label>
@@ -317,7 +317,7 @@ export function BookAppointmentModal({
               </div>
 
               <div>
-                <label className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-1.5">
+                <label className="flex items-center gap-2 text-sm font-medium text-ink-muted mb-1.5">
                   <Clock size={16} />
                   Time *
                 </label>
@@ -333,7 +333,7 @@ export function BookAppointmentModal({
 
             {/* Appointment Type */}
             <div>
-              <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+              <label className="text-sm font-medium text-ink-muted mb-1.5 block">
                 Appointment Type *
               </label>
               <Select
@@ -345,11 +345,11 @@ export function BookAppointmentModal({
 
             {/* Notes */}
             <div>
-              <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+              <label className="text-sm font-medium text-ink-muted mb-1.5 block">
                 Notes (Optional)
               </label>
               <textarea
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[80px]"
+                className="w-full rounded-lg border border-line px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 min-h-[80px]"
                 placeholder="Any additional notes..."
                 {...register("notes")}
               />

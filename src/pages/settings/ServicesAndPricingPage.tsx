@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Modal, ModalBody, ModalFooter } from "@/components/ui/modal";
 import { cn } from "@/lib/utils";
+import { getIdentityColor, getCurrentThemeMode } from "@/lib/theme";
 
 interface Service {
   id: string;
@@ -183,6 +184,7 @@ export default function ServicesAndPricingPage() {
 
   // Form state
   const [formData, setFormData] = useState<Partial<Service>>({});
+  const mode = getCurrentThemeMode();
 
   const filteredServices = services.filter((svc) => {
     const matchesSearch =
@@ -249,8 +251,8 @@ export default function ServicesAndPricingPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Services & Pricing</h1>
-          <p className="text-slate-500">Manage hospital services and their pricing</p>
+          <h1 className="text-2xl font-bold text-ink">Services & Pricing</h1>
+          <p className="text-ink-muted">Manage hospital services and their pricing</p>
         </div>
         <Button className="gap-2" onClick={openAddModal}>
           <Plus size={16} />
@@ -260,47 +262,53 @@ export default function ServicesAndPricingPage() {
 
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-              <DollarSign className="h-5 w-5 text-blue-600" />
+            <div
+              className="flex h-10 w-10 items-center justify-center rounded-lg"
+              style={{
+                backgroundColor: `${getIdentityColor("Total Services", mode)}1f`,
+                color: getIdentityColor("Total Services", mode),
+              }}
+            >
+              <DollarSign className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Total Services</p>
-              <p className="text-2xl font-bold text-slate-900">{stats.total}</p>
+              <p className="text-sm text-ink-muted">Total Services</p>
+              <p className="text-2xl font-bold text-ink">{stats.total}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
-              <Stethoscope className="h-5 w-5 text-green-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-success-100">
+              <Stethoscope className="h-5 w-5 text-success-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Active Services</p>
-              <p className="text-2xl font-bold text-green-600">{stats.active}</p>
+              <p className="text-sm text-ink-muted">Active Services</p>
+              <p className="text-2xl font-bold text-success-600">{stats.active}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
-              <DollarSign className="h-5 w-5 text-purple-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+              <DollarSign className="h-5 w-5 text-primary-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Average Price</p>
-              <p className="text-2xl font-bold text-purple-600">₹{stats.avgPrice}</p>
+              <p className="text-sm text-ink-muted">Average Price</p>
+              <p className="text-2xl font-bold text-ink">₹{stats.avgPrice}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100">
-              <FlaskConical className="h-5 w-5 text-amber-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+              <FlaskConical className="h-5 w-5 text-primary-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Categories</p>
-              <p className="text-2xl font-bold text-amber-600">{stats.categories}</p>
+              <p className="text-sm text-ink-muted">Categories</p>
+              <p className="text-2xl font-bold text-ink">{stats.categories}</p>
             </div>
           </div>
         </div>
@@ -332,43 +340,43 @@ export default function ServicesAndPricingPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-paper rounded-xl border border-line overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-50 border-b border-gray-200">
+            <thead className="bg-bg border-b border-line">
               <tr>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Service</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Category</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Price</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Tax</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Duration</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Status</th>
-                <th className="text-right text-sm font-medium text-slate-600 px-6 py-4">Actions</th>
+                <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Service</th>
+                <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Category</th>
+                <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Price</th>
+                <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Tax</th>
+                <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Duration</th>
+                <th className="text-left text-sm font-medium text-ink-muted px-6 py-4">Status</th>
+                <th className="text-right text-sm font-medium text-ink-muted px-6 py-4">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-line">
               {filteredServices.map((svc) => (
-                <tr key={svc.id} className="hover:bg-slate-50 transition-colors">
+                <tr key={svc.id} className="hover:bg-hover transition-colors">
                   <td className="px-6 py-4">
                     <div>
-                      <p className="font-medium text-slate-900">{svc.name}</p>
-                      <p className="text-sm text-slate-500 max-w-[250px] truncate">{svc.description}</p>
+                      <p className="font-medium text-ink">{svc.name}</p>
+                      <p className="text-sm text-ink-muted max-w-[250px] truncate">{svc.description}</p>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2" style={{ color: getIdentityColor(svc.category, mode) }}>
                       {getCategoryIcon(svc.category)}
-                      <span className="text-slate-700">{svc.category}</span>
+                      <span>{svc.category}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <p className="font-medium text-slate-900">₹{svc.price.toLocaleString()}</p>
+                    <p className="font-medium text-ink">₹{svc.price.toLocaleString()}</p>
                   </td>
                   <td className="px-6 py-4">
-                    <p className="text-slate-700">{svc.tax}%</p>
+                    <p className="text-ink-muted">{svc.tax}%</p>
                   </td>
                   <td className="px-6 py-4">
-                    <p className="text-slate-700">
+                    <p className="text-ink-muted">
                       {svc.duration >= 1440
                         ? `${Math.floor(svc.duration / 1440)} day(s)`
                         : `${svc.duration} min`}
@@ -397,7 +405,7 @@ export default function ServicesAndPricingPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-8 w-8 p-0 text-red-500 hover:text-red-700"
+                        className="h-8 w-8 p-0 text-danger-500 hover:text-danger-700"
                         onClick={() => setShowDeleteConfirm(svc.id)}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -421,7 +429,7 @@ export default function ServicesAndPricingPage() {
         <ModalBody>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">
                 Service Name *
               </label>
               <Input
@@ -431,9 +439,9 @@ export default function ServicesAndPricingPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Category</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">Category</label>
               <select
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
                 value={formData.category || "OPD"}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
               >
@@ -445,11 +453,11 @@ export default function ServicesAndPricingPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">
                 Description
               </label>
               <textarea
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
                 rows={2}
                 value={formData.description || ""}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -458,7 +466,7 @@ export default function ServicesAndPricingPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="block text-sm font-medium text-ink-muted mb-1.5">
                   Price (₹) *
                 </label>
                 <Input
@@ -469,7 +477,7 @@ export default function ServicesAndPricingPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="block text-sm font-medium text-ink-muted mb-1.5">
                   Tax (%)
                 </label>
                 <Input
@@ -482,7 +490,7 @@ export default function ServicesAndPricingPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="block text-sm font-medium text-ink-muted mb-1.5">
                   Duration (minutes)
                 </label>
                 <Input
@@ -498,9 +506,9 @@ export default function ServicesAndPricingPage() {
                     type="checkbox"
                     checked={formData.isActive ?? true}
                     onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                    className="h-4 w-4 rounded border-gray-300"
+                    className="h-4 w-4 rounded border-line accent-primary-600"
                   />
-                  <span className="text-sm text-slate-700">Active</span>
+                  <span className="text-sm text-ink-muted">Active</span>
                 </label>
               </div>
             </div>
@@ -523,7 +531,7 @@ export default function ServicesAndPricingPage() {
         title="Confirm Delete"
       >
         <ModalBody>
-          <p className="text-slate-600">
+          <p className="text-ink-muted">
             Are you sure you want to delete this service? This action cannot be undone.
           </p>
         </ModalBody>

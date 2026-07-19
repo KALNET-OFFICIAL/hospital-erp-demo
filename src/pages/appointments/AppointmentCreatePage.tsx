@@ -237,8 +237,8 @@ export function AppointmentCreatePage() {
           <ArrowLeft size={20} />
         </Button>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Book Appointment</h1>
-          <p className="text-slate-500">Schedule a new appointment with availability-aware slots</p>
+          <h1 className="text-2xl font-bold text-ink">Book Appointment</h1>
+          <p className="text-ink-muted">Schedule a new appointment with availability-aware slots</p>
         </div>
       </div>
 
@@ -284,12 +284,12 @@ export function AppointmentCreatePage() {
             </div>
 
             {selectedDoctorId && (
-              <Card className="bg-slate-50 p-3 text-sm">
+              <Card className="bg-selected p-3 text-sm">
                 <div className="flex flex-wrap items-center gap-3">
-                  <span className="font-medium text-slate-800">{selectedDoctor?.name}</span>
-                  <span className="text-slate-600">{selectedDoctor?.department}</span>
+                  <span className="font-medium text-ink">{selectedDoctor?.name}</span>
+                  <span className="text-ink-muted">{selectedDoctor?.department}</span>
                   {selectedDoctor?.consultationFee && (
-                    <span className="text-slate-700">
+                    <span className="text-ink-muted">
                       Fee default: {formatCurrency(selectedDoctor.consultationFee)}
                     </span>
                   )}
@@ -308,9 +308,9 @@ export function AppointmentCreatePage() {
             />
 
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">Notes</label>
+              <label className="mb-1.5 block text-sm font-medium text-ink-muted">Notes</label>
               <textarea
-                className="flex min-h-[100px] w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                className="flex min-h-[100px] w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm placeholder:text-slate-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
                 placeholder="Any additional notes..."
                 {...register("notes")}
               />

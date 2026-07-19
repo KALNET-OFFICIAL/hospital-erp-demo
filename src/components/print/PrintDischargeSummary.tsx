@@ -89,15 +89,15 @@ const PrintDischargeSummary = forwardRef<HTMLDivElement, PrintDischargeSummaryPr
         style={{ fontFamily: "Arial, sans-serif" }}
       >
         {/* Header */}
-        <div className="border-b-4 border-blue-800 pb-3 mb-4">
+        <div className="border-b-4 border-gray-800 pb-3 mb-4">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-2xl font-bold text-blue-800">{hospital.name}</h1>
+              <h1 className="text-2xl font-bold text-gray-900">{hospital.name}</h1>
               <p className="text-gray-600 text-xs mt-1">{hospital.address}</p>
               <p className="text-gray-600 text-xs">Phone: {hospital.phone}</p>
             </div>
             <div className="text-right">
-              <h2 className="text-lg font-bold text-blue-800 bg-blue-100 px-4 py-2 rounded">
+              <h2 className="text-lg font-bold text-gray-900 bg-gray-100 px-4 py-2 rounded">
                 DISCHARGE SUMMARY
               </h2>
               <p className="text-xs text-gray-600 mt-1">Doc ID: {data.id}</p>
@@ -150,19 +150,19 @@ const PrintDischargeSummary = forwardRef<HTMLDivElement, PrintDischargeSummaryPr
         {/* Ward & Doctor Info */}
         <div className="grid grid-cols-3 gap-4 mb-4 text-xs">
           {data.ward && (
-            <div className="bg-blue-50 p-2 rounded">
+            <div className="bg-gray-50 p-2 rounded">
               <span className="text-gray-500">Ward/Bed:</span>{" "}
               <span className="font-medium">
                 {data.ward} {data.bed && `/ ${data.bed}`}
               </span>
             </div>
           )}
-          <div className="bg-blue-50 p-2 rounded">
+          <div className="bg-gray-50 p-2 rounded">
             <span className="text-gray-500">Attending Doctor:</span>{" "}
             <span className="font-medium">{data.attendingDoctor}</span>
           </div>
           {data.department && (
-            <div className="bg-blue-50 p-2 rounded">
+            <div className="bg-gray-50 p-2 rounded">
               <span className="text-gray-500">Department:</span>{" "}
               <span className="font-medium">{data.department}</span>
             </div>
@@ -171,7 +171,7 @@ const PrintDischargeSummary = forwardRef<HTMLDivElement, PrintDischargeSummaryPr
 
         {/* Diagnosis */}
         <div className="mb-4">
-          <h3 className="font-bold text-blue-800 text-xs uppercase border-b border-blue-200 pb-1 mb-2">
+          <h3 className="font-bold text-gray-900 text-xs uppercase border-b border-gray-300 pb-1 mb-2">
             Diagnosis
           </h3>
           <div className="grid grid-cols-2 gap-4 text-xs">
@@ -189,7 +189,7 @@ const PrintDischargeSummary = forwardRef<HTMLDivElement, PrintDischargeSummaryPr
         {/* Chief Complaints */}
         {data.chiefComplaints && data.chiefComplaints.length > 0 && (
           <div className="mb-3">
-            <h3 className="font-bold text-blue-800 text-xs uppercase border-b border-blue-200 pb-1 mb-2">
+            <h3 className="font-bold text-gray-900 text-xs uppercase border-b border-gray-300 pb-1 mb-2">
               Chief Complaints
             </h3>
             <p className="text-xs">{data.chiefComplaints.join(", ")}</p>
@@ -199,7 +199,7 @@ const PrintDischargeSummary = forwardRef<HTMLDivElement, PrintDischargeSummaryPr
         {/* History */}
         {data.historyOfPresentIllness && (
           <div className="mb-3">
-            <h3 className="font-bold text-blue-800 text-xs uppercase border-b border-blue-200 pb-1 mb-2">
+            <h3 className="font-bold text-gray-900 text-xs uppercase border-b border-gray-300 pb-1 mb-2">
               History of Present Illness
             </h3>
             <p className="text-xs">{data.historyOfPresentIllness}</p>
@@ -209,7 +209,7 @@ const PrintDischargeSummary = forwardRef<HTMLDivElement, PrintDischargeSummaryPr
         {/* Examination Findings */}
         {data.examinationFindings && (
           <div className="mb-3">
-            <h3 className="font-bold text-blue-800 text-xs uppercase border-b border-blue-200 pb-1 mb-2">
+            <h3 className="font-bold text-gray-900 text-xs uppercase border-b border-gray-300 pb-1 mb-2">
               Examination Findings
             </h3>
             <p className="text-xs">{data.examinationFindings}</p>
@@ -219,7 +219,7 @@ const PrintDischargeSummary = forwardRef<HTMLDivElement, PrintDischargeSummaryPr
         {/* Investigations */}
         {data.investigationsPerformed && data.investigationsPerformed.length > 0 && (
           <div className="mb-3">
-            <h3 className="font-bold text-blue-800 text-xs uppercase border-b border-blue-200 pb-1 mb-2">
+            <h3 className="font-bold text-gray-900 text-xs uppercase border-b border-gray-300 pb-1 mb-2">
               Investigations Performed
             </h3>
             <table className="w-full text-xs">
@@ -246,7 +246,7 @@ const PrintDischargeSummary = forwardRef<HTMLDivElement, PrintDischargeSummaryPr
         {/* Procedures */}
         {data.proceduresPerformed && data.proceduresPerformed.length > 0 && (
           <div className="mb-3">
-            <h3 className="font-bold text-blue-800 text-xs uppercase border-b border-blue-200 pb-1 mb-2">
+            <h3 className="font-bold text-gray-900 text-xs uppercase border-b border-gray-300 pb-1 mb-2">
               Procedures Performed
             </h3>
             <table className="w-full text-xs">
@@ -273,7 +273,7 @@ const PrintDischargeSummary = forwardRef<HTMLDivElement, PrintDischargeSummaryPr
         {/* Course in Hospital */}
         {data.courseInHospital && (
           <div className="mb-3">
-            <h3 className="font-bold text-blue-800 text-xs uppercase border-b border-blue-200 pb-1 mb-2">
+            <h3 className="font-bold text-gray-900 text-xs uppercase border-b border-gray-300 pb-1 mb-2">
               Course in Hospital
             </h3>
             <p className="text-xs">{data.courseInHospital}</p>
@@ -296,11 +296,11 @@ const PrintDischargeSummary = forwardRef<HTMLDivElement, PrintDischargeSummaryPr
 
         {/* Discharge Medications */}
         <div className="mb-4">
-          <h3 className="font-bold text-blue-800 text-xs uppercase border-b border-blue-200 pb-1 mb-2">
+          <h3 className="font-bold text-gray-900 text-xs uppercase border-b border-gray-300 pb-1 mb-2">
             Discharge Medications
           </h3>
           <table className="w-full text-xs">
-            <thead className="bg-blue-50">
+            <thead className="bg-gray-50">
               <tr>
                 <th className="text-left p-1">#</th>
                 <th className="text-left p-1">Medicine</th>

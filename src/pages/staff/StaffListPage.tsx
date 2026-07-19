@@ -62,8 +62,8 @@ export function StaffListPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Staff Management</h1>
-          <p className="text-slate-500">Manage doctors and staff members</p>
+          <h1 className="text-2xl font-bold text-ink">Staff Management</h1>
+          <p className="text-ink-muted">Manage doctors and staff members</p>
         </div>
         <Button className="gap-2" onClick={() => navigate("/staff/new")}>
           <Plus size={16} />
@@ -83,8 +83,8 @@ export function StaffListPage() {
           className="hover:shadow-lg hover:-translate-y-0.5"
         >
           <CardContent className="p-4">
-            <p className="text-sm text-slate-500">Total Staff</p>
-            <p className="text-2xl font-bold text-slate-900">{staffList.length}</p>
+            <p className="text-sm text-ink-muted">Total Staff</p>
+            <p className="text-2xl font-bold text-ink">{staffList.length}</p>
           </CardContent>
         </Card>
         <Card
@@ -94,7 +94,7 @@ export function StaffListPage() {
           className="hover:shadow-lg hover:-translate-y-0.5"
         >
           <CardContent className="p-4">
-            <p className="text-sm text-slate-500">Doctors</p>
+            <p className="text-sm text-ink-muted">Doctors</p>
             <p className="text-2xl font-bold text-primary-600">{doctors.length}</p>
           </CardContent>
         </Card>
@@ -108,7 +108,7 @@ export function StaffListPage() {
           className="hover:shadow-lg hover:-translate-y-0.5"
         >
           <CardContent className="p-4">
-            <p className="text-sm text-slate-500">Active</p>
+            <p className="text-sm text-ink-muted">Active</p>
             <p className="text-2xl font-bold text-success-600">
               {staffList.filter((s: typeof mockStaff[0]) => s.status === "active").length}
             </p>
@@ -121,8 +121,8 @@ export function StaffListPage() {
           className="hover:shadow-lg hover:-translate-y-0.5"
         >
           <CardContent className="p-4">
-            <p className="text-sm text-slate-500">Departments</p>
-            <p className="text-2xl font-bold text-slate-900">
+            <p className="text-sm text-ink-muted">Departments</p>
+            <p className="text-2xl font-bold text-ink">
               {[...new Set(staffList.map((s: typeof mockStaff[0]) => s.department))].length}
             </p>
           </CardContent>
@@ -142,7 +142,7 @@ export function StaffListPage() {
               />
             </div>
             <select
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
+              className="rounded-lg border border-line px-3 py-2 text-sm"
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
             >
@@ -177,9 +177,9 @@ export function StaffListPage() {
                   <div className="flex items-center gap-3">
                     <Avatar name={member.name} size="sm" />
                     <div>
-                      <p className="font-medium text-slate-900">{member.name}</p>
+                      <p className="font-medium text-ink">{member.name}</p>
                       {member.specialization && (
-                        <p className="text-sm text-slate-500">
+                        <p className="text-sm text-ink-muted">
                           {member.specialization}
                         </p>
                       )}
@@ -198,16 +198,16 @@ export function StaffListPage() {
                 <TableCell>
                   <div className="space-y-1">
                     <div className="flex items-center gap-1 text-sm">
-                      <Phone size={12} className="text-slate-400" />
+                      <Phone size={12} className="text-ink-muted" />
                       {member.phone}
                     </div>
-                    <div className="flex items-center gap-1 text-sm text-slate-500">
-                      <Mail size={12} className="text-slate-400" />
+                    <div className="flex items-center gap-1 text-sm text-ink-muted">
+                      <Mail size={12} className="text-ink-muted" />
                       {member.email}
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="text-slate-500">
+                <TableCell className="text-ink-muted">
                   {formatDate(member.joinDate)}
                 </TableCell>
                 <TableCell>
@@ -236,7 +236,7 @@ export function StaffListPage() {
                       {member.status === "active" ? (
                         <ToggleRight size={16} className="text-success-600" />
                       ) : (
-                        <ToggleLeft size={16} className="text-slate-400" />
+                        <ToggleLeft size={16} className="text-ink-muted" />
                       )}
                     </Button>
                   </div>

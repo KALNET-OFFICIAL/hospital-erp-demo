@@ -236,8 +236,8 @@ export function PharmacyPOSPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Pharmacy POS</h1>
-        <p className="text-slate-500">Point of Sale - Quick billing</p>
+        <h1 className="text-2xl font-bold text-ink">Pharmacy POS</h1>
+        <p className="text-ink-muted">Point of Sale - Quick billing</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -265,8 +265,8 @@ export function PharmacyPOSPage() {
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="font-medium text-slate-900">{medicine.name}</p>
-                      <p className="text-sm text-slate-500">{medicine.genericName}</p>
+                      <p className="font-medium text-ink">{medicine.name}</p>
+                      <p className="text-sm text-ink-muted">{medicine.genericName}</p>
                     </div>
                     {medicine.stock <= medicine.minStock && (
                       <Badge variant="warning" className="text-xs">
@@ -278,7 +278,7 @@ export function PharmacyPOSPage() {
                     <span className="text-lg font-bold text-primary-600">
                       {formatCurrency(medicine.unitPrice)}
                     </span>
-                    <span className="text-sm text-slate-500">
+                    <span className="text-sm text-ink-muted">
                       Stock: {medicine.stock}
                     </span>
                   </div>
@@ -289,7 +289,7 @@ export function PharmacyPOSPage() {
 
           {filteredMedicines.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-slate-500">No medicines found</p>
+              <p className="text-ink-muted">No medicines found</p>
             </div>
           )}
         </div>
@@ -328,7 +328,7 @@ export function PharmacyPOSPage() {
 
               {/* Cart Items */}
               {cart.length === 0 ? (
-                <p className="text-center text-slate-500 py-8">
+                <p className="text-center text-ink-muted py-8">
                   Cart is empty. Click on products to add.
                 </p>
               ) : (
@@ -336,11 +336,11 @@ export function PharmacyPOSPage() {
                   {cart.map((item) => (
                     <div
                       key={item.id}
-                      className="flex items-center gap-2 rounded-lg border border-slate-200 p-2"
+                      className="flex items-center gap-2 rounded-lg border border-line p-2"
                     >
                       <div className="flex-1 min-w-0">
-                        <p className="truncate text-sm font-medium">{item.name}</p>
-                        <p className="text-xs text-slate-500">
+                        <p className="truncate text-sm font-medium text-ink">{item.name}</p>
+                        <p className="text-xs text-ink-muted">
                           {formatCurrency(item.unitPrice)} each
                         </p>
                       </div>
@@ -394,13 +394,13 @@ export function PharmacyPOSPage() {
 
               {/* Totals */}
               {cart.length > 0 && (
-                <div className="space-y-2 border-t border-slate-200 pt-4">
+                <div className="space-y-2 border-t border-line pt-4">
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">Subtotal</span>
-                    <span>{formatCurrency(subtotal)}</span>
+                    <span className="text-ink-muted">Subtotal</span>
+                    <span className="text-ink">{formatCurrency(subtotal)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">GST ({taxRate}%)</span>
+                    <span className="text-ink-muted">GST ({taxRate}%)</span>
                     <span>{formatCurrency(tax)}</span>
                   </div>
                   {discount > 0 && (
@@ -453,7 +453,7 @@ export function PharmacyPOSPage() {
         <ModalBody>
           <div className="space-y-4">
             <div className="bg-slate-50 rounded-lg p-4 text-center">
-              <p className="text-sm text-slate-500">Total Amount</p>
+              <p className="text-sm text-ink-muted">Total Amount</p>
               <p className="text-3xl font-bold text-primary-600">{formatCurrency(total)}</p>
             </div>
 
@@ -507,9 +507,9 @@ export function PharmacyPOSPage() {
             <div className="mx-auto w-16 h-16 bg-success-100 rounded-full flex items-center justify-center mb-4">
               <CheckCircle size={32} className="text-success-600" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">Payment Successful!</h3>
+            <h3 className="text-xl font-bold text-ink mb-2">Payment Successful!</h3>
             {lastSale && (
-              <div className="space-y-2 text-sm text-slate-600">
+              <div className="space-y-2 text-sm text-ink-muted">
                 <p>Sale ID: {lastSale.id}</p>
                 <p>Total: {formatCurrency(lastSale.total)}</p>
                 {lastSale.change > 0 && (

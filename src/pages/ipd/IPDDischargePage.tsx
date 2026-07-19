@@ -161,15 +161,15 @@ export function IPDDischargePage() {
   ]);
 
   if (!selectedAdmission || !selectedPatient || !selectedLocalState) {
-    return <Card className="p-8 text-center text-slate-600">No admission data found.</Card>;
+    return <Card className="p-8 text-center text-ink-muted">No admission data found.</Card>;
   }
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">IPD Discharge</h1>
-          <p className="text-slate-500">Prepare summary, medication plan and follow-up at discharge</p>
+          <h1 className="text-2xl font-bold text-ink">IPD Discharge</h1>
+          <p className="text-ink-muted">Prepare summary, medication plan and follow-up at discharge</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={handlePrint}>
@@ -212,9 +212,9 @@ export function IPDDischargePage() {
               placeholder={selectedAdmission.diagnosis}
             />
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">Course in Hospital</label>
+              <label className="mb-1.5 block text-sm font-medium text-ink-muted">Course in Hospital</label>
               <textarea
-                className="min-h-24 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="min-h-24 w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
                 value={courseInHospital}
                 onChange={(e) => setCourseInHospital(e.target.value)}
                 placeholder="Short clinical course summary"
@@ -240,7 +240,7 @@ export function IPDDischargePage() {
 
           <Card className="space-y-4 p-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-slate-900">Discharge Medication</h2>
+              <h2 className="text-lg font-semibold text-ink">Discharge Medication</h2>
               <Button size="sm" onClick={addMedication}>
                 <Plus className="mr-2 h-4 w-4" />
                 Add
@@ -305,14 +305,14 @@ export function IPDDischargePage() {
 
         <div>
           <Card className="space-y-2 p-4 text-sm">
-            <p className="font-semibold text-slate-900">Patient Snapshot</p>
-            <p className="text-slate-600">{selectedPatient.name}</p>
-            <p className="text-slate-500">{selectedPatient.id} • {selectedPatient.phone}</p>
+            <p className="font-semibold text-ink">Patient Snapshot</p>
+            <p className="text-ink-muted">{selectedPatient.name}</p>
+            <p className="text-ink-muted">{selectedPatient.id} • {selectedPatient.phone}</p>
             <div className="my-3 border-t border-slate-200" />
-            <p className="text-slate-600">Admission: {formatDate(selectedAdmission.admissionDate)}</p>
-            <p className="text-slate-600">Ward: {selectedAdmission.wardName}</p>
-            <p className="text-slate-600">Bed: {selectedAdmission.bedNumber}</p>
-            <p className="text-slate-600">Doctor: {selectedAdmission.doctorName}</p>
+            <p className="text-ink-muted">Admission: {formatDate(selectedAdmission.admissionDate)}</p>
+            <p className="text-ink-muted">Ward: {selectedAdmission.wardName}</p>
+            <p className="text-ink-muted">Bed: {selectedAdmission.bedNumber}</p>
+            <p className="text-ink-muted">Doctor: {selectedAdmission.doctorName}</p>
           </Card>
         </div>
       </div>

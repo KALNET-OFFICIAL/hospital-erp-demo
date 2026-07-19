@@ -149,7 +149,7 @@ export function StaffFormPage({ mode }: StaffFormPageProps) {
   if (mode === "edit" && !existingStaff && staffId) {
     return (
       <div className="flex h-96 items-center justify-center">
-        <p className="text-slate-500">Staff member not found</p>
+        <p className="text-ink-muted">Staff member not found</p>
       </div>
     );
   }
@@ -162,10 +162,10 @@ export function StaffFormPage({ mode }: StaffFormPageProps) {
           <ArrowLeft size={20} />
         </Button>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">
+          <h1 className="text-2xl font-bold text-ink">
             {mode === "create" ? "Add New Staff" : "Edit Staff"}
           </h1>
-          <p className="text-slate-500">
+          <p className="text-ink-muted">
             {mode === "create" ? "Register a new staff member" : `Update details for ${existingStaff?.id}`}
           </p>
         </div>

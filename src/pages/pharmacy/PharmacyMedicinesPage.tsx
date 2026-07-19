@@ -15,6 +15,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Modal, ModalBody, ModalFooter } from "@/components/ui/modal";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { format, addMonths, isBefore } from "date-fns";
 
@@ -225,10 +233,10 @@ export function PharmacyMedicinesPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">
+          <h1 className="text-2xl font-bold text-ink">
             {isCreateRoute ? "Add New Medicine" : "Medicines Inventory"}
           </h1>
-          <p className="text-slate-500">
+          <p className="text-ink-muted">
             {isCreateRoute
               ? "Create a new medicine record for stock tracking and ordering"
               : "Manage medicine stock and details"}
@@ -248,49 +256,49 @@ export function PharmacyMedicinesPage() {
 
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-              <Pill className="h-5 w-5 text-blue-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+              <Pill className="h-5 w-5 text-primary-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Total Medicines</p>
-              <p className="text-2xl font-bold text-slate-900">{medicines.length}</p>
+              <p className="text-sm text-ink-muted">Total Medicines</p>
+              <p className="text-2xl font-bold text-ink">{medicines.length}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
-              <Package className="h-5 w-5 text-green-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-success-50">
+              <Package className="h-5 w-5 text-success-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Total Stock Value</p>
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-sm text-ink-muted">Total Stock Value</p>
+              <p className="text-2xl font-bold text-success-600">
                 ₹{medicines.reduce((acc, m) => acc + m.quantity * m.unitPrice, 0).toLocaleString()}
               </p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100">
-              <AlertTriangle className="h-5 w-5 text-amber-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-warning-50">
+              <AlertTriangle className="h-5 w-5 text-warning-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Low Stock Items</p>
-              <p className="text-2xl font-bold text-amber-600">{lowStockCount}</p>
+              <p className="text-sm text-ink-muted">Low Stock Items</p>
+              <p className="text-2xl font-bold text-warning-600">{lowStockCount}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100">
-              <Calendar className="h-5 w-5 text-red-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-serious-50">
+              <Calendar className="h-5 w-5 text-serious-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Expiring Soon</p>
-              <p className="text-2xl font-bold text-red-600">{expiringCount}</p>
+              <p className="text-sm text-ink-muted">Expiring Soon</p>
+              <p className="text-2xl font-bold text-serious-600">{expiringCount}</p>
             </div>
           </div>
         </div>
@@ -322,90 +330,88 @@ export function PharmacyMedicinesPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-slate-50 border-b border-gray-200">
-              <tr>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Medicine</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Category</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Batch</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Stock</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Expiry</th>
-                <th className="text-left text-sm font-medium text-slate-600 px-6 py-4">Price</th>
-                <th className="text-right text-sm font-medium text-slate-600 px-6 py-4">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {filteredMedicines.map((med) => (
-                <tr key={med.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4">
-                    <div>
-                      <p className="font-medium text-slate-900">{med.name}</p>
-                      <p className="text-sm text-slate-500">{med.genericName}</p>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <Badge variant="default">{med.category}</Badge>
-                  </td>
-                  <td className="px-6 py-4">
-                    <p className="text-slate-700">{med.batchNumber}</p>
-                    <p className="text-xs text-slate-500">{med.manufacturer}</p>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={cn(
-                          "font-medium",
-                          isLowStock(med) ? "text-amber-600" : "text-slate-900"
-                        )}
-                      >
-                        {med.quantity} {med.unit}s
-                      </span>
-                      {isLowStock(med) && (
-                        <AlertTriangle className="h-4 w-4 text-amber-500" />
-                      )}
-                    </div>
-                    <p className="text-xs text-slate-500">Min: {med.minStockLevel}</p>
-                  </td>
-                  <td className="px-6 py-4">
+      <div className="bg-paper rounded-xl border border-line overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Medicine</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Batch</TableHead>
+              <TableHead>Stock</TableHead>
+              <TableHead>Expiry</TableHead>
+              <TableHead>Price</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredMedicines.map((med) => (
+              <TableRow key={med.id}>
+                <TableCell>
+                  <div>
+                    <p className="font-medium text-ink">{med.name}</p>
+                    <p className="text-sm text-ink-muted">{med.genericName}</p>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <Badge variant="default">{med.category}</Badge>
+                </TableCell>
+                <TableCell>
+                  <p className="text-ink-muted">{med.batchNumber}</p>
+                  <p className="text-xs text-ink-muted">{med.manufacturer}</p>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
                     <span
                       className={cn(
-                        isExpiringSoon(med) ? "text-red-600 font-medium" : "text-slate-700"
+                        "font-medium",
+                        isLowStock(med) ? "text-warning-600" : "text-ink"
                       )}
                     >
-                      {format(new Date(med.expiryDate), "dd MMM yyyy")}
+                      {med.quantity} {med.unit}s
                     </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <p className="font-medium text-slate-900">₹{med.sellingPrice}</p>
-                    <p className="text-xs text-slate-500">Cost: ₹{med.unitPrice}</p>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center justify-end gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0"
-                        onClick={() => openEditModal(med)}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0 text-red-500 hover:text-red-700"
-                        onClick={() => setShowDeleteConfirm(med.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                    {isLowStock(med) && (
+                      <AlertTriangle className="h-4 w-4 text-warning-500" />
+                    )}
+                  </div>
+                  <p className="text-xs text-ink-muted">Min: {med.minStockLevel}</p>
+                </TableCell>
+                <TableCell>
+                  <span
+                    className={cn(
+                      isExpiringSoon(med) ? "text-serious-600 font-medium" : "text-ink-muted"
+                    )}
+                  >
+                    {format(new Date(med.expiryDate), "dd MMM yyyy")}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <p className="font-medium text-ink">₹{med.sellingPrice}</p>
+                  <p className="text-xs text-ink-muted">Cost: ₹{med.unitPrice}</p>
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="flex items-center justify-end gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      onClick={() => openEditModal(med)}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 text-danger-500 hover:text-danger-700"
+                      onClick={() => setShowDeleteConfirm(med.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
 
       {/* Add/Edit Modal */}
@@ -423,7 +429,7 @@ export function PharmacyMedicinesPage() {
         <ModalBody>
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">
                 Medicine Name *
               </label>
               <Input
@@ -433,7 +439,7 @@ export function PharmacyMedicinesPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">
                 Generic Name
               </label>
               <Input
@@ -443,9 +449,9 @@ export function PharmacyMedicinesPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Category</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">Category</label>
               <select
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
                 value={formData.category || "Other"}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
               >
@@ -457,7 +463,7 @@ export function PharmacyMedicinesPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">
                 Manufacturer
               </label>
               <Input
@@ -467,7 +473,7 @@ export function PharmacyMedicinesPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">
                 Batch Number *
               </label>
               <Input
@@ -477,7 +483,7 @@ export function PharmacyMedicinesPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Expiry Date *</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">Expiry Date *</label>
               <Input
                 type="date"
                 value={formData.expiryDate || ""}
@@ -485,9 +491,9 @@ export function PharmacyMedicinesPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Unit Type</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">Unit Type</label>
               <select
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line bg-paper text-ink px-3 py-2 text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
                 value={formData.unit || "Tablet"}
                 onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
               >
@@ -500,7 +506,7 @@ export function PharmacyMedicinesPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Quantity *</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">Quantity *</label>
               <Input
                 type="number"
                 value={formData.quantity || ""}
@@ -509,7 +515,7 @@ export function PharmacyMedicinesPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">
                 Min Stock Level
               </label>
               <Input
@@ -520,7 +526,7 @@ export function PharmacyMedicinesPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">
                 Cost Price (₹) *
               </label>
               <Input
@@ -532,7 +538,7 @@ export function PharmacyMedicinesPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">
                 Selling Price (₹) *
               </label>
               <Input
@@ -544,7 +550,7 @@ export function PharmacyMedicinesPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-ink-muted mb-1.5">
                 Storage Location
               </label>
               <Input
@@ -572,7 +578,7 @@ export function PharmacyMedicinesPage() {
         title="Confirm Delete"
       >
         <ModalBody>
-          <p className="text-slate-600">
+          <p className="text-ink-muted">
             Are you sure you want to delete this medicine? This action cannot be undone.
           </p>
         </ModalBody>

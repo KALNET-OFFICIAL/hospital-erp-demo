@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Modal, ModalBody, ModalFooter } from "@/components/ui/modal";
 import { cn } from "@/lib/utils";
+import { getIdentityColor, getCurrentThemeMode } from "@/lib/theme";
 
 interface Permission {
   id: string;
@@ -194,8 +195,8 @@ export function RolesAndPermissionsPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Roles & Permissions</h1>
-          <p className="text-slate-500">Manage user roles and access control</p>
+          <h1 className="text-2xl font-bold text-ink">Roles & Permissions</h1>
+          <p className="text-ink-muted">Manage user roles and access control</p>
         </div>
         <Button className="gap-2" onClick={() => openRoleModal()}>
           <Plus size={16} />
@@ -205,38 +206,38 @@ export function RolesAndPermissionsPage() {
 
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-              <Shield className="h-5 w-5 text-blue-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+              <Shield className="h-5 w-5 text-primary-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Total Roles</p>
-              <p className="text-2xl font-bold text-slate-900">{roles.length}</p>
+              <p className="text-sm text-ink-muted">Total Roles</p>
+              <p className="text-2xl font-bold text-ink">{roles.length}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
-              <Users className="h-5 w-5 text-green-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+              <Users className="h-5 w-5 text-primary-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Total Users</p>
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-sm text-ink-muted">Total Users</p>
+              <p className="text-2xl font-bold text-ink">
                 {roles.reduce((acc, r) => acc + r.userCount, 0)}
               </p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-paper rounded-xl border border-line p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
-              <Check className="h-5 w-5 text-purple-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
+              <Check className="h-5 w-5 text-primary-600" />
             </div>
             <div>
-              <p className="text-sm text-slate-500">Permissions</p>
-              <p className="text-2xl font-bold text-purple-600">{allPermissions.length}</p>
+              <p className="text-sm text-ink-muted">Permissions</p>
+              <p className="text-2xl font-bold text-ink">{allPermissions.length}</p>
             </div>
           </div>
         </div>
@@ -244,15 +245,20 @@ export function RolesAndPermissionsPage() {
 
       {/* Roles Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {roles.map((role) => (
-          <div key={role.id} className="bg-white rounded-xl border border-gray-200 p-5">
+        {roles.map((role) => {
+          const roleAccent = getIdentityColor(role.name, getCurrentThemeMode());
+          return (
+          <div key={role.id} className="bg-paper rounded-xl border border-line p-5">
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                  <Shield className="h-5 w-5 text-blue-600" />
+                <div
+                  className="flex h-10 w-10 items-center justify-center rounded-lg"
+                  style={{ backgroundColor: `${roleAccent}1f`, color: roleAccent }}
+                >
+                  <Shield className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-slate-900">{role.name}</h3>
+                  <h3 className="font-semibold text-ink">{role.name}</h3>
                   {role.isSystem && (
                     <Badge variant="default" className="text-xs">System</Badge>
                   )}
@@ -279,7 +285,7 @@ export function RolesAndPermissionsPage() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-8 w-8 p-0 text-red-500 hover:text-red-700"
+                    className="h-8 w-8 p-0 text-danger-500 hover:text-danger-700"
                     onClick={() => setShowDeleteConfirm(role.id)}
                   >
                     <Trash2 className="h-4 w-4" />
@@ -287,17 +293,18 @@ export function RolesAndPermissionsPage() {
                 )}
               </div>
             </div>
-            <p className="text-sm text-slate-500 mb-4">{role.description}</p>
+            <p className="text-sm text-ink-muted mb-4">{role.description}</p>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-slate-600">
+              <span className="text-ink-muted">
                 <span className="font-medium">{role.permissions.length}</span> permissions
               </span>
-              <span className="text-slate-600">
+              <span className="text-ink-muted">
                 <span className="font-medium">{role.userCount}</span> users
               </span>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Add/Edit Role Modal */}
@@ -311,7 +318,7 @@ export function RolesAndPermissionsPage() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="block text-sm font-medium text-ink-muted mb-1.5">
                   Role Name *
                 </label>
                 <Input
@@ -321,7 +328,7 @@ export function RolesAndPermissionsPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="block text-sm font-medium text-ink-muted mb-1.5">
                   Description
                 </label>
                 <Input
@@ -333,10 +340,10 @@ export function RolesAndPermissionsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-3">
+              <label className="block text-sm font-medium text-ink-muted mb-3">
                 Permissions
               </label>
-              <div className="border border-gray-200 rounded-lg max-h-[400px] overflow-y-auto">
+              <div className="border border-line rounded-lg max-h-[400px] overflow-y-auto">
                 {permissionCategories.map((category) => {
                   const categoryPerms = allPermissions.filter((p) => p.category === category);
                   const selectedCount = categoryPerms.filter((p) =>
@@ -345,16 +352,16 @@ export function RolesAndPermissionsPage() {
                   const allSelected = selectedCount === categoryPerms.length;
 
                   return (
-                    <div key={category} className="border-b border-gray-100 last:border-0">
+                    <div key={category} className="border-b border-line last:border-0">
                       <button
                         type="button"
-                        className="w-full flex items-center justify-between px-4 py-3 hover:bg-slate-50"
+                        className="w-full flex items-center justify-between px-4 py-3 hover:bg-hover"
                         onClick={() => toggleCategoryPermissions(category)}
                       >
-                        <span className="font-medium text-slate-900">{category}</span>
+                        <span className="font-medium text-ink">{category}</span>
                         <span className={cn(
                           "text-sm",
-                          allSelected ? "text-green-600" : "text-slate-500"
+                          allSelected ? "text-success-600" : "text-ink-muted"
                         )}>
                           {selectedCount}/{categoryPerms.length}
                         </span>
@@ -369,9 +376,9 @@ export function RolesAndPermissionsPage() {
                               type="checkbox"
                               checked={(formData.permissions || []).includes(perm.id)}
                               onChange={() => togglePermission(perm.id)}
-                              className="h-4 w-4 rounded border-gray-300"
+                              className="h-4 w-4 rounded border-line"
                             />
-                            <span className="text-sm text-slate-700">{perm.name}</span>
+                            <span className="text-sm text-ink-muted">{perm.name}</span>
                           </label>
                         ))}
                       </div>
@@ -402,9 +409,9 @@ export function RolesAndPermissionsPage() {
         <ModalBody>
           {viewingRole && (
             <div className="space-y-4">
-              <p className="text-slate-600">{viewingRole.description}</p>
+              <p className="text-ink-muted">{viewingRole.description}</p>
               <div className="space-y-2">
-                <p className="text-sm font-medium text-slate-700">Permissions:</p>
+                <p className="text-sm font-medium text-ink-muted">Permissions:</p>
                 <div className="flex flex-wrap gap-2">
                   {viewingRole.permissions.map((permId) => {
                     const perm = allPermissions.find((p) => p.id === permId);
@@ -431,7 +438,7 @@ export function RolesAndPermissionsPage() {
         title="Confirm Delete"
       >
         <ModalBody>
-          <p className="text-slate-600">
+          <p className="text-ink-muted">
             Are you sure you want to delete this role? Users with this role will need to be reassigned.
           </p>
         </ModalBody>

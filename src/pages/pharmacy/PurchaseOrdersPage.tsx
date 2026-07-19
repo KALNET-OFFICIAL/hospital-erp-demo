@@ -25,10 +25,10 @@ import { purchaseOrders, suppliers, medicines } from "@/lib/mock-data";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import type { PurchaseOrder, PurchaseOrderItem } from "@/types";
 
-const statusConfig: Record<string, { label: string; variant: "primary" | "success" | "warning" | "danger"; icon: React.ReactNode }> = {
+const statusConfig: Record<string, { label: string; variant: "primary" | "success" | "warning" | "serious" | "danger"; icon: React.ReactNode }> = {
   draft: { label: "Draft", variant: "primary", icon: <Edit2 className="w-3 h-3" /> },
   ordered: { label: "Ordered", variant: "warning", icon: <Clock className="w-3 h-3" /> },
-  partial: { label: "Partial", variant: "warning", icon: <Package className="w-3 h-3" /> },
+  partial: { label: "Partial", variant: "serious", icon: <Package className="w-3 h-3" /> },
   received: { label: "Received", variant: "success", icon: <CheckCircle className="w-3 h-3" /> },
   cancelled: { label: "Cancelled", variant: "danger", icon: <AlertCircle className="w-3 h-3" /> },
 };
@@ -157,8 +157,8 @@ export default function PurchaseOrdersPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Purchase Orders</h1>
-          <p className="text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-ink">Purchase Orders</h1>
+          <p className="text-ink-muted mt-1">
             Step 1: Create purchase order. Step 2: Receive goods in Add Stock (GRN).
           </p>
         </div>
@@ -173,8 +173,8 @@ export default function PurchaseOrdersPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Total Orders</p>
-              <p className="text-2xl font-bold text-gray-900">{totalPOs}</p>
+              <p className="text-sm text-ink-muted">Total Orders</p>
+              <p className="text-2xl font-bold text-ink">{totalPOs}</p>
             </div>
             <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
               <Package className="w-5 h-5 text-primary-600" />
@@ -184,7 +184,7 @@ export default function PurchaseOrdersPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Pending</p>
+              <p className="text-sm text-ink-muted">Pending</p>
               <p className="text-2xl font-bold text-warning-600">{pendingPOs}</p>
             </div>
             <div className="w-10 h-10 rounded-full bg-warning-100 flex items-center justify-center">
@@ -195,7 +195,7 @@ export default function PurchaseOrdersPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Received</p>
+              <p className="text-sm text-ink-muted">Received</p>
               <p className="text-2xl font-bold text-success-600">{receivedPOs}</p>
             </div>
             <div className="w-10 h-10 rounded-full bg-success-100 flex items-center justify-center">
@@ -206,8 +206,8 @@ export default function PurchaseOrdersPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Total Value</p>
-              <p className="text-2xl font-bold text-gray-900">{formatCurrency(totalValue)}</p>
+              <p className="text-sm text-ink-muted">Total Value</p>
+              <p className="text-2xl font-bold text-ink">{formatCurrency(totalValue)}</p>
             </div>
             <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
               <IndianRupee className="w-5 h-5 text-primary-600" />
@@ -221,7 +221,7 @@ export default function PurchaseOrdersPage() {
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <Input
                 placeholder="Search by PO number or supplier..."
                 value={searchQuery}
@@ -254,7 +254,7 @@ export default function PurchaseOrdersPage() {
             className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
               selectedStatus === status
                 ? "bg-primary-100 text-primary-700"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                : "bg-slate-100 text-ink-muted hover:bg-slate-200"
             }`}
           >
             {status === "all" ? "All" : statusConfig[status]?.label || status}
@@ -276,7 +276,7 @@ export default function PurchaseOrdersPage() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-gray-900">{po.id}</h3>
+                    <h3 className="font-semibold text-ink">{po.id}</h3>
                     <Badge
                       variant={statusConfig[po.status]?.variant || "primary"}
                       className="flex items-center gap-1"
@@ -285,8 +285,8 @@ export default function PurchaseOrdersPage() {
                       {statusConfig[po.status]?.label}
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-500">{po.supplierName}</p>
-                  <div className="flex items-center gap-4 mt-1 text-xs text-gray-500">
+                  <p className="text-sm text-ink-muted">{po.supplierName}</p>
+                  <div className="flex items-center gap-4 mt-1 text-xs text-ink-muted">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
                       Ordered: {formatDate(po.orderDate)}
@@ -303,8 +303,8 @@ export default function PurchaseOrdersPage() {
 
               <div className="flex items-center gap-4">
                 <div className="text-right">
-                  <p className="text-lg font-semibold text-gray-900">{formatCurrency(po.total)}</p>
-                  <p className="text-xs text-gray-500">{po.items.length} items</p>
+                  <p className="text-lg font-semibold text-ink">{formatCurrency(po.total)}</p>
+                  <p className="text-xs text-ink-muted">{po.items.length} items</p>
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -335,8 +335,8 @@ export default function PurchaseOrdersPage() {
 
       {filteredPOs.length === 0 && (
         <div className="text-center py-12">
-          <Package className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500">No purchase orders found</p>
+          <Package className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+          <p className="text-ink-muted">No purchase orders found</p>
         </div>
       )}
 
@@ -369,8 +369,8 @@ export default function PurchaseOrdersPage() {
           </div>
 
           {/* Add Item */}
-          <div className="border rounded-lg p-4 bg-gray-50">
-            <h4 className="font-medium mb-3">Add Items</h4>
+          <div className="border border-line rounded-lg p-4 bg-slate-50">
+            <h4 className="font-medium text-ink mb-3">Add Items</h4>
             <div className="grid grid-cols-12 gap-2">
               <div className="col-span-5">
                 <Select
@@ -411,24 +411,24 @@ export default function PurchaseOrdersPage() {
 
           {/* Items List */}
           {formData.items.length > 0 && (
-            <div className="border rounded-lg overflow-hidden">
+            <div className="border border-line rounded-lg overflow-hidden">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50">
+                <thead className="bg-slate-50">
                   <tr>
-                    <th className="text-left px-4 py-2">Medicine</th>
-                    <th className="text-right px-4 py-2">Qty</th>
-                    <th className="text-right px-4 py-2">Price</th>
-                    <th className="text-right px-4 py-2">Total</th>
+                    <th className="text-left px-4 py-2 text-ink-muted">Medicine</th>
+                    <th className="text-right px-4 py-2 text-ink-muted">Qty</th>
+                    <th className="text-right px-4 py-2 text-ink-muted">Price</th>
+                    <th className="text-right px-4 py-2 text-ink-muted">Total</th>
                     <th className="w-10"></th>
                   </tr>
                 </thead>
                 <tbody>
                   {formData.items.map((item, index) => (
-                    <tr key={index} className="border-t">
-                      <td className="px-4 py-2">{item.medicineName}</td>
-                      <td className="text-right px-4 py-2">{item.quantity}</td>
-                      <td className="text-right px-4 py-2">{formatCurrency(item.unitPrice)}</td>
-                      <td className="text-right px-4 py-2 font-medium">
+                    <tr key={index} className="border-t border-line">
+                      <td className="px-4 py-2 text-ink">{item.medicineName}</td>
+                      <td className="text-right px-4 py-2 text-ink">{item.quantity}</td>
+                      <td className="text-right px-4 py-2 text-ink">{formatCurrency(item.unitPrice)}</td>
+                      <td className="text-right px-4 py-2 font-medium text-ink">
                         {formatCurrency(item.quantity * item.unitPrice)}
                       </td>
                       <td className="px-2">
@@ -441,11 +441,11 @@ export default function PurchaseOrdersPage() {
                       </td>
                     </tr>
                   ))}
-                  <tr className="border-t bg-gray-50">
-                    <td colSpan={3} className="px-4 py-2 font-medium text-right">
+                  <tr className="border-t border-line bg-slate-50">
+                    <td colSpan={3} className="px-4 py-2 font-medium text-right text-ink">
                       Subtotal:
                     </td>
-                    <td className="px-4 py-2 font-semibold text-right">
+                    <td className="px-4 py-2 font-semibold text-right text-ink">
                       {formatCurrency(calculateSubtotal(formData.items))}
                     </td>
                     <td></td>
@@ -455,7 +455,7 @@ export default function PurchaseOrdersPage() {
             </div>
           )}
 
-          <div className="flex justify-end gap-3 pt-4 border-t">
+          <div className="flex justify-end gap-3 pt-4 border-t border-line">
             <Button variant="outline" onClick={() => setShowCreateModal(false)}>
               Cancel
             </Button>
@@ -476,58 +476,58 @@ export default function PurchaseOrdersPage() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-gray-500">Supplier</p>
-                <p className="font-medium">{selectedPO.supplierName}</p>
+                <p className="text-sm text-ink-muted">Supplier</p>
+                <p className="font-medium text-ink">{selectedPO.supplierName}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Status</p>
+                <p className="text-sm text-ink-muted">Status</p>
                 <Badge variant={statusConfig[selectedPO.status]?.variant || "primary"}>
                   {statusConfig[selectedPO.status]?.label}
                 </Badge>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Order Date</p>
-                <p className="font-medium">{formatDate(selectedPO.orderDate)}</p>
+                <p className="text-sm text-ink-muted">Order Date</p>
+                <p className="font-medium text-ink">{formatDate(selectedPO.orderDate)}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Expected Date</p>
-                <p className="font-medium">{selectedPO.expectedDate ? formatDate(selectedPO.expectedDate) : "N/A"}</p>
+                <p className="text-sm text-ink-muted">Expected Date</p>
+                <p className="font-medium text-ink">{selectedPO.expectedDate ? formatDate(selectedPO.expectedDate) : "N/A"}</p>
               </div>
             </div>
 
             {/* Items */}
-            <div className="border rounded-lg overflow-hidden">
+            <div className="border border-line rounded-lg overflow-hidden">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50">
+                <thead className="bg-slate-50">
                   <tr>
-                    <th className="text-left px-4 py-2">Medicine</th>
-                    <th className="text-right px-4 py-2">Ordered</th>
-                    <th className="text-right px-4 py-2">Received</th>
-                    <th className="text-right px-4 py-2">Price</th>
-                    <th className="text-right px-4 py-2">Total</th>
+                    <th className="text-left px-4 py-2 text-ink-muted">Medicine</th>
+                    <th className="text-right px-4 py-2 text-ink-muted">Ordered</th>
+                    <th className="text-right px-4 py-2 text-ink-muted">Received</th>
+                    <th className="text-right px-4 py-2 text-ink-muted">Price</th>
+                    <th className="text-right px-4 py-2 text-ink-muted">Total</th>
                   </tr>
                 </thead>
                 <tbody>
                   {selectedPO.items.map((item, index) => (
-                    <tr key={index} className="border-t">
-                      <td className="px-4 py-2">{item.medicineName}</td>
-                      <td className="text-right px-4 py-2">{item.quantity}</td>
+                    <tr key={index} className="border-t border-line">
+                      <td className="px-4 py-2 text-ink">{item.medicineName}</td>
+                      <td className="text-right px-4 py-2 text-ink">{item.quantity}</td>
                       <td className="text-right px-4 py-2">
                         <span className={item.receivedQuantity === item.quantity ? "text-success-600" : "text-warning-600"}>
                           {item.receivedQuantity || 0}
                         </span>
                       </td>
-                      <td className="text-right px-4 py-2">{formatCurrency(item.unitPrice)}</td>
-                      <td className="text-right px-4 py-2 font-medium">
+                      <td className="text-right px-4 py-2 text-ink">{formatCurrency(item.unitPrice)}</td>
+                      <td className="text-right px-4 py-2 font-medium text-ink">
                         {formatCurrency(item.quantity * item.unitPrice)}
                       </td>
                     </tr>
                   ))}
-                  <tr className="border-t bg-gray-50">
-                    <td colSpan={4} className="px-4 py-2 font-medium text-right">
+                  <tr className="border-t border-line bg-slate-50">
+                    <td colSpan={4} className="px-4 py-2 font-medium text-right text-ink">
                       Total:
                     </td>
-                    <td className="px-4 py-2 font-semibold text-right">
+                    <td className="px-4 py-2 font-semibold text-right text-ink">
                       {formatCurrency(selectedPO.total)}
                     </td>
                   </tr>
@@ -535,7 +535,7 @@ export default function PurchaseOrdersPage() {
               </table>
             </div>
 
-            <div className="flex justify-end gap-3 pt-4 border-t">
+            <div className="flex justify-end gap-3 pt-4 border-t border-line">
               <Button variant="outline" onClick={() => setSelectedPO(null)}>
                 Close
               </Button>
@@ -558,16 +558,16 @@ export default function PurchaseOrdersPage() {
       >
         {selectedPO && (
           <div className="space-y-4">
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-ink-muted">
               Mark received quantities for each item. Leave as-is if fully received.
             </p>
 
             <div className="space-y-3">
               {selectedPO.items.map((item, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
                   <div>
-                    <p className="font-medium">{item.medicineName}</p>
-                    <p className="text-sm text-gray-500">Ordered: {item.quantity}</p>
+                    <p className="font-medium text-ink">{item.medicineName}</p>
+                    <p className="text-sm text-ink-muted">Ordered: {item.quantity}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Input
@@ -577,13 +577,13 @@ export default function PurchaseOrdersPage() {
                       min={0}
                       max={item.quantity}
                     />
-                    <span className="text-sm text-gray-500">received</span>
+                    <span className="text-sm text-ink-muted">received</span>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="flex justify-end gap-3 pt-4 border-t">
+            <div className="flex justify-end gap-3 pt-4 border-t border-line">
               <Button variant="outline" onClick={() => setShowReceiveModal(false)}>
                 Cancel
               </Button>

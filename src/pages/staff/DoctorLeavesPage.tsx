@@ -12,8 +12,10 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Avatar } from "@/components/ui/avatar";
 import { Modal, ModalBody, ModalFooter } from "@/components/ui/modal";
 import { format, addDays, differenceInDays } from "date-fns";
+import { getIdentityColor, getCurrentThemeMode } from "@/lib/theme";
 
 interface LeaveRequest {
   id: string;
@@ -30,18 +32,15 @@ interface LeaveRequest {
   rejectionReason?: string;
 }
 
-const leaveTypeColors: Record<string, string> = {
-  casual: "bg-blue-100 text-blue-800",
-  medical: "bg-red-100 text-red-800",
-  emergency: "bg-orange-100 text-orange-800",
-  vacation: "bg-teal-100 text-teal-800",
-  conference: "bg-purple-100 text-purple-800",
-};
+// Leave type is a category, not a state — colored via the identity
+// palette (getIdentityColor) so each type keeps a stable hue everywhere
+// it appears, instead of a hand-picked hex per type.
 
-const statusColors: Record<string, string> = {
-  pending: "bg-amber-100 text-amber-800",
-  approved: "bg-green-100 text-green-800",
-  rejected: "bg-red-100 text-red-800",
+// Leave status is a state — mapped to the shared status Badge variants.
+const statusBadgeVariant: Record<string, "warning" | "success" | "danger"> = {
+  pending: "warning",
+  approved: "success",
+  rejected: "danger",
 };
 
 const mockLeaves: LeaveRequest[] = [
@@ -198,8 +197,8 @@ export function DoctorLeavesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Doctor Leaves</h1>
-          <p className="text-gray-500 mt-1">Manage leave requests and approvals</p>
+          <h1 className="text-2xl font-bold text-ink">Doctor Leaves</h1>
+          <p className="text-ink-muted mt-1">Manage leave requests and approvals</p>
         </div>
         <Button onClick={() => setShowAddModal(true)} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
@@ -209,63 +208,63 @@ export function DoctorLeavesPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+        <div className="bg-paper rounded-xl border border-line p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-amber-100 rounded-lg">
-              <Clock className="h-5 w-5 text-amber-600" />
+            <div className="p-2 bg-warning-50 rounded-lg">
+              <Clock className="h-5 w-5 text-warning-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.pending}</p>
-              <p className="text-sm text-gray-500">Pending</p>
+              <p className="text-2xl font-bold text-ink">{stats.pending}</p>
+              <p className="text-sm text-ink-muted">Pending</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+        <div className="bg-paper rounded-xl border border-line p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <Check className="h-5 w-5 text-green-600" />
+            <div className="p-2 bg-success-50 rounded-lg">
+              <Check className="h-5 w-5 text-success-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.approved}</p>
-              <p className="text-sm text-gray-500">Approved</p>
+              <p className="text-2xl font-bold text-ink">{stats.approved}</p>
+              <p className="text-sm text-ink-muted">Approved</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+        <div className="bg-paper rounded-xl border border-line p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-red-100 rounded-lg">
-              <X className="h-5 w-5 text-red-600" />
+            <div className="p-2 bg-danger-50 rounded-lg">
+              <X className="h-5 w-5 text-danger-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.rejected}</p>
-              <p className="text-sm text-gray-500">Rejected</p>
+              <p className="text-2xl font-bold text-ink">{stats.rejected}</p>
+              <p className="text-sm text-ink-muted">Rejected</p>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+        <div className="bg-paper rounded-xl border border-line p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <CalendarOff className="h-5 w-5 text-blue-600" />
+            <div className="p-2 bg-serious-50 rounded-lg">
+              <CalendarOff className="h-5 w-5 text-serious-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.onLeaveToday}</p>
-              <p className="text-sm text-gray-500">On Leave Today</p>
+              <p className="text-2xl font-bold text-ink">{stats.onLeaveToday}</p>
+              <p className="text-sm text-ink-muted">On Leave Today</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+      <div className="bg-paper rounded-xl border border-line p-4 shadow-sm">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-muted" />
             <input
               type="text"
               placeholder="Search by doctor name or department..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-9 pr-4 py-2 border border-line rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
           <div className="flex gap-2">
@@ -285,82 +284,76 @@ export function DoctorLeavesPage() {
       </div>
 
       {/* Leave Requests Table */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-paper rounded-xl border border-line shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-hover border-b border-line">
               <tr>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">
                   Doctor
                 </th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">
                   Leave Type
                 </th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">
                   Duration
                 </th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">
                   Reason
                 </th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">
                   Status
                 </th>
-                <th className="text-right px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-right px-6 py-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-line">
               {filteredLeaves.map((leave) => {
                 const days = differenceInDays(
                   new Date(leave.endDate),
                   new Date(leave.startDate)
                 ) + 1;
+                const typeAccent = getIdentityColor(leave.leaveType, getCurrentThemeMode());
                 return (
-                  <tr key={leave.id} className="hover:bg-gray-50">
+                  <tr key={leave.id} className="hover:bg-hover">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-medium">
-                          {leave.doctorName
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")
-                            .slice(0, 2)}
-                        </div>
+                        <Avatar name={leave.doctorName} size="md" />
                         <div>
-                          <p className="font-medium text-gray-900">{leave.doctorName}</p>
-                          <p className="text-sm text-gray-500">{leave.department}</p>
+                          <p className="font-medium text-ink">{leave.doctorName}</p>
+                          <p className="text-sm text-ink-muted">{leave.department}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
-                          leaveTypeColors[leave.leaveType]
-                        }`}
+                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize"
+                        style={{ backgroundColor: `${typeAccent}1f`, color: typeAccent }}
                       >
                         {leave.leaveType}
                       </span>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2 text-sm">
-                        <Calendar className="h-4 w-4 text-gray-400" />
+                        <Calendar className="h-4 w-4 text-ink-muted" />
                         <div>
-                          <p className="text-gray-900">
+                          <p className="text-ink">
                             {format(new Date(leave.startDate), "MMM d")} -{" "}
                             {format(new Date(leave.endDate), "MMM d, yyyy")}
                           </p>
-                          <p className="text-gray-500">
+                          <p className="text-ink-muted">
                             {days} day{days > 1 ? "s" : ""}
                           </p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-sm text-gray-600 max-w-xs truncate">{leave.reason}</p>
+                      <p className="text-sm text-ink-muted max-w-xs truncate">{leave.reason}</p>
                     </td>
                     <td className="px-6 py-4">
-                      <Badge className={statusColors[leave.status]}>{leave.status}</Badge>
+                      <Badge variant={statusBadgeVariant[leave.status]}>{leave.status}</Badge>
                     </td>
                     <td className="px-6 py-4 text-right">
                       {leave.status === "pending" ? (
@@ -368,7 +361,7 @@ export function DoctorLeavesPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            className="text-green-600 hover:bg-green-50"
+                            className="text-success-600 hover:bg-success-50"
                             onClick={() => handleApprove(leave)}
                           >
                             <Check className="h-4 w-4" />
@@ -376,7 +369,7 @@ export function DoctorLeavesPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            className="text-red-600 hover:bg-red-50"
+                            className="text-danger-600 hover:bg-danger-50"
                             onClick={() => {
                               setSelectedLeave(leave);
                               setShowRejectModal(true);
@@ -386,7 +379,7 @@ export function DoctorLeavesPage() {
                           </Button>
                         </div>
                       ) : (
-                        <span className="text-sm text-gray-400">
+                        <span className="text-sm text-ink-muted">
                           {leave.status === "approved" ? `By ${leave.approvedBy}` : "-"}
                         </span>
                       )}
@@ -404,11 +397,11 @@ export function DoctorLeavesPage() {
         <ModalBody>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Doctor</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1">Doctor</label>
               <select
                 value={newLeave.doctorId}
                 onChange={(e) => setNewLeave({ ...newLeave, doctorId: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="">Select doctor...</option>
                 {doctors.map((doc) => (
@@ -420,7 +413,7 @@ export function DoctorLeavesPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Leave Type</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1">Leave Type</label>
               <select
                 value={newLeave.leaveType}
                 onChange={(e) =>
@@ -429,7 +422,7 @@ export function DoctorLeavesPage() {
                     leaveType: e.target.value as LeaveRequest["leaveType"],
                   })
                 }
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="casual">Casual Leave</option>
                 <option value="medical">Medical Leave</option>
@@ -441,32 +434,32 @@ export function DoctorLeavesPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                <label className="block text-sm font-medium text-ink-muted mb-1">Start Date</label>
                 <input
                   type="date"
                   value={newLeave.startDate}
                   onChange={(e) => setNewLeave({ ...newLeave, startDate: e.target.value })}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-line px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                <label className="block text-sm font-medium text-ink-muted mb-1">End Date</label>
                 <input
                   type="date"
                   value={newLeave.endDate}
                   onChange={(e) => setNewLeave({ ...newLeave, endDate: e.target.value })}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-line px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Reason</label>
+              <label className="block text-sm font-medium text-ink-muted mb-1">Reason</label>
               <textarea
                 value={newLeave.reason}
                 onChange={(e) => setNewLeave({ ...newLeave, reason: e.target.value })}
                 rows={3}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder="Enter reason for leave..."
               />
             </div>
@@ -502,19 +495,19 @@ export function DoctorLeavesPage() {
       >
         <ModalBody>
           <div className="space-y-4">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-ink-muted">
               Please provide a reason for rejecting{" "}
               <span className="font-medium">{selectedLeave?.doctorName}'s</span> leave request.
             </p>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-ink-muted mb-1">
                 Rejection Reason
               </label>
               <textarea
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
                 rows={3}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-line px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder="Enter reason for rejection..."
               />
             </div>

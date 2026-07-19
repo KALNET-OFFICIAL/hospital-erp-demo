@@ -3,7 +3,7 @@ import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import { QuickActions } from "./QuickActions";
 import { useAuthStore, useSidebarStore } from "@/stores";
-import { cn } from "@/lib/utils";
+import { getSidebarWidth } from "@/lib/layout";
 
 export function DashboardLayout() {
   const { isAuthenticated } = useAuthStore();
@@ -14,14 +14,12 @@ export function DashboardLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-bg">
       <Sidebar />
       <Topbar />
       <main
-        className={cn(
-          "min-h-screen pt-16 transition-all duration-300",
-          isCollapsed ? "ml-[80px]" : "ml-[256px]"
-        )}
+        className="min-h-screen pt-16 transition-all duration-300"
+        style={{ marginLeft: getSidebarWidth(isCollapsed) }}
       >
         <div className="mx-auto w-full max-w-[1600px] px-6 py-6 lg:px-8 lg:py-8">
           <Outlet />

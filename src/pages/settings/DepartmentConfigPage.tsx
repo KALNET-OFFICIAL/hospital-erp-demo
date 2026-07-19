@@ -21,6 +21,7 @@ import { Modal } from "@/components/ui/modal";
 import { Select } from "@/components/ui/select";
 import { departments, services, staff } from "@/lib/mock-data";
 import { formatCurrency } from "@/lib/utils";
+import { getIdentityColor, getCurrentThemeMode } from "@/lib/theme";
 import type { Department } from "@/types";
 
 export default function DepartmentConfigPage() {
@@ -98,8 +99,8 @@ export default function DepartmentConfigPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Departments</h1>
-          <p className="text-gray-500 mt-1">Manage hospital departments and their settings</p>
+          <h1 className="text-2xl font-bold text-ink">Departments</h1>
+          <p className="text-ink-muted mt-1">Manage hospital departments and their settings</p>
         </div>
         <Button onClick={handleAddDepartment}>
           <Plus className="w-4 h-4 mr-2" />
@@ -112,8 +113,8 @@ export default function DepartmentConfigPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Total Departments</p>
-              <p className="text-2xl font-bold text-gray-900">{departments.length}</p>
+              <p className="text-sm text-ink-muted">Total Departments</p>
+              <p className="text-2xl font-bold text-ink">{departments.length}</p>
             </div>
             <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
               <Building2 className="w-5 h-5 text-primary-600" />
@@ -123,8 +124,8 @@ export default function DepartmentConfigPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Clinical Depts</p>
-              <p className="text-2xl font-bold text-gray-900">{totalClinical}</p>
+              <p className="text-sm text-ink-muted">Clinical Depts</p>
+              <p className="text-2xl font-bold text-ink">{totalClinical}</p>
             </div>
             <div className="w-10 h-10 rounded-full bg-success-100 flex items-center justify-center">
               <Stethoscope className="w-5 h-5 text-success-600" />
@@ -134,8 +135,8 @@ export default function DepartmentConfigPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Support Depts</p>
-              <p className="text-2xl font-bold text-gray-900">{totalSupport}</p>
+              <p className="text-sm text-ink-muted">Support Depts</p>
+              <p className="text-2xl font-bold text-ink">{totalSupport}</p>
             </div>
             <div className="w-10 h-10 rounded-full bg-warning-100 flex items-center justify-center">
               <FlaskConical className="w-5 h-5 text-warning-600" />
@@ -145,8 +146,8 @@ export default function DepartmentConfigPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Total Doctors</p>
-              <p className="text-2xl font-bold text-gray-900">{totalDoctors}</p>
+              <p className="text-sm text-ink-muted">Total Doctors</p>
+              <p className="text-2xl font-bold text-ink">{totalDoctors}</p>
             </div>
             <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
               <Users className="w-5 h-5 text-primary-600" />
@@ -160,7 +161,7 @@ export default function DepartmentConfigPage() {
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <Input
                 placeholder="Search departments..."
                 value={searchQuery}
@@ -191,8 +192,8 @@ export default function DepartmentConfigPage() {
             onClick={() => setSelectedType(type)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               selectedType === type
-                ? "bg-primary-100 text-primary-700"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                ? "bg-selected text-ink"
+                : "bg-hover text-ink-muted hover:bg-selected"
             }`}
           >
             {type === "all" ? "All" : type === "clinical" ? "Clinical" : "Support"}
@@ -222,8 +223,8 @@ export default function DepartmentConfigPage() {
 
       {filteredDepartments.length === 0 && (
         <div className="text-center py-12">
-          <Building2 className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500">No departments found</p>
+          <Building2 className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+          <p className="text-ink-muted">No departments found</p>
         </div>
       )}
 
@@ -283,9 +284,9 @@ export default function DepartmentConfigPage() {
           </Select>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-sm font-medium text-ink-muted mb-1">Description</label>
             <textarea
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="w-full px-3 py-2 border border-line bg-paper text-ink rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               rows={3}
               placeholder="Department description..."
               value={formData.description}
@@ -293,7 +294,7 @@ export default function DepartmentConfigPage() {
             />
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t">
+          <div className="flex justify-end gap-3 pt-4 border-t border-line">
             <Button variant="outline" onClick={() => setShowAddModal(false)}>
               Cancel
             </Button>
@@ -318,17 +319,15 @@ function DepartmentCard({
   onEdit: (d: Department) => void;
 }) {
   const [showMenu, setShowMenu] = useState(false);
+  const accent = getIdentityColor(department.name, getCurrentThemeMode());
 
   return (
     <Card className="p-4 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-3">
           <div
-            className={`w-12 h-12 rounded-lg flex items-center justify-center ${
-              department.type === "clinical"
-                ? "bg-primary-100 text-primary-600"
-                : "bg-warning-100 text-warning-600"
-            }`}
+            className="w-12 h-12 rounded-lg flex items-center justify-center"
+            style={{ backgroundColor: `${accent}1f`, color: accent }}
           >
             {department.type === "clinical" ? (
               <Stethoscope className="w-6 h-6" />
@@ -337,8 +336,8 @@ function DepartmentCard({
             )}
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">{department.name}</h3>
-            <p className="text-xs text-gray-500">{department.code}</p>
+            <h3 className="font-semibold text-ink">{department.name}</h3>
+            <p className="text-xs text-ink-muted">{department.code}</p>
             <Badge
               variant={department.type === "clinical" ? "primary" : "warning"}
               className="mt-1"
@@ -350,24 +349,24 @@ function DepartmentCard({
         <div className="relative">
           <button
             onClick={() => setShowMenu(!showMenu)}
-            className="p-1 hover:bg-gray-100 rounded"
+            className="p-1 hover:bg-hover rounded"
           >
-            <MoreVertical className="w-4 h-4 text-gray-400" />
+            <MoreVertical className="w-4 h-4 text-slate-400" />
           </button>
           {showMenu && (
-            <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border py-1 z-10 min-w-32">
+            <div className="absolute right-0 top-full mt-1 bg-paper rounded-lg shadow-lg border border-line py-1 z-10 min-w-32">
               <button
                 onClick={() => {
                   onEdit(department);
                   setShowMenu(false);
                 }}
-                className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
+                className="w-full px-3 py-2 text-left text-sm hover:bg-hover flex items-center gap-2"
               >
                 <Edit2 className="w-4 h-4" /> Edit
               </button>
               <button
                 onClick={() => setShowMenu(false)}
-                className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 text-warning-600"
+                className="w-full px-3 py-2 text-left text-sm hover:bg-hover flex items-center gap-2 text-warning-600"
               >
                 <Archive className="w-4 h-4" /> Archive
               </button>
@@ -377,20 +376,20 @@ function DepartmentCard({
       </div>
 
       {/* Stats */}
-      <div className="mt-4 pt-4 border-t grid grid-cols-3 gap-4 text-center">
+      <div className="mt-4 pt-4 border-t border-line grid grid-cols-3 gap-4 text-center">
         <div>
-          <p className="text-lg font-semibold text-gray-900">{stats.doctors}</p>
-          <p className="text-xs text-gray-500">Doctors</p>
+          <p className="text-lg font-semibold text-ink">{stats.doctors}</p>
+          <p className="text-xs text-ink-muted">Doctors</p>
         </div>
         <div>
-          <p className="text-lg font-semibold text-gray-900">{stats.services}</p>
-          <p className="text-xs text-gray-500">Services</p>
+          <p className="text-lg font-semibold text-ink">{stats.services}</p>
+          <p className="text-xs text-ink-muted">Services</p>
         </div>
         <div>
           <p className="text-lg font-semibold text-primary-600">
             {department.consultationFee > 0 ? formatCurrency(department.consultationFee) : "N/A"}
           </p>
-          <p className="text-xs text-gray-500">Consult Fee</p>
+          <p className="text-xs text-ink-muted">Consult Fee</p>
         </div>
       </div>
 
@@ -401,7 +400,7 @@ function DepartmentCard({
           <span>Active</span>
         </div>
         {department.headOfDepartment && (
-          <span className="text-gray-500 text-xs">HOD: {department.headOfDepartment}</span>
+          <span className="text-ink-muted text-xs">HOD: {department.headOfDepartment}</span>
         )}
       </div>
     </Card>

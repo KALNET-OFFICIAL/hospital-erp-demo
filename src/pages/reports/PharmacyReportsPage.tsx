@@ -29,7 +29,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { KpiCard } from "@/components/dashboard/KpiCard";
 import { formatCurrency } from "@/lib/utils";
+import { getChartColors, getChartTooltipStyle, getIdentityColor } from "@/lib/theme";
+import { useThemeStore } from "@/stores";
 
 // Mock data for Pharmacy reports
 const salesTrend = [
@@ -52,11 +55,11 @@ const monthlySales = [
 ];
 
 const categoryDistribution = [
-  { category: "Antibiotics", sales: 285000, items: 1250, color: "#3B82F6" },
-  { category: "Cardiac", sales: 220000, items: 680, color: "#EF4444" },
-  { category: "Analgesics", sales: 195000, items: 2100, color: "#10B981" },
-  { category: "Diabetes", sales: 175000, items: 920, color: "#F59E0B" },
-  { category: "Vitamins", sales: 125000, items: 1450, color: "#8B5CF6" },
+  { category: "Antibiotics", sales: 285000, items: 1250 },
+  { category: "Cardiac", sales: 220000, items: 680 },
+  { category: "Analgesics", sales: 195000, items: 2100 },
+  { category: "Diabetes", sales: 175000, items: 920 },
+  { category: "Vitamins", sales: 125000, items: 1450 },
 ];
 
 const topSellingMedicines = [
@@ -83,24 +86,32 @@ const supplierPerformance = [
 ];
 
 const salesByChannel = [
-  { channel: "OPD Prescriptions", value: 45, color: "#3B82F6" },
-  { channel: "IPD Dispensing", value: 30, color: "#10B981" },
-  { channel: "Walk-in Sales", value: 15, color: "#F59E0B" },
-  { channel: "Online Orders", value: 10, color: "#8B5CF6" },
+  { channel: "OPD Prescriptions", value: 45 },
+  { channel: "IPD Dispensing", value: 30 },
+  { channel: "Walk-in Sales", value: 15 },
+  { channel: "Online Orders", value: 10 },
 ];
 
 export function PharmacyReportsPage() {
   const [dateRange, setDateRange] = useState("This Month");
+  const { theme } = useThemeStore();
+  const mode =
+    theme === "dark" ||
+    (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ? "dark"
+      : "light";
+  const chartColors = getChartColors(mode);
+  const tooltipStyle = getChartTooltipStyle(mode);
 
   const totalSales = salesTrend.reduce((sum, d) => sum + d.sales, 0);
   const totalPrescriptions = salesTrend.reduce((sum, d) => sum + d.prescriptions, 0);
   const monthlyProfit = monthlySales.reduce((sum, m) => sum + m.profit, 0);
   const inventoryValue = 2850000; // Mock value
 
-  const statusColors: Record<string, string> = {
-    critical: "bg-red-100 text-red-800",
-    warning: "bg-amber-100 text-amber-800",
-    normal: "bg-green-100 text-green-800",
+  const statusVariant: Record<string, "danger" | "warning" | "success"> = {
+    critical: "danger",
+    warning: "warning",
+    normal: "success",
   };
 
   return (
@@ -108,8 +119,8 @@ export function PharmacyReportsPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Pharmacy Reports</h1>
-          <p className="text-gray-500">Sales, inventory, and performance analytics</p>
+          <h1 className="text-2xl font-bold text-ink">Pharmacy Reports</h1>
+          <p className="text-ink-muted">Sales, inventory, and performance analytics</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" className="gap-2">
@@ -129,62 +140,34 @@ export function PharmacyReportsPage() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-5">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <IndianRupee className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Weekly Sales</p>
-                <p className="text-2xl font-bold text-gray-900">{formatCurrency(totalSales)}</p>
-                <p className="text-xs text-green-600">+12% from last week</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-5">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-teal-100 rounded-lg">
-                <TrendingUp className="h-5 w-5 text-teal-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Total Profit (6M)</p>
-                <p className="text-2xl font-bold text-gray-900">{formatCurrency(monthlyProfit)}</p>
-                <p className="text-xs text-green-600">+18% YoY</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-5">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-amber-100 rounded-lg">
-                <ShoppingCart className="h-5 w-5 text-amber-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Prescriptions</p>
-                <p className="text-2xl font-bold text-gray-900">{totalPrescriptions}</p>
-                <p className="text-xs text-gray-500">This week</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-5">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Package className="h-5 w-5 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Inventory Value</p>
-                <p className="text-2xl font-bold text-gray-900">{formatCurrency(inventoryValue)}</p>
-                <p className="text-xs text-gray-500">1,245 items</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <KpiCard
+          title="Weekly Sales"
+          value={formatCurrency(totalSales)}
+          change="+12% from last week"
+          icon={<IndianRupee className="h-5 w-5" />}
+          iconColor="Weekly Sales"
+        />
+        <KpiCard
+          title="Total Profit (6M)"
+          value={formatCurrency(monthlyProfit)}
+          change="+18% YoY"
+          icon={<TrendingUp className="h-5 w-5" />}
+          iconColor="Total Profit"
+        />
+        <KpiCard
+          title="Prescriptions"
+          value={totalPrescriptions.toString()}
+          subtitle="This week"
+          icon={<ShoppingCart className="h-5 w-5" />}
+          iconColor="Prescriptions"
+        />
+        <KpiCard
+          title="Inventory Value"
+          value={formatCurrency(inventoryValue)}
+          subtitle="1,245 items"
+          icon={<Package className="h-5 w-5" />}
+          iconColor="Inventory Value"
+        />
       </div>
 
       {/* Charts Row 1 */}
@@ -200,34 +183,31 @@ export function PharmacyReportsPage() {
                 <AreaChart data={salesTrend}>
                   <defs>
                     <linearGradient id="salesGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
+                      <stop offset="0%" stopColor={getIdentityColor("sales", mode)} stopOpacity={0.3} />
+                      <stop offset="95%" stopColor={getIdentityColor("sales", mode)} stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                  <XAxis dataKey="date" stroke="#9CA3AF" fontSize={12} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
+                  <XAxis dataKey="date" stroke={chartColors.axis} fontSize={12} />
                   <YAxis
                     yAxisId="left"
-                    stroke="#9CA3AF"
+                    stroke={chartColors.axis}
                     fontSize={12}
                     tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}K`}
                   />
-                  <YAxis yAxisId="right" orientation="right" stroke="#9CA3AF" fontSize={12} />
+                  <YAxis yAxisId="right" orientation="right" stroke={chartColors.axis} fontSize={12} />
                   <Tooltip
                     formatter={(value, name) => [
                       name === "sales" ? formatCurrency(Number(value)) : value,
                       name === "sales" ? "Sales" : "Prescriptions",
                     ]}
-                    contentStyle={{
-                      borderRadius: "8px",
-                      border: "1px solid #E5E7EB",
-                    }}
+                    {...tooltipStyle}
                   />
                   <Area
                     yAxisId="left"
                     type="monotone"
                     dataKey="sales"
-                    stroke="#3B82F6"
+                    stroke={getIdentityColor("sales", mode)}
                     strokeWidth={2}
                     fill="url(#salesGradient)"
                     name="Sales"
@@ -236,9 +216,9 @@ export function PharmacyReportsPage() {
                     yAxisId="right"
                     type="monotone"
                     dataKey="prescriptions"
-                    stroke="#10B981"
+                    stroke={getIdentityColor("prescriptions", mode)}
                     strokeWidth={2}
-                    dot={{ fill: "#10B981" }}
+                    dot={{ fill: getIdentityColor("prescriptions", mode) }}
                     name="Prescriptions"
                   />
                 </AreaChart>
@@ -256,22 +236,21 @@ export function PharmacyReportsPage() {
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={monthlySales}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                  <XAxis dataKey="month" stroke="#9CA3AF" fontSize={12} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
+                  <XAxis dataKey="month" stroke={chartColors.axis} fontSize={12} />
                   <YAxis
-                    stroke="#9CA3AF"
+                    stroke={chartColors.axis}
                     fontSize={12}
                     tickFormatter={(value) => `₹${(value / 100000).toFixed(0)}L`}
                   />
-                  <Tooltip
-                    formatter={(value) => [formatCurrency(Number(value))]}
-                    contentStyle={{
-                      borderRadius: "8px",
-                      border: "1px solid #E5E7EB",
-                    }}
+                  <Tooltip formatter={(value) => [formatCurrency(Number(value))]} {...tooltipStyle} />
+                  <Bar dataKey="sales" fill={getIdentityColor("sales", mode)} radius={[4, 4, 0, 0]} name="Sales" />
+                  <Bar
+                    dataKey="profit"
+                    fill={getIdentityColor("profit", mode)}
+                    radius={[4, 4, 0, 0]}
+                    name="Profit"
                   />
-                  <Bar dataKey="sales" fill="#3B82F6" radius={[4, 4, 0, 0]} name="Sales" />
-                  <Bar dataKey="profit" fill="#10B981" radius={[4, 4, 0, 0]} name="Profit" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -301,10 +280,10 @@ export function PharmacyReportsPage() {
                     labelLine={false}
                   >
                     {salesByChannel.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
+                      <Cell key={`cell-${index}`} fill={getIdentityColor(entry.channel, mode)} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip {...tooltipStyle} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -314,9 +293,9 @@ export function PharmacyReportsPage() {
                   <div className="flex items-center gap-2">
                     <div
                       className="h-3 w-3 rounded-full"
-                      style={{ backgroundColor: channel.color }}
+                      style={{ backgroundColor: getIdentityColor(channel.channel, mode) }}
                     />
-                    <span className="text-gray-600">{channel.channel}</span>
+                    <span className="text-ink-muted">{channel.channel}</span>
                   </div>
                   <span className="font-medium">{channel.value}%</span>
                 </div>
@@ -334,30 +313,27 @@ export function PharmacyReportsPage() {
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={categoryDistribution} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                  <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
                   <XAxis
                     type="number"
-                    stroke="#9CA3AF"
+                    stroke={chartColors.axis}
                     fontSize={12}
                     tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}K`}
                   />
                   <YAxis
                     type="category"
                     dataKey="category"
-                    stroke="#9CA3AF"
+                    stroke={chartColors.axis}
                     fontSize={12}
                     width={80}
                   />
                   <Tooltip
                     formatter={(value) => [formatCurrency(Number(value)), "Sales"]}
-                    contentStyle={{
-                      borderRadius: "8px",
-                      border: "1px solid #E5E7EB",
-                    }}
+                    {...tooltipStyle}
                   />
                   <Bar dataKey="sales" radius={[0, 4, 4, 0]}>
                     {categoryDistribution.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
+                      <Cell key={`cell-${index}`} fill={getIdentityColor(entry.category, mode)} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -372,7 +348,7 @@ export function PharmacyReportsPage() {
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base">Stock Alerts</CardTitle>
-            <Badge className="bg-red-100 text-red-800">
+            <Badge variant="danger">
               <AlertTriangle className="h-3 w-3 mr-1" />
               {stockAlerts.filter((a) => a.status === "critical").length} Critical
             </Badge>
@@ -381,41 +357,41 @@ export function PharmacyReportsPage() {
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-slate-50 border-b border-line">
                 <tr>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-ink-muted uppercase">
                     Medicine
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-ink-muted uppercase">
                     Alert Type
                   </th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase">
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-ink-muted uppercase">
                     Current Stock
                   </th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase">
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-ink-muted uppercase">
                     Threshold/Expiry
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-ink-muted uppercase">
                     Status
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-line">
                 {stockAlerts.map((alert) => (
-                  <tr key={alert.name} className="hover:bg-gray-50">
+                  <tr key={alert.name} className="hover:bg-slate-50">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <Pill className="h-4 w-4 text-gray-400" />
-                        <span className="font-medium text-gray-900">{alert.name}</span>
+                        <Pill className="h-4 w-4 text-ink-muted" />
+                        <span className="font-medium text-ink">{alert.name}</span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-gray-600 capitalize">{alert.type} stock</td>
-                    <td className="px-4 py-3 text-right text-gray-900">{alert.current} units</td>
-                    <td className="px-4 py-3 text-right text-gray-900">
+                    <td className="px-4 py-3 text-ink-muted capitalize">{alert.type} stock</td>
+                    <td className="px-4 py-3 text-right text-ink">{alert.current} units</td>
+                    <td className="px-4 py-3 text-right text-ink">
                       {alert.type === "low" ? `${alert.reorder} (reorder)` : alert.expiry}
                     </td>
                     <td className="px-4 py-3">
-                      <Badge className={statusColors[alert.status]}>{alert.status}</Badge>
+                      <Badge variant={statusVariant[alert.status]}>{alert.status}</Badge>
                     </td>
                   </tr>
                 ))}
@@ -433,45 +409,51 @@ export function PharmacyReportsPage() {
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-slate-50 border-b border-line">
                 <tr>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-ink-muted uppercase">
                     Medicine
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-ink-muted uppercase">
                     Category
                   </th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase">
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-ink-muted uppercase">
                     Units Sold
                   </th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase">
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-ink-muted uppercase">
                     Revenue
                   </th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase">
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-ink-muted uppercase">
                     Current Stock
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-line">
                 {topSellingMedicines.map((med, index) => (
-                  <tr key={med.name} className="hover:bg-gray-50">
+                  <tr key={med.name} className="hover:bg-slate-50">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <span className="h-6 w-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-medium">
+                        <span
+                          className="h-6 w-6 rounded-full flex items-center justify-center text-xs font-medium"
+                          style={{
+                            backgroundColor: `${getIdentityColor(med.name, mode)}1f`,
+                            color: getIdentityColor(med.name, mode),
+                          }}
+                        >
                           {index + 1}
                         </span>
-                        <span className="font-medium text-gray-900">{med.name}</span>
+                        <span className="font-medium text-ink">{med.name}</span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-gray-600">{med.category}</td>
-                    <td className="px-4 py-3 text-right text-gray-900">{med.sales}</td>
-                    <td className="px-4 py-3 text-right font-medium text-gray-900">
+                    <td className="px-4 py-3 text-ink-muted">{med.category}</td>
+                    <td className="px-4 py-3 text-right text-ink">{med.sales}</td>
+                    <td className="px-4 py-3 text-right font-medium text-ink">
                       {formatCurrency(med.revenue)}
                     </td>
                     <td className="px-4 py-3 text-right">
                       <span
                         className={
-                          med.stock < 700 ? "text-amber-600 font-medium" : "text-gray-900"
+                          med.stock < 700 ? "text-warning-600 font-medium" : "text-ink"
                         }
                       >
                         {med.stock}
@@ -493,46 +475,46 @@ export function PharmacyReportsPage() {
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-slate-50 border-b border-line">
                 <tr>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-ink-muted uppercase">
                     Supplier
                   </th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase">
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-ink-muted uppercase">
                     Total Orders
                   </th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase">
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-ink-muted uppercase">
                     On-Time Delivery
                   </th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase">
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-ink-muted uppercase">
                     Total Value
                   </th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase">
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-ink-muted uppercase">
                     Rating
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-line">
                 {supplierPerformance.map((supplier) => {
                   const onTimePercent = Math.round((supplier.onTime / supplier.orders) * 100);
                   return (
-                    <tr key={supplier.name} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 font-medium text-gray-900">{supplier.name}</td>
-                      <td className="px-4 py-3 text-right text-gray-900">{supplier.orders}</td>
+                    <tr key={supplier.name} className="hover:bg-slate-50">
+                      <td className="px-4 py-3 font-medium text-ink">{supplier.name}</td>
+                      <td className="px-4 py-3 text-right text-ink">{supplier.orders}</td>
                       <td className="px-4 py-3 text-right">
                         <span
                           className={
-                            onTimePercent >= 90 ? "text-green-600" : "text-amber-600"
+                            onTimePercent >= 90 ? "text-success-600" : "text-warning-600"
                           }
                         >
                           {onTimePercent}%
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-right text-gray-900">
+                      <td className="px-4 py-3 text-right text-ink">
                         {formatCurrency(supplier.value)}
                       </td>
                       <td className="px-4 py-3 text-right">
-                        <span className="inline-flex items-center gap-1 text-amber-600">
+                        <span className="inline-flex items-center gap-1 text-warning-600">
                           ⭐ {supplier.rating}
                         </span>
                       </td>

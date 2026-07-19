@@ -22,6 +22,7 @@ import { Modal } from "@/components/ui/modal";
 import { Select } from "@/components/ui/select";
 import { useAuditTrailStore } from "@/stores";
 import { formatDate } from "@/lib/utils";
+import { getIdentityColor, getCurrentThemeMode } from "@/lib/theme";
 import type { AuditLog } from "@/types";
 
 const actionConfig: Record<string, { label: string; variant: "primary" | "success" | "warning" | "danger"; icon: React.ReactNode }> = {
@@ -96,8 +97,8 @@ export default function AuditLogsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Audit Logs</h1>
-          <p className="text-gray-500 mt-1">Track all system activities and user actions</p>
+          <h1 className="text-2xl font-bold text-ink">Audit Logs</h1>
+          <p className="text-ink-muted mt-1">Track all system activities and user actions</p>
         </div>
         <Button variant="outline" onClick={handleExport}>
           <Download className="w-4 h-4 mr-2" />
@@ -110,8 +111,8 @@ export default function AuditLogsPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Total Logs</p>
-              <p className="text-2xl font-bold text-gray-900">{auditLogs.length}</p>
+              <p className="text-sm text-ink-muted">Total Logs</p>
+              <p className="text-2xl font-bold text-ink">{auditLogs.length}</p>
             </div>
             <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
               <Activity className="w-5 h-5 text-primary-600" />
@@ -121,8 +122,8 @@ export default function AuditLogsPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Today's Activity</p>
-              <p className="text-2xl font-bold text-gray-900">{todayLogs}</p>
+              <p className="text-sm text-ink-muted">Today's Activity</p>
+              <p className="text-2xl font-bold text-ink">{todayLogs}</p>
             </div>
             <div className="w-10 h-10 rounded-full bg-success-100 flex items-center justify-center">
               <Calendar className="w-5 h-5 text-success-600" />
@@ -132,8 +133,8 @@ export default function AuditLogsPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Active Users</p>
-              <p className="text-2xl font-bold text-gray-900">{uniqueUsers}</p>
+              <p className="text-sm text-ink-muted">Active Users</p>
+              <p className="text-2xl font-bold text-ink">{uniqueUsers}</p>
             </div>
             <div className="w-10 h-10 rounded-full bg-warning-100 flex items-center justify-center">
               <User className="w-5 h-5 text-warning-600" />
@@ -143,8 +144,8 @@ export default function AuditLogsPage() {
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Changes Made</p>
-              <p className="text-2xl font-bold text-gray-900">{createActions + updateActions}</p>
+              <p className="text-sm text-ink-muted">Changes Made</p>
+              <p className="text-2xl font-bold text-ink">{createActions + updateActions}</p>
             </div>
             <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
               <Shield className="w-5 h-5 text-primary-600" />
@@ -158,7 +159,7 @@ export default function AuditLogsPage() {
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <Input
                 placeholder="Search by user, record ID, or type..."
                 value={searchQuery}
@@ -207,8 +208,8 @@ export default function AuditLogsPage() {
             onClick={() => setSelectedAction(action)}
             className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
               selectedAction === action
-                ? "bg-primary-100 text-primary-700"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                ? "bg-selected text-ink"
+                : "bg-hover text-ink-muted hover:bg-selected"
             }`}
           >
             {action === "all" ? "All Actions" : actionConfig[action]?.label || action}
@@ -224,9 +225,9 @@ export default function AuditLogsPage() {
         {Object.entries(groupedLogs).map(([date, logs]) => (
           <div key={date}>
             <div className="flex items-center gap-2 mb-4">
-              <Calendar className="w-4 h-4 text-gray-400" />
-              <span className="text-sm font-medium text-gray-600">{date}</span>
-              <span className="text-xs text-gray-400">({logs.length} events)</span>
+              <Calendar className="w-4 h-4 text-slate-400" />
+              <span className="text-sm font-medium text-ink-muted">{date}</span>
+              <span className="text-xs text-ink-muted">({logs.length} events)</span>
             </div>
             <div className="space-y-3">
               {logs.map((log) => (
@@ -239,8 +240,8 @@ export default function AuditLogsPage() {
 
       {filteredLogs.length === 0 && (
         <div className="text-center py-12">
-          <Activity className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500">No audit logs found</p>
+          <Activity className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+          <p className="text-ink-muted">No audit logs found</p>
         </div>
       )}
 
@@ -254,48 +255,48 @@ export default function AuditLogsPage() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-gray-500">Log ID</p>
+                <p className="text-sm text-ink-muted">Log ID</p>
                 <p className="font-mono text-sm">{selectedLog.id}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Action</p>
+                <p className="text-sm text-ink-muted">Action</p>
                 <Badge variant={actionConfig[selectedLog.action]?.variant || "primary"}>
                   {actionConfig[selectedLog.action]?.label}
                 </Badge>
               </div>
               <div>
-                <p className="text-sm text-gray-500">User</p>
+                <p className="text-sm text-ink-muted">User</p>
                 <p className="font-medium">{selectedLog.userName}</p>
-                <p className="text-xs text-gray-400">{selectedLog.userId}</p>
+                <p className="text-xs text-ink-muted">{selectedLog.userId}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Module</p>
+                <p className="text-sm text-ink-muted">Module</p>
                 <p className="font-medium">{moduleLabels[selectedLog.module] || selectedLog.module}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Record</p>
+                <p className="text-sm text-ink-muted">Record</p>
                 <p className="font-medium">{selectedLog.recordType}</p>
-                <p className="text-xs text-gray-400">{selectedLog.recordId}</p>
+                <p className="text-xs text-ink-muted">{selectedLog.recordId}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Timestamp</p>
+                <p className="text-sm text-ink-muted">Timestamp</p>
                 <p className="font-medium">{formatDate(selectedLog.timestamp)}</p>
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-ink-muted">
                   {new Date(selectedLog.timestamp).toLocaleTimeString()}
                 </p>
               </div>
             </div>
 
             {selectedLog.changes && (
-              <div className="pt-4 border-t">
-                <p className="text-sm font-medium text-gray-700 mb-2">Changes Made</p>
-                <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+              <div className="pt-4 border-t border-line">
+                <p className="text-sm font-medium text-ink-muted mb-2">Changes Made</p>
+                <div className="bg-bg rounded-lg p-4 space-y-2">
                   {Object.entries(selectedLog.changes).map(([field, change]) => (
                     <div key={field} className="flex items-start gap-4 text-sm">
-                      <span className="font-medium text-gray-700 min-w-24">{field}:</span>
+                      <span className="font-medium text-ink-muted min-w-24">{field}:</span>
                       <div className="flex items-center gap-2">
                         <span className="text-danger-600 line-through">{(change as any).old}</span>
-                        <span className="text-gray-400">→</span>
+                        <span className="text-slate-400">→</span>
                         <span className="text-success-600">{(change as any).new}</span>
                       </div>
                     </div>
@@ -305,23 +306,23 @@ export default function AuditLogsPage() {
             )}
 
             {selectedLog.ipAddress && (
-              <div className="pt-4 border-t">
+              <div className="pt-4 border-t border-line">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-500">IP Address</p>
+                    <p className="text-sm text-ink-muted">IP Address</p>
                     <p className="font-mono text-sm">{selectedLog.ipAddress}</p>
                   </div>
                   {selectedLog.userAgent && (
                     <div>
-                      <p className="text-sm text-gray-500">User Agent</p>
-                      <p className="text-xs text-gray-600 truncate">{selectedLog.userAgent}</p>
+                      <p className="text-sm text-ink-muted">User Agent</p>
+                      <p className="text-xs text-ink-muted truncate">{selectedLog.userAgent}</p>
                     </div>
                   )}
                 </div>
               </div>
             )}
 
-            <div className="flex justify-end pt-4 border-t">
+            <div className="flex justify-end pt-4 border-t border-line">
               <Button variant="outline" onClick={() => setSelectedLog(null)}>
                 Close
               </Button>
@@ -335,6 +336,8 @@ export default function AuditLogsPage() {
 
 // Audit Log Card Component
 function AuditLogCard({ log, onClick }: { log: AuditLog; onClick: () => void }) {
+  const moduleAccent = getIdentityColor(log.module, getCurrentThemeMode());
+
   return (
     <Card
       className="p-4 hover:shadow-md transition-shadow cursor-pointer"
@@ -356,13 +359,13 @@ function AuditLogCard({ log, onClick }: { log: AuditLog; onClick: () => void }) 
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-medium text-gray-900">{log.userName}</span>
+            <span className="font-medium text-ink">{log.userName}</span>
             <Badge variant={actionConfig[log.action]?.variant || "primary"} className="text-xs">
               {actionConfig[log.action]?.label}
             </Badge>
-            <span className="text-gray-500">{log.recordType}</span>
+            <span className="text-ink-muted">{log.recordType}</span>
           </div>
-          <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
+          <div className="flex items-center gap-4 mt-1 text-sm text-ink-muted">
             <span className="flex items-center gap-1">
               <FileText className="w-3 h-3" />
               {log.recordId}
@@ -373,12 +376,15 @@ function AuditLogCard({ log, onClick }: { log: AuditLog; onClick: () => void }) 
             </span>
           </div>
           {log.changes && (
-            <div className="mt-2 text-xs text-gray-600">
+            <div className="mt-2 text-xs text-ink-muted">
               Changed: {Object.keys(log.changes).join(", ")}
             </div>
           )}
         </div>
-        <Badge variant="primary" className="text-xs flex-shrink-0">
+        <Badge
+          className="text-xs flex-shrink-0"
+          style={{ backgroundColor: `${moduleAccent}1f`, color: moduleAccent }}
+        >
           {moduleLabels[log.module] || log.module}
         </Badge>
       </div>

@@ -35,8 +35,8 @@ export function PatientListPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-h1 text-slate-900">Patients</h1>
-          <p className="text-slate-600 mt-1">Manage patient records and information</p>
+          <h1 className="text-h1 text-ink">Patients</h1>
+          <p className="text-ink-muted mt-1">Manage patient records and information</p>
         </div>
         <Button onClick={() => navigate("/patients/new")} className="gap-2" size="default">
           <Plus className="h-4 w-4" />
@@ -58,11 +58,11 @@ export function PatientListPage() {
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-600">Total Patients</p>
-                <p className="text-2xl font-bold text-slate-900 mt-1">{patients.length}</p>
+                <p className="text-sm font-medium text-ink-muted">Total Patients</p>
+                <p className="text-2xl font-bold text-ink mt-1">{patients.length}</p>
               </div>
-              <div className="h-12 w-12 rounded-xl bg-blue-100 flex items-center justify-center">
-                <User className="h-6 w-6 text-blue-600" />
+              <div className="h-12 w-12 rounded-xl bg-primary-100 flex items-center justify-center">
+                <User className="h-6 w-6 text-primary-600" />
               </div>
             </div>
           </CardContent>
@@ -76,8 +76,8 @@ export function PatientListPage() {
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-600">New This Month</p>
-                <p className="text-2xl font-bold text-slate-900 mt-1">18</p>
+                <p className="text-sm font-medium text-ink-muted">New This Month</p>
+                <p className="text-2xl font-bold text-ink mt-1">18</p>
               </div>
               <div className="h-12 w-12 rounded-xl bg-teal-100 flex items-center justify-center">
                 <Calendar className="h-6 w-6 text-teal-600" />
@@ -94,11 +94,11 @@ export function PatientListPage() {
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-600">Active Today</p>
-                <p className="text-2xl font-bold text-slate-900 mt-1">42</p>
+                <p className="text-sm font-medium text-ink-muted">Active Today</p>
+                <p className="text-2xl font-bold text-ink mt-1">42</p>
               </div>
-              <div className="h-12 w-12 rounded-xl bg-green-100 flex items-center justify-center">
-                <Eye className="h-6 w-6 text-green-600" />
+              <div className="h-12 w-12 rounded-xl bg-success-50 flex items-center justify-center">
+                <Eye className="h-6 w-6 text-success-600" />
               </div>
             </div>
           </CardContent>
@@ -112,11 +112,11 @@ export function PatientListPage() {
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-600">Critical</p>
-                <p className="text-2xl font-bold text-slate-900 mt-1">3</p>
+                <p className="text-sm font-medium text-ink-muted">Critical</p>
+                <p className="text-2xl font-bold text-ink mt-1">3</p>
               </div>
-              <div className="h-12 w-12 rounded-xl bg-red-100 flex items-center justify-center">
-                <User className="h-6 w-6 text-red-600" />
+              <div className="h-12 w-12 rounded-xl bg-danger-50 flex items-center justify-center">
+                <User className="h-6 w-6 text-danger-600" />
               </div>
             </div>
           </CardContent>
@@ -140,13 +140,13 @@ export function PatientListPage() {
                 <Filter className="h-4 w-4" />
                 Filters
               </Button>
-              <div className="flex rounded-lg border border-slate-200 overflow-hidden">
+              <div className="flex rounded-lg border border-line overflow-hidden">
                 <button
                   onClick={() => setViewMode("table")}
                   className={`px-4 py-2 text-sm font-medium transition-colors ${
                     viewMode === "table"
                       ? "bg-primary-50 text-primary-700 border-r border-primary-200"
-                      : "text-slate-600 hover:bg-slate-50"
+                      : "text-ink-muted hover:bg-hover"
                   }`}
                 >
                   Table
@@ -156,7 +156,7 @@ export function PatientListPage() {
                   className={`px-4 py-2 text-sm font-medium transition-colors ${
                     viewMode === "grid"
                       ? "bg-primary-50 text-primary-700"
-                      : "text-slate-600 hover:bg-slate-50"
+                      : "text-ink-muted hover:bg-hover"
                   }`}
                 >
                   Grid
@@ -187,7 +187,7 @@ export function PatientListPage() {
                 <TableRow>
                   <TableCell colSpan={7} className="h-32 text-center">
                     <User className="mx-auto h-12 w-12 text-slate-300 mb-3" />
-                    <p className="text-slate-500">No patients found</p>
+                    <p className="text-ink-muted">No patients found</p>
                     <Button
                       variant="link"
                       size="sm"
@@ -202,13 +202,13 @@ export function PatientListPage() {
                 filteredPatients.map((patient) => (
                   <TableRow
                     key={patient.id}
-                    className="cursor-pointer hover:bg-slate-50 transition-colors"
+                    className="cursor-pointer hover:bg-hover transition-colors"
                     onClick={() => navigate(`/patients/${patient.id}`)}
                   >
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <Avatar name={patient.name} size="sm" />
-                        <span className="font-medium text-slate-900">{patient.name}</span>
+                        <span className="font-medium text-ink">{patient.name}</span>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -218,19 +218,19 @@ export function PatientListPage() {
                     </TableCell>
                     <TableCell>
                       <div className="space-y-1">
-                        <div className="flex items-center gap-1.5 text-sm text-slate-700">
+                        <div className="flex items-center gap-1.5 text-sm text-ink-muted">
                           <Phone className="h-3.5 w-3.5 text-slate-400" />
                           {patient.phone}
                         </div>
                         {patient.email && (
-                          <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                          <div className="flex items-center gap-1.5 text-xs text-ink-muted">
                             <Mail className="h-3 w-3 text-slate-400" />
                             {patient.email}
                           </div>
                         )}
                       </div>
                     </TableCell>
-                    <TableCell className="text-slate-700">
+                    <TableCell className="text-ink-muted">
                       {calculateAge(patient.dob)} yrs / {patient.gender.charAt(0).toUpperCase()}
                     </TableCell>
                     <TableCell>
@@ -242,7 +242,7 @@ export function PatientListPage() {
                         <span className="text-xs text-slate-400">—</span>
                       )}
                     </TableCell>
-                    <TableCell className="text-sm text-slate-500">
+                    <TableCell className="text-sm text-ink-muted">
                       {formatDate(patient.createdAt)}
                     </TableCell>
                     <TableCell>
@@ -267,7 +267,7 @@ export function PatientListPage() {
           {filteredPatients.length === 0 ? (
             <div className="col-span-full py-16 text-center">
               <User className="mx-auto h-16 w-16 text-slate-300 mb-4" />
-              <p className="text-slate-500 mb-2">No patients found</p>
+              <p className="text-ink-muted mb-2">No patients found</p>
               <Button
                 variant="link"
                 size="sm"
@@ -288,7 +288,7 @@ export function PatientListPage() {
                     <div className="flex items-center gap-3">
                       <Avatar name={patient.name} size="lg" />
                       <div>
-                        <p className="font-semibold text-slate-900">{patient.name}</p>
+                        <p className="font-semibold text-ink">{patient.name}</p>
                         <code className="text-xs font-mono bg-slate-100 px-2 py-0.5 rounded mt-1 inline-block">
                           {patient.id}
                         </code>
@@ -301,18 +301,18 @@ export function PatientListPage() {
                     )}
                   </div>
                   <div className="space-y-2.5">
-                    <div className="flex items-center gap-2 text-sm text-slate-700">
+                    <div className="flex items-center gap-2 text-sm text-ink-muted">
                       <Phone className="h-4 w-4 text-slate-400" />
                       {patient.phone}
                     </div>
                     {patient.email && (
-                      <div className="flex items-center gap-2 text-sm text-slate-500">
+                      <div className="flex items-center gap-2 text-sm text-ink-muted">
                         <Mail className="h-4 w-4 text-slate-400" />
                         {patient.email}
                       </div>
                     )}
-                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-                      <span className="text-slate-600">
+                    <div className="pt-2 border-t border-line flex items-center justify-between text-xs">
+                      <span className="text-ink-muted">
                         {calculateAge(patient.dob)} years • {patient.gender}
                       </span>
                       <span className="text-slate-400">
